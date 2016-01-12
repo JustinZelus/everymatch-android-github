@@ -137,9 +137,10 @@ public class PusherManager implements ConnectionEventListener {
 
         @Override
         public void onEvent(String channelName, String eventName, String data) {
+
             data = handleEventData(data);
 
-            Serializable serializable = pusherDataToObject(data, eventName);
+            Serializable  serializable = pusherDataToObject(data, eventName);
 
             if (serializable != null) {
                 /* Events that should only update data.*/
@@ -172,13 +173,13 @@ public class PusherManager implements ConnectionEventListener {
                 /*update inbox*/
                 if (PUSHER_EVENT_EVENT_INBOX_UNREAD.equals(eventName)) {
                     ds.getUser().setInbox((ResponseGetUser.DataInbox) serializable);
-                    return;
+                    //return;
                 }
 
                 /*update user profile*/
                 if (PUSHER_EVENT_PROFILES.equals(eventName)) {
                     ds.getUser().profiles = (ResponseGetUser.Profiles) serializable;
-                    return;
+                    //return;
                 }
 
                 Intent intent = new Intent(ACTION_PUSHER_EVENT);
@@ -221,7 +222,8 @@ public class PusherManager implements ConnectionEventListener {
                 break;
 
             case PUSHER_EVENT_PEOPLE:
-                serializable = gson.fromJson(eventData, new TypeToken<HashMap<String, DataPeopleHolder>>(){}.getType());
+                serializable = gson.fromJson(eventData, new TypeToken<HashMap<String, DataPeopleHolder>>() {
+                }.getType());
                 break;
 
             case PUSHER_EVENT_EVENT_NEW_MESSAGE:

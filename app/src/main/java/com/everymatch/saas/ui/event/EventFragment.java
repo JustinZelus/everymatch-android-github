@@ -286,11 +286,10 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         // PARTICIPANTS
         mPeopleRow.setTitle(String.valueOf(mEvent.dataPublicEvent.getUsers().size()) + " " + getString(R.string.Participants));
         if (mEvent.dataPublicEvent.spots == -1) {
-            mPeopleRow.setDetails(getString(R.string.Unlimited));
+            mPeopleRow.setDetails(dm.getResourceText(R.string.Unlimited));
         } else {
             try {
-                mPeopleRow.setDetails(Utils.setFirstLetterUpperCase(new MessageFormat(DataManager.getInstance().getResourceText
-                        (R.string.Event_open_spots)).format(new Object[]{mEvent.dataPublicEvent.spots})));
+                mPeopleRow.setDetails(Utils.setFirstLetterUpperCase(new MessageFormat(dm.getResourceText(R.string.Event_open_spots)).format(new Object[]{mEvent.dataPublicEvent.spots})));
             } catch (Exception e) {
             }
         }
@@ -323,29 +322,29 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
         if (mStatus.equals("participating")) {
             mPercent.setText("PARTICIPATING");
-            mPercent.setTextColor(DataStore.getInstance().getIntColor(EMColor.POSITIVE));
+            mPercent.setTextColor(ds.getIntColor(EMColor.POSITIVE));
             mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusPositive"));
-            mPercentIcon.setTextColor(DataStore.getInstance().getIntColor(EMColor.POSITIVE));
+            mPercentIcon.setTextColor(ds.getIntColor(EMColor.POSITIVE));
         } else if (mStatus.equals("pending")) {
             mPercent.setText("PENDING");
-            mPercent.setTextColor(DataStore.getInstance().getIntColor(EMColor.MAYBE));
+            mPercent.setTextColor(ds.getIntColor(EMColor.MAYBE));
             mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusMaybe"));
-            mPercentIcon.setTextColor(DataStore.getInstance().getIntColor(EMColor.MAYBE));
+            mPercentIcon.setTextColor(ds.getIntColor(EMColor.MAYBE));
         } else if (mStatus.equals("saved")) {
             mPercent.setText("SAVED");
-            mPercent.setTextColor(DataStore.getInstance().getIntColor(EMColor.MAYBE));
+            mPercent.setTextColor(ds.getIntColor(EMColor.MAYBE));
             mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusLater"));
-            mPercentIcon.setTextColor(DataStore.getInstance().getIntColor(EMColor.MAYBE));
+            mPercentIcon.setTextColor(ds.getIntColor(EMColor.MAYBE));
         } else if (mStatus.equals("hosting")) {
             mPercent.setText("HOSTING");
-            mPercent.setTextColor(DataStore.getInstance().getIntColor(EMColor.WHITE));
+            mPercent.setTextColor(ds.getIntColor(EMColor.WHITE));
             mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusHosting"));
-            mPercentIcon.setTextColor(DataStore.getInstance().getIntColor(EMColor.WHITE));
+            mPercentIcon.setTextColor(ds.getIntColor(EMColor.WHITE));
         } else if (mStatus.equals("invited")) {
             mPercent.setText("INVITED");
-            mPercent.setTextColor(DataStore.getInstance().getIntColor(EMColor.NEGATIVE));
+            mPercent.setTextColor(ds.getIntColor(EMColor.NEGATIVE));
             mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusInvited"));
-            mPercentIcon.setTextColor(DataStore.getInstance().getIntColor(EMColor.NEGATIVE));
+            mPercentIcon.setTextColor(ds.getIntColor(EMColor.NEGATIVE));
         } else {
             /*here we need to set match percents*/
 
@@ -357,9 +356,9 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                 }
             }
             /*mPercent.setText(mEvent.dataPublicEvent.match + "%");
-            mPercent.setTextColor(DataStore.getInstance().getIntColor(EMColor.WHITE));
+            mPercent.setTextColor(ds.getIntColor(EMColor.WHITE));
             mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("Match"));
-            mPercentIcon.setTextColor(DataStore.getInstance().getIntColor(EMColor.WHITE));*/
+            mPercentIcon.setTextColor(ds.getIntColor(EMColor.WHITE));*/
         }
 
         setPeopleCarousel();
