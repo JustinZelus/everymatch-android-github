@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/fragment_me_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.everymatch.saas.view.BaseScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:bg_color="silver_color">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.everymatch.saas.view.BaseRelativeLayout
+                        android:id="@+id/rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:bg_color="white_color">
+
+                        <com.pkmmte.view.CircularImageView
+                            android:id="@+id/imgMeImage"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="@dimen/margin_xs"
+                            android:layout_marginTop="@dimen/margin_m"
+                            android:scaleType="fitCenter"
+                            app:border="false"
+                            app:border_color="#dc0f0f0f"
+                            app:border_width="7dp"
+                            app:shadow="true" />
+
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/tvMeUserName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/imgMeImage"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="5dp"
+                            tools:text="New Text"
+                            android:textSize="32sp"
+                            app:text_color="night_color" />
+
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/tvMeMemberSince"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvMeUserName"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="7dp"
+                            tools:text="New Text"
+                            app:text_color="morning_color" />
+
+                    </com.everymatch.saas.view.BaseRelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_Settings"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/rl"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="15dp">
+
+                        <com.everymatch.saas.view.EventDataRow
+                            android:id="@+id/event_row_me_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            app:bg_color="white_color"
+                            app:left_media_container_visible="false"
+                            app:left_icon_visible="false"
+                            app:row_details="About,Status,Location,Personality,recommendations..."
+                            app:row_title="Profile" />
+
+                        <com.everymatch.saas.view.EventDataRow
+                            android:id="@+id/event_row_me_settings"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:left_media_container_visible="false"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@+id/event_row_me_profile"
+                            android:layout_marginBottom="2dp"
+                            app:bg_color="white_color"
+                            app:left_icon_visible="false"
+                            app:row_details="Account,notifications,Units,Privacy"
+                            app:row_title="Settings" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlMeProfiles"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl_Settings"
+                        android:layout_marginBottom="10dp">
+
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="10dp"
+                            app:text_key="@string/Activity_Profile"
+                            tools:text="Activity Profiles" />
+
+                        <LinearLayout
+                            android:id="@+id/llMeActivities"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/textView"
+                            android:minHeight="20dp"
+                            android:orientation="vertical">
+
+
+                        </LinearLayout>
+
+                        <com.everymatch.saas.view.BaseListView
+                            android:id="@+id/listViewMeActivities"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@+id/textView"
+                            android:choiceMode="singleChoice"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            app:bg_color="white_color" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rlMeProfiles"
+                        android:padding="4dp">
+
+                        <com.everymatch.saas.view.BaseButton
+                            android:id="@+id/btnMeAddProfile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            tools:text="Add_Profile"
+                            app:bg="rounded"
+                            app:text_key="@string/Add_Profile"
+                            app:text_color="white_color" />
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+
+            </com.everymatch.saas.view.BaseScrollView>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+

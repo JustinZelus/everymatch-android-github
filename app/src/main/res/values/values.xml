@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="sign_screen_animation_duration_out">600</integer>
+    <integer name="sign_screen_animation_duration">800</integer>
+    <integer name="sign_screen_animation_duration2">1600</integer>
+    <integer name="sign_screen_animation_blur_delay">1000</integer>
+</resources>

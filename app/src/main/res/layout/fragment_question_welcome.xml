@@ -1,0 +1,73 @@
+<com.everymatch.saas.view.BaseRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    app:bg_color="white_color"
+    tools:context=".SignActivity$WalkthroughFragment">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/eventHeader"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
+        android:gravity="center"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:textSize="33sp"
+        app:text_color="night_color"
+        tools:text="title" />
+
+
+    <com.everymatch.saas.view.IconImageView
+        android:id="@+id/icon_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_below="@+id/title_textview"
+        android:layout_centerHorizontal="true"
+        app:text_color="night_color"
+        app:text_size="120dp" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/subtitle_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/start_button"
+        android:layout_below="@id/icon_image"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        app:text_color="moon_color"
+        tools:text="text" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="0dip"
+        android:layout_weight="0.2" />
+
+    <com.everymatch.saas.view.BaseButton
+        android:id="@+id/start_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
+        android:onClick="goToNextQuestion"
+        app:text_color="white_color"
+        app:text_key="@string/Start_Button"
+        tools:text="@string/start" />
+
+
+</com.everymatch.saas.view.BaseRelativeLayout>

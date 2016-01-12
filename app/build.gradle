@@ -1,0 +1,98 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+android {
+
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+    defaultConfig {
+        applicationId "em2.everymatch.com.everymatch"
+        minSdkVersion 15
+        targetSdkVersion 23
+        renderscriptSupportModeEnabled true
+        versionCode 15
+        versionName "1.5"
+        multiDexEnabled true
+
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        productFlavors {
+            wigan {
+                applicationId "com.everymatch.wigan"
+                versionName "wigan 1.0"
+            }
+
+            ucpa {
+                applicationId "com.everymatch.ucpa"
+                versionName "ucpa 1.0"
+            }
+        }
+        debug {
+            debuggable true
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/maven/com.squareup.okhttp/okhttp/pom.properties'
+        exclude 'META-INF/maven/com.squareup.okhttp/okhttp/pom.xml'
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
+    compile 'com.mcxiaoke.volley:library:1.0.+'
+    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.android.gms:play-services-maps:8.3.0'
+    compile 'com.google.android.gms:play-services-analytics:8.3.0'
+    compile 'com.google.android.gms:play-services-location:8.3.0'
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:design:+'
+    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile('com.squareup.okhttp:okhttp:2.6.0') {
+        exclude(group: 'com.google.android', module: 'support-v4')
+    }
+    compile 'com.ocpsoft:ocpsoft-pretty-time:1.0.7'
+    compile project(':lib')
+    compile 'com.pusher:pusher-java-client:0.3.3'
+    compile 'com.pkmmte.view:circularimageview:1.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true;
+    }
+    compile 'com.github.rey5137:material:1.2.1'
+    compile 'com.wang.avi:library:1.0.1'
+    compile 'com.github.tajchert:nammu:1.1.1'
+    compile 'com.github.jkwiecien:EasyImage:1.1.2'
+    compile project(':wheel')
+}
+
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'http://clojars.org/repo' }
+    maven { url 'https://jitpack.io' }
+
+}
+

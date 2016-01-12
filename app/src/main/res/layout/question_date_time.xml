@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginLeft="40dip"
+    android:layout_marginRight="40dip"
+    >
+
+    <com.everymatch.saas.view.BaseButton
+        android:id="@+id/date_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_date"
+        android:background="@drawable/input_field"
+        android:layout_marginBottom="20dip"
+        />
+
+    <com.everymatch.saas.view.BaseButton
+        android:id="@+id/time_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_time"
+        android:background="@drawable/input_field"
+        />
+
+</LinearLayout>

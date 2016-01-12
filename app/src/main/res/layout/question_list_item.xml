@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:paddingTop="@dimen/margin_xs"
+    android:paddingBottom="@dimen/margin_xs"
+    android:layout_height="wrap_content">
+
+    <com.everymatch.saas.view.BaseIconTextView
+        android:id="@+id/arrow_image"
+        android:layout_marginRight="@dimen/margin_xs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textSize="24sp"
+        app:text_color="morning_color" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:layout_marginLeft="@dimen/margin_xs"
+        android:id="@+id/question_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/arrow_image"
+        style="@style/EmTextStyleNormal"
+        app:text_color="night_color"
+        android:layout_marginBottom="1dp"
+        tools:text="question" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:layout_marginLeft="@dimen/margin_xs"
+        android:id="@+id/answer_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/question_textview"
+        android:layout_marginTop="1dp"
+        android:layout_toLeftOf="@+id/arrow_image"
+        style="@style/EmTextStyleMeta"
+        app:text_color="moon_color"
+        tools:text="answer" />
+
+</RelativeLayout>

@@ -1,0 +1,135 @@
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:bg_color="white_color"
+    tools:context="com.everymatch.saas.ui.PeopleFragment">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/fragment_my_profile_event_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/fragment_my_profile_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/fragment_my_profile_image_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/fragment_my_profile_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/vertical_black_gradient" />
+
+                    <LinearLayout
+                        android:id="@+id/fragment_my_profile_change_image_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical">
+
+                        <com.everymatch.saas.view.BaseIconTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="24dp"
+                            app:iconText="Camera"
+                            app:text_color="white_color" />
+
+                        <com.everymatch.saas.view.BaseTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:paddingLeft="10dp"
+                            android:textSize="15dp"
+                            app:font="lato_font"
+                            app:text_color="white_color"
+                            app:text_key="@string/Change_Picture"
+                            tools:text="82%" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/staticQuestionsHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.everymatch.saas.view.FloatingEditTextLayout
+                        android:id="@+id/fetFirstName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fl_hint_resource="@string/FirstName"
+                        app:fl_isLeftIconVisible="false"
+                        app:fl_title_resource="@string/FirstName" />
+
+                    <com.everymatch.saas.view.BaseLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:orientation="vertical"
+                        app:bg_color="moon_color" />
+
+
+                    <com.everymatch.saas.view.FloatingEditTextLayout
+                        android:id="@+id/fetLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fl_hint_resource="@string/LastName"
+                        app:fl_isLeftIconVisible="false"
+                        app:fl_title_resource="@string/LastName" />
+
+                    <com.everymatch.saas.view.BaseLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:orientation="vertical"
+                        app:bg_color="moon_color" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fragment_my_profile_question_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+
+                <LinearLayout
+                    android:id="@+id/questionsHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+</com.everymatch.saas.view.BaseLinearLayout>

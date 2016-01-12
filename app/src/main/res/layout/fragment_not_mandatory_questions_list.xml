@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    app:bg_color="white_color">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:layout_below="@id/eventHeader"
+        android:id="@+id/title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_s"
+        app:text_key="@string/Anything_Else"
+        android:layout_centerHorizontal="true"
+        android:textSize="35sp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        app:text_color="night_color"
+        />
+
+    <LinearLayout
+        android:id="@+id/answers_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_textview"
+        android:layout_above="@+id/bottom_layout"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+        <ListView android:id="@android:id/list"
+            android:layout_marginTop="@dimen/margin_m"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawSelectorOnTop="false" />
+    </LinearLayout>
+
+
+
+</com.everymatch.saas.view.BaseRelativeLayout>

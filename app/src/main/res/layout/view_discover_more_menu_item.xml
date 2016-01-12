@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    app:bg_color="white_color">
+
+    <RelativeLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/view_discover_more_menu_item_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textSize="20dp"
+            app:text_color="primary_color"
+            tools:text="e"
+            android:layout_centerInParent="true" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/notification_count_icon"
+            android:textSize="9dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:text_color="white_color"
+            tools:text="1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/view_discover_more_menu_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:textSize="14dp"
+        app:text_color="primary_color"
+        tools:text="Messages" />
+</com.everymatch.saas.view.BaseLinearLayout>

@@ -1,0 +1,43 @@
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingTop="54dp"
+    android:visibility="invisible">
+
+    <com.everymatch.saas.view.BaseLinearLayout
+        android:background="#88000000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.everymatch.saas.view.BaseLinearLayout
+            app:bg_color="primary_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/view_activities_popup_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.everymatch.saas.view.BaseButton
+                android:id="@+id/view_activities_popup_button_add_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_s"
+                android:background="@drawable/input_field"
+                tools:text="Add_activity_profile"
+                app:text_key="@string/Add_activity_profile"
+                android:textAllCaps="true"
+                style="@style/EmTextStyleButton"
+                app:text_color="primary_color" />
+
+        </com.everymatch.saas.view.BaseLinearLayout>
+    </com.everymatch.saas.view.BaseLinearLayout>
+
+
+</com.everymatch.saas.view.BaseLinearLayout>

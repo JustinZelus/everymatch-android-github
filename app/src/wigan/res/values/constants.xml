@@ -1,0 +1,11 @@
+<resources>
+    <!-- <string name="app_id">20150208103953</string>--> <!--UCPA  -->
+    <!--<string name="app_id">20150518212134</string>--> <!--WIGAN  -->
+
+    <string name="app_name">Wigan</string>
+    <string name="app_id">20150518212134</string>
+    <string name="term_url">http://www.google.com</string>
+    <string name="default_culture">en-US</string>
+
+
+</resources>

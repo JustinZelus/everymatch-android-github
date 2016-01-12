@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF"
+    android:fitsSystemWindows="true"
+    tools:context="com.everymatch.ucpa.SplashActivity">
+
+    <RelativeLayout
+        android:id="@+id/rlSplashBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/imgSplashLogo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+
+            android:layout_centerVertical="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/splash_logo" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvSplashPoweredBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imgSplashLogo"
+            android:layout_centerHorizontal="true"
+            android:singleLine="true"
+            android:text="@string/poweredByEveryMatch"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/activity_splash_view_loader"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:visibility="visible"
+            app:indicator="BallPulse"
+            app:indicator_color="@android:color/white" />
+    </RelativeLayout>
+</RelativeLayout>

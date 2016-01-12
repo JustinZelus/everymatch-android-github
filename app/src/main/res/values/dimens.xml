@@ -1,0 +1,72 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="sign_buttons_height">100dip</dimen>
+
+    <dimen name="fab_elevation">8dp</dimen>
+    <dimen name="fab_translation_z_pressed">6dp</dimen>
+    <dimen name="fab_content_size">24dp</dimen>
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">40dp</dimen>
+    <dimen name="drawer_max_width">320dp</dimen>
+    <dimen name="drawer_elevation">12dp</dimen>
+    <dimen name="drawer_icon_padding">32dp</dimen>
+    <dimen name="drawer_icon_size">24dp</dimen>
+    <dimen name="tab_min_width">72dp</dimen>
+    <dimen name="tab_max_width">264dp</dimen>
+    <dimen name="drawer_separator_vertical_margin">8dp</dimen>
+    <!-- This needs to be drawer_separator_vertical_margin * 2 + 1 -->
+    <dimen name="drawer_separator_overall_height">17dp</dimen>
+    <dimen name="drawer_padding_top_default">0dp</dimen>
+
+    <dimen name="size_default_height">160dp</dimen>
+
+    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_short">8dp</dimen>
+    <dimen name="margin_extra_short">4dp</dimen>
+
+    <dimen name="toolbar_elevation">4dp</dimen>
+
+    <dimen name="toolbar_margin_start">72dp</dimen>
+    <dimen name="flexible_space_height">72dp</dimen>
+    <dimen name="flexible_space_image_height">240dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">120dp</dimen>
+
+    <dimen name="parallax_image_height">180dp</dimen>
+    <dimen name="tab_height">48dp</dimen>
+
+    <dimen name="header_bar_height">72dp</dimen>
+    <dimen name="intersection_height">16dp</dimen>
+
+    <dimen name="sliding_slop">32dp</dimen>
+    <dimen name="sliding_overlay_blur_size">4dp</dimen>
+
+    <dimen name="no_connection_view_title_text_size">28dp</dimen>
+    <dimen name="no_connection_view_margin">40dp</dimen>
+    <dimen name="no_connection_view_text_size">14dp</dimen>
+
+
+
+    <dimen name="chatMessageCornerRadius">8dp</dimen>
+
+
+    <dimen name="margin_ln">1dp</dimen>
+    <dimen name="margin_xs">10dp</dimen>
+    <dimen name="margin_s">20dp</dimen>
+    <dimen name="margin_m">40dp</dimen>
+    <dimen name="margin_l">70dp</dimen>
+
+    <dimen name="text_size_heading">32dp</dimen>
+    <dimen name="text_size_normal">16dp</dimen>
+    <dimen name="text_size_meta">14dp</dimen>
+    <dimen name="text_size_service">12dp</dimen>
+    <dimen name="text_size_button">14dp</dimen>
+
+    <dimen name="people_carousel_height">70dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="event_recycler_view_height">70dp</dimen>
+
+</resources>

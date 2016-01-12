@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.everymatch.saas.view.IconImageView
+        android:id="@+id/view_event_selection_row_left_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:text_size="18dp"
+        app:text_color="fog_color"
+        tools:text="\@" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/view_event_selection_row_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:singleLine="false"
+        android:text="title"
+        android:textSize="16dp"
+        app:text_color="moon_color" />
+
+    <com.everymatch.saas.view.BaseIconTextView
+        android:id="@+id/view_event_selection_row_right_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="\@"
+        android:textSize="18dp"
+        app:text_color="fog_color" />
+</merge>

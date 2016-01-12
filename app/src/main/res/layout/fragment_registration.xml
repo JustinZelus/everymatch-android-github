@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    app:bg_color="background_color">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/fragment_base_sign_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:id="@+id/fragment_registration_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_m"
+            android:paddingRight="@dimen/margin_m">
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/fragment_base_sign_text_title"
+                style="@style/EmTextStyleNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_s"
+                app:first_letter_capitalize="true"
+                app:text_color="night_color"
+                app:text_key="@string/Em2_register_subtitle" />
+
+            <LinearLayout
+                android:id="@+id/fragment_base_sign_provider_button_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/fragment_registration_terms_of_use_1"
+                style="@style/EmTextStyleMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_s"
+                android:gravity="center"
+                app:text_color="night_color"
+                app:text_key="@string/RegisterTnc" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_s"
+                android:paddingTop="@dimen/margin_s">
+
+                <com.everymatch.saas.view.BaseView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    app:bg_color="fog_color" />
+
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/fragment_base_sign_text_or"
+                    style="@style/EmTextStyleNormal"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textAllCaps="true"
+                    app:text_color="night_color"
+                    app:text_key="@string/Or"
+                    tools:text="OR" />
+
+            </FrameLayout>
+
+            <com.everymatch.saas.view.BaseTextView
+                style="@style/EmTextStyleNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_s"
+                app:first_letter_capitalize="true"
+                app:text_color="night_color"
+                app:text_key="@string/CreateAccountTextTitle" />
+
+            <com.everymatch.saas.view.BaseEditText
+                android:id="@+id/fragment_registration_edit_text_first_name"
+                style="@style/EmTextStyleNormal"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginBottom="@dimen/margin_s"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:padding="0dp"
+                android:singleLine="true"
+                android:maxLines="1"
+                app:text_color="night_color" />
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/email_register_error_first_name"
+                style="@style/EmTextStyleService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:visibility="gone"
+                app:font="lato_font"
+                app:text_color="error_color" />
+
+            <com.everymatch.saas.view.BaseEditText
+                android:id="@+id/fragment_registration_edit_text_last_name"
+                style="@style/EmTextStyleNormal"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:padding="0dp"
+                android:layout_marginBottom="@dimen/margin_s"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:singleLine="true"
+                android:maxLines="1"
+                app:text_color="night_color" />
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/email_register_error_last_name"
+                style="@style/EmTextStyleService"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:visibility="gone"
+                app:text_color="error_color" />
+
+            <com.everymatch.saas.view.BaseEditText
+                android:id="@+id/fragment_registration_edit_text_email"
+                style="@style/EmTextStyleNormal"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:gravity="center"
+                android:padding="0dp"
+                android:imeOptions="actionDone"
+                android:inputType="textPersonName"
+                android:singleLine="true"
+                android:maxLines="1"
+                app:text_color="night_color" />
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/email_register_error_email"
+                style="@style/EmTextStyleService"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:visibility="gone"
+                app:text_color="error_color">
+
+                <requestFocus />
+            </com.everymatch.saas.view.BaseTextView>
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/fragment_registration_terms_of_use_2"
+                style="@style/EmTextStyleMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_s"
+                android:gravity="center"
+                app:text_color="night_color"
+                app:text_key="@string/RegisterTnc" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginBottom="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_xs">
+
+                <com.everymatch.saas.view.BaseButton
+                    android:id="@+id/fragment_registration_button_register"
+                    style="@style/EmTextStyleButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center"
+                    app:text_color="white_color"
+                    app:text_key="@string/Em2_register_title" />
+
+                <include
+                    android:id="@+id/fragment_registration_button_loading"
+                    layout="@layout/view_button_loading" />
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</com.everymatch.saas.view.BaseLinearLayout>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BaseTextView">
+        <attr name="font" format="enum">
+            <enum name="lato_font" value="0" />
+            <enum name="lato_light" value="1" />
+
+        </attr>
+
+        <attr name="text_key" format="string" />
+        <attr name="text_sub_key" format="string" />
+        <attr name="first_letter_capitalize" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="BaseButton">
+        <attr name="bg" format="enum">
+            <enum name="rounded" value="0" />
+            <enum name="stroke" value="1" />
+        </attr>
+
+    </declare-styleable>
+
+    <declare-styleable name="EventDataRow">
+
+        <attr name="row_title" format="string" />
+        <attr name="row_details" format="string" />
+        <attr name="left_icon_visible" format="boolean" />
+        <attr name="right_icon_visible" format="boolean" />
+        <attr name="right_text_visible" format="boolean" />
+        <attr name="is_detail_visible" format="boolean" />
+        <attr name="left_media_container_visible" format="boolean" />
+        <attr name="bg_color" />
+
+    </declare-styleable>
+
+
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+
+
+    <!-- Defines the custom XML attributes supported for a HorizontalListView -->
+    <declare-styleable name="HorizontalListView">
+        <attr name="dividerWidth" format="dimension" />
+        <attr name="android:divider" />
+        <attr name="android:requiresFadingEdge" />
+        <attr name="android:fadingEdgeLength" />
+    </declare-styleable>
+
+    <declare-styleable name="PullToZoomView">
+        <attr name="headerView" format="reference" />
+        <attr name="contentView" format="reference" />
+        <attr name="zoomView" format="reference" />
+        <attr name="isHeaderParallax" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="IconFont">
+        <attr name="iconText" format="string" />
+        <attr name="iconSquare" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="ComponentHeader">
+        <attr name="leftText" format="string" />
+        <attr name="rightText" format="string" />
+    </declare-styleable>
+
+
+    <declare-styleable name="RangeSeekBar">
+        <!-- the minimum of the range -->
+        <attr name="absoluteMinValue" format="integer|float" />
+
+        <!-- the maximum of the range -->
+        <attr name="absoluteMaxValue" format="integer|float" />
+
+        <!-- show a single slider -->
+        <attr name="singleThumb" format="boolean" />
+
+        <!-- show the labels on the right and left-->
+        <attr name="showLabels" format="boolean" />
+
+        <!-- alwaysActive will make the buttons and bar always draw as the activeColor (the default is false) -->
+        <attr name="alwaysActive" format="boolean" />
+
+        <!-- show the currently selected value above each thumb (defaults to true) -->
+        <attr name="valuesAboveThumbs" format="boolean" />
+
+        <!-- padding on either side on the slider -->
+        <attr name="internalPadding" format="dimension" />
+
+        <!-- the height of the bar -->
+        <attr name="barHeight" format="dimension" />
+        <attr name="barHeightInRange" format="dimension" />
+
+        <!-- the color of the bar that is not selected -->
+        <attr name="defaultColor" format="color" />
+
+        <!-- the color of the bar that is selected -->
+        <attr name="activeColor" format="color" />
+
+        <!-- set drawables for thumb handles -->
+        <attr name="thumbNormal" format="reference" />
+        <attr name="thumbPressed" format="reference" />
+        <attr name="thumbDisabled" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="FloatingEditTextLayout">
+        <attr name="fl_title_resource" format="string" />
+        <attr name="fl_hint_resource" format="string" />
+        <attr name="fl_isLeftIconVisible" format="boolean" />
+        />
+
+    </declare-styleable>
+
+    <declare-styleable name="ResourceColor">
+        <attr name="text_color" />
+        <attr name="bg_color" />
+        <attr name="divider_color" />
+        <attr name="text_size" format="dimension"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="BaseListView">
+        <attr name="divider_height" format="dimension" />
+
+    </declare-styleable>
+
+    <attr name="text_color" format="enum">
+
+        <enum name="primary_color" value="1" />
+        <enum name="secondary_color" value="2" />
+        <enum name="tertiary_color" value="3" />
+        <enum name="font_color" value="4" />
+        <enum name="background_color" value="5" />
+        <enum name="night_color" value="6" />
+        <enum name="moon_color" value="7" />
+        <enum name="morning_color" value="8" />
+        <enum name="fog_color" value="9" />
+        <enum name="error_color" value="10" />
+        <enum name="positive_color" value="11" />
+        <enum name="negative_color" value="12" />
+        <enum name="maybe_color" value="13" />
+        <enum name="white_color" value="14" />
+        <enum name="info_color" value="15" />
+        <enum name="silver_color" value="16" />
+
+    </attr>
+
+    <attr name="bg_color" format="enum">
+
+        <enum name="primary_color" value="1" />
+        <enum name="secondary_color" value="2" />
+        <enum name="tertiary_color" value="3" />
+        <enum name="font_color" value="4" />
+        <enum name="background_color" value="5" />
+        <enum name="night_color" value="6" />
+        <enum name="moon_color" value="7" />
+        <enum name="morning_color" value="8" />
+        <enum name="fog_color" value="9" />
+        <enum name="error_color" value="10" />
+        <enum name="positive_color" value="11" />
+        <enum name="negative_color" value="12" />
+        <enum name="maybe_color" value="13" />
+        <enum name="white_color" value="14" />
+        <enum name="info_color" value="15" />
+        <enum name="silver_color" value="16" />
+
+    </attr>
+
+    <attr name="divider_color" format="enum">
+
+        <enum name="primary_color" value="1" />
+        <enum name="secondary_color" value="2" />
+        <enum name="tertiary_color" value="3" />
+        <enum name="font_color" value="4" />
+        <enum name="background_color" value="5" />
+        <enum name="night_color" value="6" />
+        <enum name="moon_color" value="7" />
+        <enum name="morning_color" value="8" />
+        <enum name="fog_color" value="9" />
+        <enum name="error_color" value="10" />
+        <enum name="positive_color" value="11" />
+        <enum name="negative_color" value="12" />
+        <enum name="maybe_color" value="13" />
+        <enum name="white_color" value="14" />
+        <enum name="info_color" value="15" />
+        <enum name="silver_color" value="16" />
+
+    </attr>
+
+
+</resources>

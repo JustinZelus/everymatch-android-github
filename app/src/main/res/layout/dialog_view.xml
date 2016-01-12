@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="270dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <com.everymatch.saas.view.BaseTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/dialog_title"
+        android:layout_gravity="center_horizontal"
+        app:text_color="positive_color"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="New Text"
+        android:id="@+id/dialog_message"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"/>
+
+    <com.everymatch.saas.view.BaseView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:bg_color="night_color"
+        android:layout_marginBottom="15dp"/>
+
+    <com.everymatch.saas.view.BaseTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:text_color="primary_color"
+        android:id="@+id/dialog_button"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="15dp"/>
+
+</LinearLayout>

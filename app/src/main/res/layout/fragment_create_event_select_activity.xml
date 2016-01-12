@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"/>
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/eventHeader"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="20dp"
+        tools:text="Select Activity"
+        app:text_key="@string/Select_Activity"
+        app:text_color="night_color"
+        android:layout_marginBottom="10dp"
+        android:textSize="40sp"
+        app:font="lato_light" />
+
+    <LinearLayout
+        android:id="@+id/createEventSelectActivitySubTitleHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal">
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/createEventSelectActivityIconLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            tools:text="\@"
+            app:text_color="primary_color"
+            android:textSize="24dp" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvCreateEventSelectActivityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            tools:text="title"
+            app:text_color="primary_color"
+            android:textSize="40sp" />
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/createEventSelectActivityIconRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            app:text_color="primary_color"
+            android:textSize="24dp"
+            app:iconText="icon-ArrowDown" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/createEventSelectActivitySubTitleHolder"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+</RelativeLayout>

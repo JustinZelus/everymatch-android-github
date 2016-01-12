@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:bg_color="white_color"
+    android:orientation="horizontal">
+
+    <com.everymatch.saas.view.BaseImageView
+        android:id="@+id/people_list_item_image"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        app:bg_color="fog_color" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/people_list_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4.5dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="title"
+            app:text_color="night_color"
+            style="@style/EmTextStyleNormal"
+            />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/people_list_item_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="details"
+            app:text_color="moon_color"
+            style="@style/EmTextStyleMeta"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/people_list_item_right_icon"
+            android:layout_width="wrap_content"
+            tools:text="A"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:text_color="moon_color"
+            android:paddingTop="2dp"
+            android:paddingRight="3dp"
+            android:textSize="16dp"/>
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/people_list_item_right_text"
+            android:layout_width="wrap_content"
+            tools:text="A"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:text_color="primary_color"
+            style="@style/EmTextStyleMeta"/>
+
+    </LinearLayout>
+
+</com.everymatch.saas.view.BaseLinearLayout>

@@ -1,0 +1,202 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.everymatch.saas.ui.sign.RegisterWithEmailFragment">
+
+    <ImageButton
+        android:id="@+id/sms_register_close"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="17dp"
+        android:background="@drawable/ic_btn_close" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="70dp"
+            android:text="@string/register_screen_with_email_title"
+            app:text_color="white_color"
+            android:textSize="30sp" />
+
+        <com.everymatch.saas.view.BaseEditText
+            android:id="@+id/sms_register_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/input_area"
+            android:ems="10"
+            android:focusable="true"
+            android:gravity="center"
+            android:hint="@string/first_name"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/sms_register_error_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="end"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:text_color="error_color"
+            android:textSize="12sp" />
+
+        <com.everymatch.saas.view.BaseEditText
+            android:id="@+id/sms_register_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/input_area"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/last_name"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/sms_register_error_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="end"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:text_color="error_color"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
+            <com.everymatch.saas.view.BaseEditText
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+
+                android:background="@drawable/button_left"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="+972"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textSize="16sp" />
+            <com.everymatch.saas.view.BaseView
+                android:layout_width="1dp"
+                android:layout_height="50dp"
+                app:bg_color="fog_color"/>
+
+        <com.everymatch.saas.view.BaseEditText
+            android:id="@+id/sms_register_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_right"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/enter_phone"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:textSize="16sp" />
+        </LinearLayout>
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/sms_register_error_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="75dp"
+            android:gravity="end"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:text_color="error_color"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical">
+
+            <com.everymatch.saas.view.BaseTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/privacy_registration_first_line"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                app:text_color="white_color"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/sms_register_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/privacy_registration_privacy"
+                    app:text_color="primary_color"
+                    android:textSize="12sp"
+                    android:layout_marginRight="2dp"/>
+                <com.everymatch.saas.view.BaseTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/privacy_registration_and"
+                    app:text_color="white_color"
+                    android:textSize="12sp"
+                    android:layout_marginRight="2dp" />
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/sms_register_terms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/privacy_registration_terms_and"
+                    app:text_color="primary_color"
+                    android:textSize="12sp"
+                    android:layout_marginRight="2dp"/>
+                <com.everymatch.saas.view.BaseTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/privacy_registration_policies"
+                    app:text_color="white_color"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.everymatch.saas.view.BaseButton
+            android:id="@+id/sms_register_register_button"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/button_signup"
+            android:text="@string/register"
+            app:text_color="white_color"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</LinearLayout>

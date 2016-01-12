@@ -1,0 +1,192 @@
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:bg_color="background_color"
+    tools:context="com.everymatch.saas.ui.PeopleFragment">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/fragment_people_event_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@android:id/progress"
+            style="?android:attr/progressBarStyleLargeInverse"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center" />
+
+        <ScrollView
+            android:id="@+id/fragment_people_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/fragment_people_details_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
+                <RelativeLayout
+                    android:id="@+id/fragment_people_image_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/fragment_people_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/vertical_black_gradient" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical">
+
+                        <com.everymatch.saas.view.BaseIconTextView
+                            android:id="@+id/fragment_people_icon_match"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="24dp"
+                            app:iconText="Match"
+                            app:text_color="white_color" />
+
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/fragment_people_text_how_your_match"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:paddingLeft="10dp"
+                            android:textSize="15dp"
+                            app:font="lato_font"
+                            app:text_color="white_color"
+                            app:text_key="how_you_match"
+                            tools:text="82%" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <com.everymatch.saas.view.EventDataRow
+                    android:id="@+id/fragment_people_data_row_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bg_color="white_color"
+                    app:is_detail_visible="false"
+                    app:left_icon_visible="false"
+                    app:left_media_container_visible="false"
+                    app:right_icon_visible="false"
+                    app:right_text_visible="true" />
+
+                <com.everymatch.saas.view.BaseView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:bg_color="fog_color" />
+
+                <com.everymatch.saas.view.EventDataRow
+                    android:id="@+id/fragment_people_data_row_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bg_color="white_color"
+                    app:is_detail_visible="false"
+                    app:left_icon_visible="false"
+                    app:left_media_container_visible="false"
+                    app:right_icon_visible="false"
+                    app:right_text_visible="true" />
+
+                <com.everymatch.saas.view.BaseView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:bg_color="fog_color" />
+
+                <com.everymatch.saas.view.EventDataRow
+                    android:id="@+id/fragment_people_data_row_personality"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bg_color="white_color"
+                    app:is_detail_visible="false"
+                    app:left_icon_visible="false"
+                    app:left_media_container_visible="false"
+                    app:right_icon_visible="false"
+                    app:right_text_visible="true" />
+
+                <com.everymatch.saas.view.BaseView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:bg_color="fog_color" />
+
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/fragment_people_text_about_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:paddingTop="18dp"
+                    android:textSize="16dp"
+                    app:font="lato_font"
+                    app:text_color="night_color"
+                    app:text_key="@string/About" />
+
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/fragment_people_text_about"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:paddingTop="4dp"
+                    android:textSize="13dp"
+                    app:font="lato_font" />
+
+                <FrameLayout
+                    android:visibility="gone"
+                    android:id="@+id/fragment_people_events_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp" />
+
+                <LinearLayout
+                    android:id="@+id/fragment_people_activities_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.everymatch.saas.view.BaseTextView
+                        android:paddingTop="25dp"
+                        android:id="@+id/fragment_people_activity_profile_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="16dp"
+                        app:font="lato_font"
+                        app:text_color="night_color"
+                        app:text_key="@string/Activity_Profile" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+</com.everymatch.saas.view.BaseLinearLayout>

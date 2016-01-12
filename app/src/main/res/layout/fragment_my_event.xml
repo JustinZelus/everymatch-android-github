@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:bg_color="white_color"
+    android:orientation="vertical">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/participants_eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.everymatch.saas.ui.event.MyEventsFragment"
+            android:id="@+id/fragment"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+</com.everymatch.saas.view.BaseLinearLayout>

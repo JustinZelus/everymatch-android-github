@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="220dp"
+    android:layout_height="146dp">
+
+    <com.everymatch.saas.view.BaseLinearLayout
+        android:id="@+id/strip"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        app:bg_color="white_color">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/view_event_text_participants"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/EmTextStyleMeta"
+            app:text_color="moon_color"
+            tools:text="52 participants" />
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/view_event_tex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:textSize="24dp"
+            app:iconText="Match"
+            app:text_color="primary_color" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/view_event_text_match"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            app:text_color="primary_color"
+            tools:text="82%" />
+    </com.everymatch.saas.view.BaseLinearLayout>
+
+    <com.everymatch.saas.view.BaseFrameLayout
+        app:bg_color="fog_color"
+        android:id="@+id/image_wrapper"
+        android:layout_above="@id/strip"
+        android:layout_width="match_parent"
+        android:layout_height="110dp">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/view_event_image_placeholder"
+            android:layout_width="86dp"
+            android:layout_height="80dp"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/view_event_image"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:scaleType="centerCrop" />
+
+    </com.everymatch.saas.view.BaseFrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignBottom="@id/image_wrapper"
+        android:background="@drawable/vertical_black_gradient" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/view_event_text_sub_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/strip"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="14dp"
+        app:font="lato_light"
+        app:text_color="white_color"
+        tools:text="Tue, Jul 14 2015  19:45" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/view_event_text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/view_event_text_sub_title"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="16dp"
+        app:text_color="white_color"
+        tools:text="Wigan vs. Altrincham" />
+
+</RelativeLayout>
+

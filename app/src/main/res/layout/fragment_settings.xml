@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:bg_color="silver_color">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/fragment_settings_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.everymatch.saas.view.BaseLinearLayout
+                    android:id="@+id/moreSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:orientation="vertical"
+                    app:bg_color="fog_color">
+
+                    <com.everymatch.saas.view.EventDataRow
+                        android:id="@+id/edrTimeZone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        app:bg_color="white_color"
+                        app:is_detail_visible="false"
+                        app:left_icon_visible="false"
+                        app:left_media_container_visible="false"
+                        app:row_title="Time Zone"></com.everymatch.saas.view.EventDataRow>
+
+                    <com.everymatch.saas.view.EventDataRow
+                        android:id="@+id/edrUnits"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        app:bg_color="white_color"
+                        app:is_detail_visible="false"
+                        app:left_icon_visible="false"
+                        app:left_media_container_visible="false"
+                        app:row_title="Units"></com.everymatch.saas.view.EventDataRow>
+
+                                       <com.everymatch.saas.view.EventDataRow
+                        android:id="@+id/edrCurrency"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        app:bg_color="white_color"
+                        app:is_detail_visible="false"
+                        app:left_icon_visible="false"
+                        app:left_media_container_visible="false"
+                        app:row_title="Currency"></com.everymatch.saas.view.EventDataRow>
+
+                    <com.everymatch.saas.view.EventDataRow
+                        android:id="@+id/edrLanguage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        app:bg_color="white_color"
+                        app:is_detail_visible="false"
+                        app:left_icon_visible="false"
+                        app:left_media_container_visible="false"
+                        app:row_title="Language"></com.everymatch.saas.view.EventDataRow>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.everymatch.saas.view.EventDataRow
+                            android:id="@+id/edrPushNotifications"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            app:bg_color="white_color"
+                            app:is_detail_visible="false"
+                            app:left_icon_visible="false"
+                            app:left_media_container_visible="false"
+                            app:right_icon_visible="false"
+                            app:row_title="push Notifications"></com.everymatch.saas.view.EventDataRow>
+
+                        <com.rey.material.widget.Switch
+                            android:id="@+id/settingsPushSwitch"
+                            style="@style/Material.Widget.Switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="8dp"
+                            android:checked="false"
+                            android:gravity="center" />
+
+                    </RelativeLayout>
+
+                </com.everymatch.saas.view.BaseLinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragment_settings_holder1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+
+                <com.everymatch.saas.view.FloatingEditTextLayout
+                    android:id="@+id/floatingEditTextUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fl_hint_resource="UserName" />
+
+                <com.everymatch.saas.view.FloatingEditTextLayout
+                    android:id="@+id/floatingEditTextEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fl_hint_resource="Email" />
+
+                <com.everymatch.saas.view.FloatingEditTextLayout
+                    android:id="@+id/floatingEditTextFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fl_hint_resource="First Name" />
+
+                <com.everymatch.saas.view.FloatingEditTextLayout
+                    android:id="@+id/floatingEditTextLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fl_hint_resource="Last Name" />
+
+                <com.everymatch.saas.view.FloatingEditTextLayout
+                    android:id="@+id/floatingEditTextPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fl_hint_resource="Phone" />
+
+            </LinearLayout>
+
+            <com.everymatch.saas.view.BaseLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:padding="20dp"
+                app:bg_color="white_color">
+
+                <com.everymatch.saas.view.BaseButton
+                    android:id="@+id/btnSettingsSaveSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="20dip"
+                    android:layout_weight="1"
+                    android:text="Save Settings"
+                    android:textSize="14sp"
+                    app:text_color="white_color" />
+
+            </com.everymatch.saas.view.BaseLinearLayout>
+
+            <com.everymatch.saas.view.BaseLinearLayout
+                android:id="@+id/providers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:orientation="vertical"
+                app:bg_color="fog_color"
+
+                ></com.everymatch.saas.view.BaseLinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/Buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <com.everymatch.saas.view.BaseButton
+                    android:id="@+id/btnSettingsChangePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginBottom="20dip"
+                    android:layout_weight="1"
+                    android:textSize="14sp"
+                    app:text_color="primary_color"
+                    app:text_key="@string/ChangePassword"
+                    tools:text="Change Password" />
+
+                <com.everymatch.saas.view.BaseButton
+                    android:id="@+id/btnSettingsLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginBottom="20dip"
+                    android:layout_weight="1"
+                    android:textSize="14sp"
+                    app:text_color="negative_color"
+                    app:text_key="@string/Logout"
+                    tools:text="Logout" />
+
+                <ToggleButton
+                    android:id="@+id/btnNetworkToggle"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginBottom="20dip"
+                    android:layout_weight="1"
+                    android:textSize="14sp"
+                    android:textOn="Air"
+                    android:textOff="Local"
+                    tools:text="Local" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</com.everymatch.saas.view.BaseLinearLayout>
+

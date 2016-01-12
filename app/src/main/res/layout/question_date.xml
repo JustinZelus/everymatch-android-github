@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/date_button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="40dip"
+    android:layout_marginRight="40dip"
+    android:background="@drawable/input_field"
+    android:text="@string/select_date"
+    android:textSize="18sp"
+    app:bg="stroke"
+    app:text_color="moon_color" />

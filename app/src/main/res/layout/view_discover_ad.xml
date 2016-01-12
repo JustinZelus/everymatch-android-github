@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="top"
+    android:orientation="vertical">
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/tvAdTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/margin_s"
+        android:layout_marginLeft="@dimen/margin_xs"
+        android:layout_marginRight="@dimen/margin_xs"
+        android:layout_marginBottom="@dimen/margin_xs"
+        tools:text="special offer"
+        style="@style/EmTextStyleNormal"
+        app:text_color="night_color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.everymatch.saas.view.BaseImageView
+            android:layout_marginLeft="@dimen/margin_xs"
+            android:layout_marginRight="@dimen/margin_xs"
+            android:id="@+id/imgAd"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tvAdTitle"
+            android:foregroundGravity="top" />
+    </LinearLayout>
+
+</LinearLayout>

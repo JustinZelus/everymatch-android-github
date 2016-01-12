@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/fragment_registration_button_loading"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:visibility="invisible"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.everymatch.saas.view.BaseTextView
+        android:paddingLeft="@dimen/margin_s"
+        android:layout_gravity="center_vertical|left"
+        style="@style/EmTextStyleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:text_color="white_color"
+        app:text_key="@string/Account_cover_button" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:layout_marginRight="@dimen/margin_s"
+        android:layout_gravity="center_vertical|right"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:visibility="visible"
+        app:indicator="BallPulse"
+        app:indicator_color="@android:color/white" />
+
+</FrameLayout>

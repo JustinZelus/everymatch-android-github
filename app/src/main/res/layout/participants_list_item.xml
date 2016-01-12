@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_event_data_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <com.everymatch.saas.view.BaseImageView
+            android:id="@+id/participants_imageView"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|start"
+            android:gravity="center"
+            tools:text="icon"
+            app:text_color="fog_color" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/participants_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                tools:text="title"
+                app:text_color="night_color"
+                android:textSize="17dp" />
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/participants_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                tools:text="details"
+                app:text_color="moon_color"
+                android:textSize="13dp" />
+
+        </LinearLayout>
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/participants_icon_match"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|end"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            tools:text="icon"
+            app:text_color="fog_color" />
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/participants_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center|end"
+            android:gravity="center"
+            tools:text="icon"
+            app:text_color="fog_color" />
+
+    </LinearLayout>
+</LinearLayout>

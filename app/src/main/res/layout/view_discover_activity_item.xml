@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    app:bg_color="primary_color"
+    android:layout_height="54dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <com.everymatch.saas.view.IconImageView
+        android:id="@+id/view_discover_activity_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="10dp"
+        app:text_color="white_color"
+        app:text_size="20dp"
+        android:clickable="true"
+        android:layout_height="wrap_content"/>
+
+    <com.everymatch.saas.view.BaseTextView
+        android:layout_weight="1"
+        android:id="@+id/view_discover_activity_item_title"
+        tools:text="Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        app:text_color="white_color"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <com.everymatch.saas.view.BaseIconTextView
+        android:id="@+id/view_discover_activity_item_settings_button"
+        app:iconText="Settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="18dp"
+        android:clickable="true"
+        android:paddingTop="3dp"
+        app:text_color="white_color"
+        android:textSize="20dp" />
+</com.everymatch.saas.view.BaseLinearLayout>

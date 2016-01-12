@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="top"
+    android:paddingTop="@dimen/margin_m"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/edrSetupNumberOfSpots"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/margin_xs"
+        android:paddingLeft="@dimen/margin_xs">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:paddingTop="@dimen/margin_xs"
+            android:paddingBottom="@dimen/margin_xs"
+            style="@style/EmTextStyleNormal"
+            tools:text="title"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            app:first_letter_capitalize="true"
+            app:text_color="night_color"
+            app:text_key="@string/Places" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvEventSetupSpotsNumber"
+            tools:text="Unlimited"
+            android:layout_width="wrap_content"
+            app:first_letter_capitalize="true"
+            android:layout_height="wrap_content"
+            style="@style/EmTextStyleNormal"
+            app:text_key="@string/Unlimited" />
+    </LinearLayout>
+
+    <com.everymatch.saas.view.BaseView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:bg_color="fog_color" />
+
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/margin_xs"
+        android:paddingLeft="@dimen/margin_xs">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:paddingTop="@dimen/margin_xs"
+            android:paddingBottom="@dimen/margin_xs"
+            android:id="@+id/edrJoinType"
+            style="@style/EmTextStyleNormal"
+            tools:text="title"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            app:first_letter_capitalize="true"
+            app:text_color="night_color"
+            app:text_key="@string/Pre_Approve_Participation" />
+
+        <com.rey.material.widget.Switch
+            android:id="@+id/SwitchSetupEventJoinType"
+            style="@style/Material.Widget.Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:checked="false"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <com.everymatch.saas.view.BaseView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:bg_color="fog_color" />
+
+
+    <LinearLayout
+        android:id="@+id/edrSetupPrivacy"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/margin_xs"
+        android:paddingLeft="@dimen/margin_xs">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:paddingTop="@dimen/margin_xs"
+            android:paddingBottom="@dimen/margin_xs"
+            style="@style/EmTextStyleNormal"
+            tools:text="title"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            app:first_letter_capitalize="true"
+            app:text_color="night_color"
+            app:text_key="@string/Privacy" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvEventSetupPrivacy"
+            tools:text="public"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/EmTextStyleNormal"
+            app:text_key="@string/Public" />
+    </LinearLayout>
+
+    <com.everymatch.saas.view.BaseView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:bg_color="fog_color" />
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/margin_xs"
+        android:paddingLeft="@dimen/margin_xs">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:paddingTop="@dimen/margin_xs"
+            android:paddingBottom="@dimen/margin_xs"
+            android:id="@+id/edrIsParticipating"
+            style="@style/EmTextStyleNormal"
+            tools:text="title"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            app:first_letter_capitalize="true"
+            app:text_color="night_color"
+            app:text_key="Are_you_participating" />
+
+        <com.rey.material.widget.Switch
+            android:id="@+id/SwitchSetupIsParticipating"
+            style="@style/Material.Widget.Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:checked="true"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <com.everymatch.saas.view.BaseView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:bg_color="fog_color" />
+
+</LinearLayout>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/event_header"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    app:bg_color="primary_color"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/view_discover_header_title_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <com.everymatch.saas.view.IconImageView
+            android:id="@+id/view_discover_header_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:text_color="white_color"
+            app:text_size="20dp" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/view_discover_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            app:text_color="white_color"
+            android:textSize="16dp"
+            android:textStyle="bold"
+
+            tools:text="Title" />
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:paddingTop="3dp"
+            app:text_color="white_color"
+            android:textSize="12dp"
+            app:iconText="Arrowdown" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal">
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/tv_view_my_event_icon"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center"
+            app:text_color="white_color"
+            android:textSize="20dp"
+            app:iconText="Event" />
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/tv_view_people_icon"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center"
+            app:text_color="white_color"
+            android:textSize="20dp"
+            app:iconText="People" />
+
+        <FrameLayout
+            android:animateLayoutChanges="true"
+            android:layout_width="40dp"
+            android:layout_height="match_parent">
+
+            <com.everymatch.saas.view.BaseIconTextView
+                android:id="@+id/tv_view_notification_icon"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:gravity="center"
+                app:text_color="white_color"
+                android:textSize="20dp"
+                app:iconText="NotificationFull" />
+
+        </FrameLayout>
+        <FrameLayout
+            android:animateLayoutChanges="true"
+            android:layout_width="40dp"
+            android:layout_height="match_parent">
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/view_discover_header_menu_more"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="\@"
+            app:text_color="white_color"
+            android:textSize="25dp"
+            app:iconText="MoreV" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+</com.everymatch.saas.view.BaseLinearLayout>

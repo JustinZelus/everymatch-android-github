@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    app:bg_color="background_color">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/fragment_base_sign_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_m"
+            android:paddingRight="@dimen/margin_m">
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/fragment_base_sign_text_title"
+                style="@style/EmTextStyleNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_s"
+                app:first_letter_capitalize="true"
+                app:text_color="night_color"
+                app:text_key="@string/Login.title" />
+
+            <LinearLayout
+                android:id="@+id/fragment_base_sign_provider_button_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/fragment_login_terms_of_use"
+                style="@style/EmTextStyleMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_s"
+                android:gravity="center"
+                app:text_color="night_color"
+                app:text_key="@string/RegisterTnc" />
+
+            <FrameLayout
+                android:id="@+id/fragment_sign_base_or_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_s">
+
+                <com.everymatch.saas.view.BaseView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    app:bg_color="fog_color" />
+
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/fragment_base_sign_text_or"
+                    style="@style/EmTextStyleNormal"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textAllCaps="true"
+                    app:text_color="night_color"
+                    app:text_key="@string/Or"
+                    tools:text="OR" />
+
+            </FrameLayout>
+
+            <com.everymatch.saas.view.BaseTextView
+                style="@style/EmTextStyleNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_s"
+                android:paddingTop="@dimen/margin_s"
+                app:first_letter_capitalize="true"
+                app:text_color="night_color"
+                app:text_key="@string/LoginByEmailSubtitle" />
+
+            <com.everymatch.saas.view.BaseEditText
+                android:id="@+id/fragment_login_edit_text_email"
+                style="@style/EmTextStyleNormal"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginBottom="@dimen/margin_s"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:padding="0dp"
+                android:singleLine="true"
+                app:text_color="night_color" />
+
+            <com.everymatch.saas.view.BaseEditText
+                android:id="@+id/fragment_login_edit_text_password"
+                style="@style/EmTextStyleNormal"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginBottom="@dimen/margin_s"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:padding="0dp"
+                android:singleLine="true"
+                app:text_color="night_color" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginBottom="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_xs">
+
+                <com.everymatch.saas.view.BaseButton
+                    android:id="@+id/fragment_login_button_login"
+                    style="@style/EmTextStyleButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center"
+                    app:text_color="white_color"
+                    app:text_key="@string/SignIn.Login" />
+
+                <include
+                    android:id="@+id/fragment_login_button_loading"
+                    layout="@layout/view_button_loading" />
+
+            </FrameLayout>
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/fragment_login_text_forgot_password"
+                style="@style/EmTextStyleNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_s"
+                android:gravity="center"
+                app:first_letter_capitalize="true"
+                app:text_color="primary_color"
+                app:text_key="@string/Forgot_Password" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</com.everymatch.saas.view.BaseLinearLayout>

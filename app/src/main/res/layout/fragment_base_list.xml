@@ -1,0 +1,81 @@
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:orientation="vertical"
+    app:bg_color="background_color"
+    tools:context=".ui.discover.DiscoverActivity">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/fragment_list_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/dataView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fragment_event_list_top_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.everymatch.saas.view.BaseListView
+                    android:id="@android:id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:padding="10dip"
+                    android:paddingRight="10dp"
+                    android:scrollbars="none"
+                    app:bg_color="background_color"
+                    app:divider_color="background_color"
+                    app:divider_height="10dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <com.everymatch.saas.view.BaseButton
+                    android:id="@+id/fragment_list_action_button_primary"
+                    style="@style/peopleListActionButton"
+                    tools:text="Accept" />
+
+                <com.everymatch.saas.view.BaseButton
+                    android:id="@+id/fragment_list_action_button_secondary"
+                    style="@style/peopleListActionButton"
+                    tools:text="Reject" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.everymatch.saas.view.BaseRelativeLayout
+            android:id="@+id/emptyViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:visibility="gone"
+            app:bg_color="background_color" />
+
+    </RelativeLayout>
+
+
+</com.everymatch.saas.view.BaseLinearLayout>

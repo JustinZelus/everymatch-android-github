@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/fragment_edit_event_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.everymatch.saas.view.BaseScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:bg_color="fog_color">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.everymatch.saas.view.EventDataRow
+                    android:id="@+id/fragment_edit_event_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    app:bg_color="white_color"
+                    app:iconText="icon-Settings"
+                    app:text_key="@string/Settings"
+                    app:text_sub_key="@string/Edit_Setting_Description"
+                    app:left_icon_visible="true"
+                    tools:text="About,Status,Location,Personality,recommendations..."
+                    app:row_title="Profile" />
+
+                <com.everymatch.saas.view.EventDataRow
+                    android:id="@+id/fragment_edit_event_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    app:bg_color="white_color"
+                    app:iconText="icon-Details"
+                    app:text_key="@string/Event_Profile"
+                    app:left_icon_visible="true"
+                    tools:text="About,Status,Location,Personality,recommendations..."
+                    app:row_title="Profile" />
+
+                <com.everymatch.saas.view.EventDataRow
+                    android:id="@+id/fragment_edit_event_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    app:bg_color="white_color"
+                    app:iconText="icon-Location"
+                    app:text_key="@string/Location"
+                    app:left_icon_visible="true"
+                    tools:text="About,Status,Location,Personality,recommendations..."
+                    app:row_title="Profile" />
+
+                <com.everymatch.saas.view.EventDataRow
+                    android:id="@+id/fragment_edit_event_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    app:bg_color="white_color"
+                    app:iconText="icon-Event"
+                    app:text_key="@string/Schedule"
+                    app:left_icon_visible="true"
+                    tools:text="About,Status,Location,Personality,recommendations..."
+                    app:row_title="Profile" />
+
+                <com.everymatch.saas.view.EventDataRow
+                    android:id="@+id/fragment_edit_event_participants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    app:bg_color="white_color"
+                    app:iconText="icon-People"
+                    app:text_key="@string/Participants"
+                    app:left_icon_visible="true"
+                    tools:text="About,Status,Location,Personality,recommendations..."
+                    app:row_title="Profile" />
+
+            </LinearLayout>
+
+        </com.everymatch.saas.view.BaseScrollView>
+    </LinearLayout>
+
+</LinearLayout>

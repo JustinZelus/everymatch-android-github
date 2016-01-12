@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_height="wrap_content">
+
+    <com.everymatch.saas.view.BaseTextView
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:id="@+id/view_list_header_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        app:text_color="primary_color"
+        tools:text="Upcoming events(27)" />
+
+    <com.everymatch.saas.view.BaseIconTextView
+        android:visibility="gone"
+        android:id="@+id/view_list_header_text_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:text_color="primary_color"
+        android:textSize="12dp"
+        app:iconText="Arrowdown" />
+
+</com.everymatch.saas.view.BaseLinearLayout>

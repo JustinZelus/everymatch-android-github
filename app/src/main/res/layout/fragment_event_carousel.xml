@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    tools:context=".ui.discover.DiscoverActivity">
+
+    <com.everymatch.saas.view.ComponentHeader
+        android:layout_marginTop="@dimen/margin_s"
+        android:layout_marginLeft="@dimen/margin_xs"
+        android:layout_marginRight="@dimen/margin_xs"
+        android:layout_marginBottom="@dimen/margin_xs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+
+    <com.everymatch.saas.view.BaseRecyclerView
+        android:id="@+id/fragment_event_carousel_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="146dp" />
+
+</LinearLayout>

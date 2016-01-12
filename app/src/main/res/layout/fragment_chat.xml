@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:bg_color="white_color">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listViewChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/relativeLayout6"
+            android:layout_alignParentTop="true"
+            android:choiceMode="singleChoice"
+            android:divider="@null" />
+
+        <com.everymatch.saas.view.BaseRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/relativeLayout6"
+            android:layout_below="@+id/listViewChat"
+            android:layout_centerHorizontal="true"
+            app:bg_color="fog_color"></com.everymatch.saas.view.BaseRelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/relativeLayout7">
+
+                <com.everymatch.saas.view.BaseEditText
+                    android:id="@+id/et_view_chat_send"
+                    style="@style/editTextChatStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:focusable="true"
+                    android:gravity="top"
+                    android:minHeight="40dp"
+                    android:padding="10dp"
+                    android:singleLine="false" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:paddingLeft="10dp">
+
+                <com.everymatch.saas.view.BaseIconTextView
+                    android:id="@+id/tv_view_chat_send"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:textSize="25sp"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
+                    app:bg_color="white_color"
+                    app:iconText="Arrowright" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@android:id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_material_light"
+            android:clickable="true">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+    </RelativeLayout>
+
+</com.everymatch.saas.view.BaseLinearLayout>

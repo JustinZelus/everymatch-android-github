@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignActivity$WalkthroughFragment">
+
+    <!--
+        <com.android.volley.toolbox.NetworkImageView
+        <com.everymatch.saas.view.BlurImageView
+    -->
+    <com.everymatch.saas.view.BlurImageView
+        android:id="@+id/background_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:background="#70000000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        tools:text="Title"
+        android:textSize="30sp"
+        app:font="lato_font"
+        app:text_color="white_color" />
+
+    <com.everymatch.saas.view.IconImageView
+        android:id="@+id/icon_image"
+        android:layout_width="120dp"
+        app:text_color="white_color"
+        app:text_size="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+         />
+
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/subtitle_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="120dp"
+        android:gravity="center"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        tools:text="text text text text text text text text text text text"
+        android:textSize="16sp"
+        app:font="lato_font"
+        app:text_color="white_color" />
+
+</RelativeLayout>

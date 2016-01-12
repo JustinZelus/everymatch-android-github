@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/yes_no_layout"
+    android:layout_margin="7dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.everymatch.saas.view.BaseIconTextView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="44sp"
+        app:text_color="moon_color"
+        />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        tools:text="yes"
+        app:text_key="@string/Yes"
+        android:textSize="14sp"
+        android:paddingBottom="4dip"
+        app:text_color="moon_color"
+        />
+
+
+
+</RelativeLayout>

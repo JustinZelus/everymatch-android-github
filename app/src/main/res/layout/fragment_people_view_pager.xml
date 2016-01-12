@@ -1,0 +1,55 @@
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:bg_color="white_color"
+    tools:context="com.everymatch.saas.ui.PeopleViewPagerFragment">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/participants_eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/sliding_tabs"
+                style="@style/Base.Widget.Design.TabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                app:tabGravity="fill"
+                app:tabMaxWidth="0dp"
+                app:tabMode="scrollable" />
+
+            <com.everymatch.saas.view.BaseView
+                android:id="@+id/tab_view"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                app:bg_color="fog_color" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_people_view_page_empty_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+</com.everymatch.saas.view.BaseLinearLayout>

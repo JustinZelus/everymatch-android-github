@@ -1,0 +1,31 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.everymatch.saas.ui.PeopleListFragment">
+
+    <com.everymatch.saas.view.BaseLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:bg_color="silver_color"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="40dp">
+
+        <com.everymatch.saas.view.BaseListView
+            android:id="@+id/people_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:bg_color="white_color"
+            android:dividerHeight="10dp" />
+    </com.everymatch.saas.view.BaseLinearLayout>
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/people_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="12dp"
+        android:textSize="16dp" />
+</FrameLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.everymatch.saas.view.BaseTextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:text_color="morning_color"
+        android:textSize="18dp"
+        app:text_key="@string/No_Events" />
+
+</com.everymatch.saas.view.BaseFrameLayout>

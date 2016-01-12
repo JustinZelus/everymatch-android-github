@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    xmlns:rsb="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip">
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/value_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="32sp"
+        app:text_color="primary_color" />
+
+    <!--
+        rsb:activeColor="@color/primary"
+        rsb:defaultColor="@color/primary"
+
+     -->
+    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        rsb:barHeight="1dip"
+        rsb:barHeightInRange="3dip"
+        rsb:showLabels="false"
+        rsb:valuesAboveThumbs="false" />
+    <!--
+        rsb:thumbDisabled="@mipmap/ic_launcher"
+        rsb:thumbNormal="@mipmap/ic_launcher"
+        rsb:thumbPressed="@mipmap/ic_launcher"
+    -->
+
+    <!--
+        <com.appyvet.rangebar.RangeBar
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/rangebar"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            custom:tickStart="5"
+            custom:tickInterval="1"
+            custom:tickEnd="10"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+    -->
+
+
+</LinearLayout>

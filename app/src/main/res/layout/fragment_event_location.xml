@@ -1,0 +1,56 @@
+<com.everymatch.saas.view.BaseLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:bg_color="white_color"
+    android:orientation="vertical"
+    tools:context="com.everymatch.saas.ui.event.EventLocationFragment">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/event_location_eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="380dp" >
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="380dp"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/event_location_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/event_location_address_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:text_color="fog_color"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+</com.everymatch.saas.view.BaseLinearLayout>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/typeLocationHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dip"
+        android:layout_marginLeft="@dimen/margin_s"
+        android:layout_marginRight="@dimen/margin_s"
+        android:gravity="center"
+        android:minHeight="50dp"
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/location_input"
+            style="@style/EmTextStyleNormal"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="0.9"
+            android:background="@null"
+            android:dropDownWidth="match_parent"
+            android:gravity="center"
+            android:hint="@string/Type_Name_Or_Location"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/margin_xs"
+            android:singleLine="true" />
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/set_loction_button"
+            android:layout_width="50dip"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="4dip"
+            android:src="@drawable/ic_action_a_location"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="0.9" />
+
+    <ViewAnimator
+        android:id="@+id/viewAnimator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/tvSetRadiusStageOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="7dp"
+                android:visibility="gone"
+                app:text_color="primary_color"
+                app:text_key="@string/Set_specific_area"
+                tools:text="Set_specific_area" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlSelectRadiusStageTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp">
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/area_radius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                app:text_color="moon_color"
+                app:text_key="@string/Set_location_radius"
+                tools:text="Set_location_radius" />
+
+            <RelativeLayout
+                android:id="@+id/radiusWrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+
+                >
+
+                <com.everymatch.saas.view.BaseEditText
+                    android:id="@+id/radius_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dip"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:minWidth="80dp"
+                    android:textSize="18sp" />
+
+
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/tvDistanceUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_xs"
+                    android:layout_toRightOf="@id/radius_edittext"
+                    android:text="km" />
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ViewAnimator>
+
+    <!-- here we have some hardcoded but it's gone anyway... -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.everymatch.saas.view.BaseButton
+            android:id="@+id/button_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/radius_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100" />
+
+        <com.everymatch.saas.view.BaseButton
+            android:id="@+id/button_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-" />
+    </LinearLayout>
+
+</LinearLayout>

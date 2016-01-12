@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SignActivity"
+    >
+
+    <item android:id="@+id/action_add_profile_picture_from_camera"
+        android:title="@string/add_profile_picture_from_camera"
+        android:icon="@drawable/ic_action_camera"
+        />
+
+    <item android:id="@+id/action_add_profile_picture_from_gallery"
+        android:title="@string/add_profile_picture_from_gallery"
+        android:icon="@drawable/ic_action_camera"
+        />
+
+</menu>

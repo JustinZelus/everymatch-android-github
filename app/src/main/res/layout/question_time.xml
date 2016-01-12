@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal|top"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/llWheelsHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.everymatch.saas.view.WheelView
+                android:id="@+id/wheelHour"
+                style="@style/WheelStyle" />
+
+            <TextView
+                android:id="@+id/tvDotsLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text=" : " />
+
+            <com.everymatch.saas.view.WheelView
+                android:id="@+id/wheelMin"
+                style="@style/WheelStyle" />
+
+            <TextView
+                android:id="@+id/tvDotsRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text=" : " />
+
+            <com.everymatch.saas.view.WheelView
+                android:id="@+id/wheelSec"
+                style="@style/WheelStyle"
+                android:fillViewport="false" />
+        </LinearLayout>
+
+        <com.everymatch.saas.view.BaseTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textSize="25sp"
+            app:text_color="primary_color"
+            app:text_key="@string/Save" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

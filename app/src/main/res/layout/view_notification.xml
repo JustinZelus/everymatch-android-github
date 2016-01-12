@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlNotificationHolder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginLeft="@dimen/margin_xs"
+        android:layout_marginRight="@dimen/margin_s">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_xs"
+            android:layout_marginTop="@dimen/margin_xs">
+
+            <ImageView
+                android:id="@+id/imgNotification"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_xs" />
+
+            <TextView
+                android:id="@+id/tvNotificationMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/imgNotification"
+                android:layout_toRightOf="@+id/imgNotification"
+                tools:text="content here" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeLayout8"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_xs">
+
+
+            <com.everymatch.saas.view.BaseIconTextView
+                android:id="@+id/tvNotificationStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="\@"
+                android:textSize="16dp"
+                app:text_color="white_color" />
+
+            <TextView
+                android:id="@+id/tvAgo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/tvNotificationStatus"
+                android:layout_toRightOf="@+id/tvNotificationStatus"
+                tools:text="ago" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

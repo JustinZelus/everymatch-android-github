@@ -1,0 +1,59 @@
+<com.everymatch.saas.view.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:bg_color="background_color"
+    tools:context=".ui.discover.DiscoverActivity">
+
+    <include
+        android:id="@+id/fragment_discover_header"
+        layout="@layout/view_discover_header" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="54dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:id="@+id/fragment_discover_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/margin_s"/>
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@android:id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_material_light"
+            android:clickable="true">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_discover_view_no_data_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    </FrameLayout>
+
+    <include
+        android:id="@+id/fragment_discover_activities_popup"
+        layout="@layout/view_activities_popup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</com.everymatch.saas.view.BaseFrameLayout>

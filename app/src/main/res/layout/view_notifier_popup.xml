@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_height="wrap_content"
+    android:background="#abcdef"
+    android:padding="@dimen/margin_xs"
+    android:minHeight="54dp">
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/view_notifier_popup_text_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingRight="@dimen/margin_xs"
+        android:ellipsize="end"
+        style="@style/EmTextStyleNormal"
+        app:text_color="night_color"
+        tools:text="Bla bla bla" />
+
+    <com.everymatch.saas.view.PieProgressView
+        android:id="@+id/view_notifier_popup_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
+
+</com.everymatch.saas.view.BaseLinearLayout>

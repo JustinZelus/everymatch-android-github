@@ -1,0 +1,110 @@
+<resources>
+    <string name="activity_profile">Activity Profile</string>
+    <string name="try_again">Try Again</string>
+    <string name="connection_lost_title">Connection\nLost</string>
+    <string name="connection_lost_text">Seems like we lost connection with the servers. This might happen duo
+        to weak Wi-Fi signal or your provider\'s services.</string>
+
+    <string name="not_mandatory_questions_screen_title">Anything else?</string>
+    <string name="question_location_screen_area_radius">Area radius</string>
+    <string name="question_location_hint">Type location</string>
+
+    <string name="register_button">Register</string>
+    <string name="login_button">Log in</string>
+
+    <string name="login_screen_title">Login</string>
+    <string name="password_recovery_title">Recover Your\nPassword</string>
+    <string name="login_screen_subtitle">Signin with your existing account</string>
+    <string name="login_screen_register"></string>
+    <string name="login_screen_bottom">Login using email</string>
+    <string name="type_your_email">Type your email</string>
+    <string name="register_screen_title">Register</string>
+    <string name="register_screen_subtitle">Signup to create account</string>
+    <string name="register_screen_register">By submitting this form you agree to our\nPrivacy and Terms and Condition policies</string>
+    <string name="register_screen_bottom">Alternatively,\nRegister using email</string>
+    <string name="register_screen_with_email_title">Create Account</string>
+    <string name="privacy_registration_first_line">By submitting this form you agree to our</string>
+    <string name="privacy_registration_privacy">Privacy</string>
+    <string name="privacy_registration_and">and</string>
+    <string name="privacy_registration_terms_and">Terms and Conditions</string>
+    <string name="privacy_registration_policies">policies</string>
+    <string name="email">Type your email</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="first_name">Type your first name</string>
+    <string name="last_name">Type your last name</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="submit">SUBMIT</string>
+
+    <string name="login_with_email_screen_title">Login</string>
+    <string name="login_with_email_screen_forgot_password">Forgot password</string>
+
+    <string name="select_date">Select date</string>
+    <string name="select_time">Select time</string>
+
+    <string name="add_profile_picture_add_picture">Add picture</string>
+    <string name="add_profile_picture_title">Choose image source</string>
+    <string name="add_profile_picture_from_gallery">Choose from photos</string>
+    <string name="add_profile_picture_from_camera">Use camera</string>
+
+    <string name="done">DONE</string>
+    <string name="next">NEXT</string>
+    <string name="start">START</string>
+    <string name="replace">REPLCAE</string>
+    <string name="save">SAVE</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="loading_web_page_message">Loading...</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="recover_please_enter">Please enter the registration email\naddress. The recovery instructions will\n be sent to.</string>
+    <string name="enter_phone">Enter your phone number</string>
+    <string name="coming">Coming</string>
+    <string name="manage_participants">Manage Participants</string>
+    <string name="view_all">View all</string>
+    <string name="about">About</string>
+    <string name="cahnge_picture">Change picture</string>
+    <string name="edit">Edit</string>
+    <string name="title_activity_event">EventActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="demo_min_label">Min</string>
+    <string name="demo_max_label">Max</string>
+    
+    <!-- Discover -->
+    <string name="event_participants_format">%s Participants</string>
+    <string name="event_participant_format">%s Participant</string>
+    <string name="suggested_events">Suggested events</string>
+    <string name="people_matches">People matches</string>
+    <string name="add_activity">Add Activity</string>
+    <string name="discover_no_matches_yet_title">No Matches Yet</string>
+    <string name="discover_no_matches_yet_text">Currently there\'s no results matching\nyour profile details. You may update your\n
+    profile parameters to broaden the match\n or start your event.</string>
+    <string name="discover_update_profile">Update Profile</string>
+    <string name="discover_create_your_event">Create Your Event</string>
+    <string name="loadMoreMessages">Load more Messages</string>
+    <string name="discover_matches_title">Discover Matches</string>
+
+    <!--INBOX  -->
+    <string name="reply">Reply</string>
+    <string name="archive">Archive</string>
+    <string name="report_abuse">Report abuse</string>
+
+    <!--SETUP QUESTIONS  -->
+    <string name="pleaseSelectSpotsNumber">Please Select The Number Of \nSpots In Your Event</string>
+    <string name="pleaseSelectSpots">Please Select \n In Your Event</string>
+    <string name="pick_image_intent_text">Pick</string>
+
+    <item type="id" name="TAG_1"/>
+    <item type="id" name="TAG_2"/>
+    <item type="id" name="TAG_3"/>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="No">No</string>
+
+</resources>

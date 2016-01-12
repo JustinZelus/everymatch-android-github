@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/view_component_header_text_left"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="16dp"
+        app:text_color="night_color" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/view_component_header_text_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        app:font="lato_font"
+        app:text_color="primary_color" />
+</merge>

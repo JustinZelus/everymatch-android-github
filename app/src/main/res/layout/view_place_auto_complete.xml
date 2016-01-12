@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseTextView
+    android:id="@android:id/text1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="@dimen/margin_xs"
+    style="@style/EmTextStyleNormal"
+    app:text_color="moon_color"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"/>
+

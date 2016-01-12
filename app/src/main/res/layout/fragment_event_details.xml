@@ -1,0 +1,71 @@
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:bg_color="white_color"
+    android:orientation="vertical"
+    tools:context="com.everymatch.saas.ui.event.EventDetailsFragment">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/event_details_eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.everymatch.saas.view.EventDataRow
+                android:id="@+id/row_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.everymatch.saas.view.BaseView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:bg_color="fog_color" />
+
+            <com.everymatch.saas.view.EventDataRow
+                android:id="@+id/row_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.everymatch.saas.view.BaseView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:bg_color="fog_color" />
+
+            <com.everymatch.saas.view.EventDataRow
+                android:id="@+id/row_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.everymatch.saas.view.BaseView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:bg_color="fog_color" />
+
+            <com.everymatch.saas.view.EventDataRow
+                android:id="@+id/row_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.everymatch.saas.view.BaseView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:bg_color="fog_color" />
+
+           <!-- <com.everymatch.saas.view.EventDataRow
+                android:id="@+id/row_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />-->
+        </LinearLayout>
+    </ScrollView>
+
+</com.everymatch.saas.view.BaseLinearLayout>
