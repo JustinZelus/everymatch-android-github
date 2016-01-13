@@ -23,7 +23,7 @@
         rsb:defaultColor="@color/primary"
 
      -->
-    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+    <com.everymatch.saas.view.RangeSeekBar
         android:id="@+id/seekbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

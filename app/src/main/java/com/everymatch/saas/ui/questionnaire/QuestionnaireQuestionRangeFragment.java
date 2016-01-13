@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.util.EMLog;
-import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
+import com.everymatch.saas.view.RangeSeekBar;
 
 /**
  * A placeholder fragment containing a simple view.

@@ -19,6 +19,7 @@ import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseEvents;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.base.BaseEventListFragment;
 import com.everymatch.saas.ui.dialog.EventTypeSelectionDialog;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
@@ -26,13 +27,14 @@ import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.util.Utils;
 
+import java.io.Serializable;
 import java.util.Map;
 
 
 /**
  * My events
  */
-public class MyEventsFragment extends BaseEventListFragment implements EmptyViewFactory.ButtonListener{
+public class MyEventsFragment extends BaseEventListFragment implements EmptyViewFactory.ButtonListener {
 
     public static final String TAG = MyEventsFragment.class.getSimpleName();
     private static final int CODE_EVENT_SELECTION = 1212;
@@ -86,7 +88,7 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
             }
         }
 
-        if (!mHasEventsAtAll){
+        if (!mHasEventsAtAll) {
             mCurrentEventKey = EventType.UPCOMING; // Set default to upcoming
         }
     }
@@ -114,7 +116,7 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
         initSearch();
     }
 
-    private void initSearch(){
+    private void initSearch() {
         mEventHeader.getEditTitle().addTextChangedListener(this);
     }
 
@@ -252,6 +254,15 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
 
             // Initialize pagination data for the next type
             mIsNoMoreResults = false;
+        }
+    }
+
+    @Override
+    protected void handleBroadcast(Serializable eventObject, String eventName) {
+        // super.handleBroadcast(eventObject, eventName);
+        if (PusherManager.PUSHER_EVENT_MY_EVENT_UPDATE.equals(eventName)) {
+            setEventTypeTitle(mEventMap.get(mCurrentEventKey));
+            mAdapter.refreshData(mEventMap.get(mCurrentEventKey).getEvents());
         }
     }
 
