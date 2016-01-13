@@ -8,6 +8,7 @@ import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.server.Data.DataChannelName;
 import com.everymatch.saas.server.Data.DataChatMessage;
+import com.everymatch.saas.server.Data.DataEvent;
 import com.everymatch.saas.server.Data.DataPeopleHolder;
 import com.everymatch.saas.server.responses.ResponseGetUser;
 import com.everymatch.saas.util.EMLog;
@@ -20,6 +21,8 @@ import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionState;
 import com.pusher.client.connection.ConnectionStateChange;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +32,7 @@ import java.util.Map;
  * Created by PopApp_laptop on 23/08/2015.
  */
 public class PusherManager implements ConnectionEventListener {
+    public final String TAG = getClass().getName();
 
     public static final String ACTION_PUSHER_EVENT = "action.pusher.event";
     public static final String EXTRA_PUSHER_EVENT_DATA = "extra.pusher.event.data";
@@ -140,7 +144,7 @@ public class PusherManager implements ConnectionEventListener {
 
             data = handleEventData(data);
 
-            Serializable  serializable = pusherDataToObject(data, eventName);
+            Serializable serializable = pusherDataToObject(data, eventName);
 
             if (serializable != null) {
                 /* Events that should only update data.*/
@@ -180,6 +184,27 @@ public class PusherManager implements ConnectionEventListener {
                 if (PUSHER_EVENT_PROFILES.equals(eventName)) {
                     ds.getUser().profiles = (ResponseGetUser.Profiles) serializable;
                     //return;
+                }
+
+                if (PUSHER_EVENT_MY_EVENT_UPDATE.equals(eventName)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(data);
+                        ArrayList<String> filters = new Gson().fromJson(jsonObject.getJSONArray("filters").toString(), new TypeToken<ArrayList<String>>() {
+                        }.getType());
+                        DataEvent dataEvent = new Gson().fromJson(jsonObject.getJSONObject("data").toString(), DataEvent.class);
+                        String action = jsonObject.getString("action");
+
+                        if (action.equals("create")) {
+                            if (filters != null && dataEvent != null) {
+                                for (String filter : filters) {
+                                    ds.getUser().addOrUpdateEventIntoMap(dataEvent, filter);
+                                }
+                            }
+                        }
+
+                    } catch (Exception ex) {
+                        EMLog.e(TAG, ex.getMessage());
+                    }
                 }
 
                 Intent intent = new Intent(ACTION_PUSHER_EVENT);
@@ -239,6 +264,13 @@ public class PusherManager implements ConnectionEventListener {
                 }.getType());
                 serializable = channelNames;
                 break;
+
+            case PUSHER_EVENT_MY_EVENT_UPDATE:
+                // no need to use it: we will take the Json
+                serializable = new Serializable() {
+                };
+                break;
+
 
         }
 
