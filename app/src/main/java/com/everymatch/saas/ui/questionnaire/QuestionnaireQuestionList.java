@@ -73,6 +73,8 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
         }
 
         setTitleEnabled(selectedAnswers.size() > 0);
+        String answers = mQuestion.getAnswerValuesByAnswerIds(getSelectedIds());
+        setAnswer(answers);
     }
 
     private void setRegularRow(DataAnswer answer, EventDataRow edr) {

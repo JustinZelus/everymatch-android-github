@@ -87,7 +87,7 @@ public class QuestionnaireNotMandatoryFragment extends BaseFragment
     }
 
     private void showQuestionNumber() {
-        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_EVENT) {
+        if  (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_EVENT) {
             int mandatoryCount = 0;
             for (QuestionAndAnswer qaa : mActivity.mQuestionsAndAnswers) {
                 if (qaa.question.mandatory)

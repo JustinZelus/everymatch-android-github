@@ -53,7 +53,8 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createEventMap();
+        mEventMap = ds.getUser().getAllEvents();
+        mCurrentEventKey = getCurrentEventKey();
     }
 
     /**
@@ -63,25 +64,24 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
      * HOSTING
      * any thing that contains events
      */
-    private void createEventMap() {
-
-        mEventMap = ds.getUser().getAllEvents();
+    private String getCurrentEventKey() {
+        String answer = "";
 
         if (mEventMap.containsKey(EventType.UPCOMING) && mEventMap.get(EventType.UPCOMING).count > 0) {
-            mCurrentEventKey = EventType.UPCOMING;
+            answer = EventType.UPCOMING;
             mHasEventsAtAll = true;
         }
 
-        if (mCurrentEventKey == null && mEventMap.containsKey(EventType.HOSTING) &&
+        if (answer == null && mEventMap.containsKey(EventType.HOSTING) &&
                 mEventMap.get(EventType.HOSTING).count > 0) {
-            mCurrentEventKey = EventType.HOSTING;
+            answer = EventType.HOSTING;
             mHasEventsAtAll = true;
         }
 
-        if (mCurrentEventKey == null) {
+        if (answer == null) {
             for (Map.Entry<String, DataEventHolder> entry : mEventMap.entrySet()) {
                 if (entry.getValue().count > 0) {
-                    mCurrentEventKey = entry.getKey();
+                    answer = entry.getKey();
                     mHasEventsAtAll = true;
                     break;
                 }
@@ -89,8 +89,10 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
         }
 
         if (!mHasEventsAtAll) {
-            mCurrentEventKey = EventType.UPCOMING; // Set default to upcoming
+            answer = EventType.UPCOMING; // Set default to upcoming
         }
+
+        return answer;
     }
 
     @Override
@@ -260,9 +262,19 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
     @Override
     protected void handleBroadcast(Serializable eventObject, String eventName) {
         // super.handleBroadcast(eventObject, eventName);
-        if (PusherManager.PUSHER_EVENT_MY_EVENT_UPDATE.equals(eventName)) {
-            setEventTypeTitle(mEventMap.get(mCurrentEventKey));
+         if (PusherManager.PUSHER_EVENT_MY_EVENT_UPDATE.equals(eventName)) {
+
+            if (ds.getUser().getTotalEventsCount() > 0)
+                mTopContainer.setVisibility(View.VISIBLE);
+
+            //check if event
+            if (mCurrentEventKey != getCurrentEventKey()) {
+                mCurrentEventKey = getCurrentEventKey();
+                setEventTypeTitle(mEventMap.get(mCurrentEventKey));
+            }
+
             mAdapter.refreshData(mEventMap.get(mCurrentEventKey).getEvents());
+
         }
     }
 

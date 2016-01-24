@@ -98,7 +98,12 @@ public class ServerConnector {
             case Request.Method.GET:
             case Request.Method.DELETE:
             case Request.Method.PATCH:
-                url = url.replaceAll(" ", "%20");
+                // my patch here (idan) - did it because unsave event base on delete with body
+                if (!Utils.isEmpty(baseRequest.getEncodedBody()) && GsonRequest.CONTENT_TYPE_X_URL_ENCODED.equals(baseRequest.getBodyContentType())) {
+                    body = "=" + baseRequest.getEncodedBody();
+                } else {
+                    url = url.replaceAll(" ", "%20");
+                }
                 break;
         }
 

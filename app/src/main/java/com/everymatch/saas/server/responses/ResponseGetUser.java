@@ -19,6 +19,7 @@ import com.everymatch.saas.util.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Dor on 7/27/15.
@@ -172,6 +173,17 @@ public class ResponseGetUser extends BaseResponse {
         return my_events;
     }
 
+    public int getTotalEventsCount() {
+        int answer = 0;
+        for (Map.Entry<String, DataEventHolder> entry : getAllEvents().entrySet()) {
+            if (entry.getValue().count > 0) {
+                answer += entry.getValue().count;
+                break;
+            }
+        }
+        return answer;
+    }
+
     public DataEventHolder getEventHolderByKey(String key) {
         DataEventHolder dataEventHolder = my_events.get(key);
 
@@ -207,26 +219,43 @@ public class ResponseGetUser extends BaseResponse {
         dataEventHolder.addEvent(newDataEvent);
     }
 
+    public void removeEventFromMap(DataEvent newDataEvent, String fromKey) {
+        DataEventHolder dataEventHolder = my_events.get(fromKey);
 
-    /*this method return's only user answered activities*/
-    public ArrayList<DataActivity> getUserActivities() {
-        ArrayList<DataActivity> answer = new ArrayList<>();
+        if (dataEventHolder != null) {
 
-        // Get activities from local store
-        DataActivity[] activities = DataStore.getInstance().getApplicationData().getActivities();
-
-        // Filter only the ones that the user attached to
-        String[] activityIds = DataStore.getInstance().getUser().getAnswerActivityProfile();
-
-        for (DataActivity dataActivity : activities) {
-            for (String activityId : activityIds) {
-                if (activityId.equals(dataActivity.client_id)) {
-                    answer.add(dataActivity);
+            int i = 0;
+            for (DataEvent dataEvent : dataEventHolder.getEvents()) {
+                if (dataEvent._id.equals(newDataEvent._id)) {
+                /* here we updating the old event */
+                    dataEventHolder.getEvents().remove(i);
+                    return;
                 }
+                i++;
             }
         }
-
-        return answer;
     }
 
-}
+
+    /*this method return's only user answered activities*/
+        public ArrayList<DataActivity> getUserActivities () {
+            ArrayList<DataActivity> answer = new ArrayList<>();
+
+            // Get activities from local store
+            DataActivity[] activities = DataStore.getInstance().getApplicationData().getActivities();
+
+            // Filter only the ones that the user attached to
+            String[] activityIds = DataStore.getInstance().getUser().getAnswerActivityProfile();
+
+            for (DataActivity dataActivity : activities) {
+                for (String activityId : activityIds) {
+                    if (activityId.equals(dataActivity.client_id)) {
+                        answer.add(dataActivity);
+                    }
+                }
+            }
+
+            return answer;
+        }
+
+    }

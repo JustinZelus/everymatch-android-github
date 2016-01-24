@@ -3,7 +3,6 @@ package com.everymatch.saas.ui.user;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.server.Data.DataAnswer;
@@ -29,9 +28,7 @@ public class UserActivity extends BaseActivity implements EventListener,
         PeopleFragment.Callbacks, MeFragment.MeCallback, MyProfileFragment.MyProfileCallbacks {
 
     private static final int REQUEST_ANSWER_QUESTION = 123;
-
     private static final String TAG = UserActivity.class.getSimpleName();
-
     private static final String EXTRA_USER_ID = "extra.user.id";
     private static final String EXTRA_SHOW_MY_PROFILE_FRAGMENT = "extra.show.my.profile.fragment";
 
@@ -60,7 +57,6 @@ public class UserActivity extends BaseActivity implements EventListener,
     }
 
     private void showNextFragment() {
-
         Intent intent = getIntent();
 
         if (intent != null && intent.hasExtra(EXTRA_USER_ID)) {
@@ -78,10 +74,7 @@ public class UserActivity extends BaseActivity implements EventListener,
 
     @Override
     public void onEventClick(DataEvent event) {
-        if (event._id == null) {
-            Toast.makeText(UserActivity.this, "No Id", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        event._id = event.entity._id;
         EventActivity.startActivity(this, event);
     }
 

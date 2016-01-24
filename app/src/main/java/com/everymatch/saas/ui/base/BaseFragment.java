@@ -27,6 +27,7 @@ import com.everymatch.saas.server.ServerConnector;
 import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.dialog.NetworkErrorMessageDialog;
 import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.view.NoConnectionView;
 
 import java.io.Serializable;
@@ -39,6 +40,7 @@ import java.io.Serializable;
 public abstract class BaseFragment extends Fragment implements NoConnectionView.Callbacks {
 
     private final String TAG = getClass().getSimpleName();
+    protected IconManager im;
     /**
      * Dialog for modal blocking
      */
@@ -56,6 +58,12 @@ public abstract class BaseFragment extends Fragment implements NoConnectionView.
     private IntentFilter intentFilter;
 
     private View mDimView;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        im = IconManager.getInstance(activity);
+    }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override

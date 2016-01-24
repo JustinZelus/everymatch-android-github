@@ -16,6 +16,7 @@ import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.PopupMenuItem;
 import com.everymatch.saas.server.Data.DataConversation;
 import com.everymatch.saas.server.Data.DataParticipant;
+import com.everymatch.saas.ui.chat.ConversationsFragment;
 import com.everymatch.saas.ui.discover.DiscoverFragment;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseIconTextView;
@@ -31,7 +32,8 @@ import java.util.List;
  */
 public class AdapterConversations extends BaseAdapter {
 
-    public ArrayList<DataConversation> data;
+    public ArrayList<DataConversation> data, filtered;
+    private String conversationType = ConversationsFragment.CONVERSATION_TYPE_ACTIVE;
     Context con;
     LayoutInflater inflater;
     private ListPopupWindow mMorePopup;
@@ -40,6 +42,7 @@ public class AdapterConversations extends BaseAdapter {
 
     public AdapterConversations(ArrayList<DataConversation> data, Context con, inboxCallback callback) {
         this.data = data;
+        filtered = new ArrayList<>();
         this.con = con;
         this.callback = callback;
         inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,12 +50,12 @@ public class AdapterConversations extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        return filtered.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return data.get(i);
+        return filtered.get(i);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class AdapterConversations extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        DataConversation item = data.get(i);
+        DataConversation item = filtered.get(i);
 
         View v = view;
         if (view == null)
@@ -130,7 +133,7 @@ public class AdapterConversations extends BaseAdapter {
             }
             // now we've got the participant!
             //set the name
-            if (participant != null){
+            if (participant != null) {
                 tvUser.setText(participant.first_name + " " + participant.last_name);
             }
 
@@ -161,18 +164,26 @@ public class AdapterConversations extends BaseAdapter {
         return v;
     }
 
-    /*
-        public static Date getDate(DataDate dataDate) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.YEAR, dataDate.year);
-            cal.set(Calendar.MONTH, dataDate.month);
-            cal.set(Calendar.DAY_OF_MONTH, dataDate.day);
-            cal.set(Calendar.HOUR_OF_DAY, dataDate.hour);
-            cal.set(Calendar.MINUTE, dataDate.minute);
-            cal.set(Calendar.SECOND, dataDate.second);
-            return cal.getTime();
+    public void add(DataConversation dataConversation) {
+        data.add(dataConversation);
+        refresh(conversationType);
+    }
+
+    public void add(List<DataConversation> data) {
+        data.addAll(data);
+        refresh(conversationType);
+    }
+
+    public void refresh(String conversationType) {
+        this.conversationType = conversationType;
+        filtered.clear();
+        for (DataConversation conversation : data) {
+            if (conversation.status.equals(this.conversationType))
+                filtered.add(conversation);
         }
-    */
+        notifyDataSetChanged();
+    }
+
     public interface inboxCallback {
         void onReplyClick(int pos);
 

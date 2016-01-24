@@ -1,9 +1,11 @@
 package com.everymatch.saas.server.Data;
 
+import java.io.Serializable;
+
 /**
  * Created by Dacid on 30/06/2015.
  */
-public class DataActivity {
+public class DataActivity implements Serializable {
     public int _id;
     public boolean is_default;
     public String locked_by;
@@ -28,7 +30,7 @@ public class DataActivity {
     public String image_url;
     public String text_description;
 
-    public class DataUrl {
+    public class DataUrl implements Serializable {
         public String url;
     }
 }

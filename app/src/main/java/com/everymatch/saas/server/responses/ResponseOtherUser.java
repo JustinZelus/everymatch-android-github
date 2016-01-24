@@ -4,12 +4,13 @@ import com.everymatch.saas.server.Data.DataActivity;
 import com.everymatch.saas.server.Data.DataEvent;
 import com.everymatch.saas.server.Data.DataLocation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by PopApp_laptop on 31/08/2015.
  */
-public class ResponseOtherUser extends BaseResponse {
+public class ResponseOtherUser extends BaseResponse implements Serializable {
     public DataActivity activities[];
     public ArrayList<DataEvent> events;
     public DataLocation location;

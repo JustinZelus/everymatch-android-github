@@ -139,5 +139,8 @@
     <string name="Inbox">Inbox</string>
     <string name="Inbox_Title">Inbox_Title</string>
     <string name="Profile_Label">Profile_Label</string>
+    <string name="Pending">Pending</string>
+    <string name="Saved">Saved</string>
+    <string name="You_Match">You_Match</string>
 
 </resources>

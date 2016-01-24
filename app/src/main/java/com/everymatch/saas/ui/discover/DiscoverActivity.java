@@ -139,9 +139,9 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
         super.onActivityResult(requestCode, resultCode, data);
 
         // In case user edited an activity, we need to refresh it in the DiscoverFragment
-        if (requestCode == REQUEST_CODE_ME && resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_CODE_ME && resultCode == Activity.RESULT_OK) {
             DiscoverFragment discoverFragment = (DiscoverFragment) findFragment(DiscoverFragment.TAG);
-            if (discoverFragment != null){
+            if (discoverFragment != null) {
                 discoverFragment.refreshCurrentActivity();
             }
         }

@@ -411,7 +411,7 @@ public class BitmapUtils {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        float bitmapRatio = (float)width / (float) height;
+        float bitmapRatio = (float) width / (float) height;
         if (bitmapRatio > 0) {
             width = maxSize;
             height = (int) (width / bitmapRatio);
@@ -527,13 +527,13 @@ public class BitmapUtils {
         return succeeded;
     }
 
-//    public static Bitmap getImageFromVideo(String videoPath, int fromPosition) {
-//        FFmpegMediaMetadataRetriever mediaMetadataRetriever = new FFmpegMediaMetadataRetriever();
-//        mediaMetadataRetriever.setDataSource(videoPath);
-//        Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(fromPosition * 1000, MediaMetadataRetriever.OPTION_CLOSEST); //unit in microsecond
-//        mediaMetadataRetriever.release();
-//        return bmFrame;
-//    }
+    //    public static Bitmap getImageFromVideo(String videoPath, int fromPosition) {
+    //        FFmpegMediaMetadataRetriever mediaMetadataRetriever = new FFmpegMediaMetadataRetriever();
+    //        mediaMetadataRetriever.setDataSource(videoPath);
+    //        Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(fromPosition * 1000, MediaMetadataRetriever.OPTION_CLOSEST); //unit in microsecond
+    //        mediaMetadataRetriever.release();
+    //        return bmFrame;
+    //    }
 
     public static long getVideoDurationInMillis(String videoFile) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();

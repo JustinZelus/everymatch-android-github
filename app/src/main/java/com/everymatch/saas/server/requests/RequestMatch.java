@@ -5,6 +5,7 @@ import com.everymatch.saas.Constants;
 import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.server.Data.DataMatchResults;
 import com.everymatch.saas.singeltones.Preferences;
 
 import java.util.HashMap;
@@ -14,6 +15,9 @@ import java.util.Map;
  * Created by PopApp_laptop on 20/12/2015.
  */
 public class RequestMatch extends BaseRequest {
+
+    public static final String MATCH_TYPE_USER_TO_EVENT = "user_to_event";
+    public static final String MATCH_TYPE_USER_TO_USER = "user_to_user";
 
     private String action;
     private String object_id;
@@ -26,10 +30,10 @@ public class RequestMatch extends BaseRequest {
         this.activity_client_id = activity_client_id;
     }
 
-    @Override
+    /*@Override
     public boolean parseResponseAsJson() {
         return false;
-    }
+    }*/
 /*
     * https://api.everymatch.me/api/match?
     * hl=en-US
@@ -57,7 +61,7 @@ public class RequestMatch extends BaseRequest {
 
     @Override
     public Class getResponseClass() {
-        return null;
+        return DataMatchResults.class;
     }
 
     @Override

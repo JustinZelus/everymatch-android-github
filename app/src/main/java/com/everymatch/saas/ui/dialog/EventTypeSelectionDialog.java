@@ -102,6 +102,7 @@ public class EventTypeSelectionDialog extends DialogFragment implements View.OnC
         ((FrameLayout.LayoutParams) mPopup.getLayoutParams()).leftMargin = mLeftMargin;
         ((FrameLayout.LayoutParams) mPopup.getLayoutParams()).topMargin = mTopMargin;
         setItems();
+
         mPopup.post(new Runnable() {
             @Override
             public void run() {

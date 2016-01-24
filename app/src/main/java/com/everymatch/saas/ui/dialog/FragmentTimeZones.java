@@ -97,7 +97,7 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
         Intent result = new Intent();
         result.putExtra(SettingsFragment.EXTRA_TIME_ZONE, mAdapter.getSelectedTimeZone());
         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
-        getActivity().onBackPressed();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override

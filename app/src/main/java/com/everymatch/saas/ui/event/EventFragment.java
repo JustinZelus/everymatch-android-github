@@ -31,18 +31,20 @@ import com.everymatch.saas.server.Data.DataEventActions;
 import com.everymatch.saas.server.Data.DataMatchResults;
 import com.everymatch.saas.server.Data.DataPeopleHolder;
 import com.everymatch.saas.server.ServerConnector;
+import com.everymatch.saas.server.request_manager.MatchManager;
 import com.everymatch.saas.server.requests.RequestEvent;
 import com.everymatch.saas.server.requests.RequestEventActions;
 import com.everymatch.saas.server.requests.RequestMatch;
 import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseEvent;
-import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.ui.PeopleViewPagerFragment;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.chat.ChatFragment;
 import com.everymatch.saas.ui.common.PeopleCarouselFragment;
+import com.everymatch.saas.ui.match.MatchActivity;
 import com.everymatch.saas.ui.user.UserActivity;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.util.Utils;
@@ -52,7 +54,6 @@ import com.everymatch.saas.view.BaseTextView;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.EventHeader;
 import com.everymatch.saas.view.OverScrollView;
-import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -321,36 +322,38 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         String mStatus = mEvent.dataPublicEvent.user_event_status.status;
 
         if (mStatus.equals("participating")) {
-            mPercent.setText("PARTICIPATING");
+            mPercent.setText(dm.getResourceText(R.string.Participants));
             mPercent.setTextColor(ds.getIntColor(EMColor.POSITIVE));
-            mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusPositive"));
+            mPercentIcon.setText(im.getIconString("StatusPositive"));
             mPercentIcon.setTextColor(ds.getIntColor(EMColor.POSITIVE));
         } else if (mStatus.equals("pending")) {
-            mPercent.setText("PENDING");
+            mPercent.setText(dm.getResourceText(R.string.Pending));
             mPercent.setTextColor(ds.getIntColor(EMColor.MAYBE));
-            mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusMaybe"));
+            mPercentIcon.setText(im.getIconString("StatusMaybe"));
             mPercentIcon.setTextColor(ds.getIntColor(EMColor.MAYBE));
         } else if (mStatus.equals("saved")) {
-            mPercent.setText("SAVED");
+            mPercent.setText(dm.getResourceText(R.string.Saved));
             mPercent.setTextColor(ds.getIntColor(EMColor.MAYBE));
-            mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusLater"));
+            mPercentIcon.setText(im.getIconString("StatusLater"));
             mPercentIcon.setTextColor(ds.getIntColor(EMColor.MAYBE));
         } else if (mStatus.equals("hosting")) {
             mPercent.setText("HOSTING");
             mPercent.setTextColor(ds.getIntColor(EMColor.WHITE));
-            mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusHosting"));
+            mPercentIcon.setText(im.getIconString("StatusHosting"));
             mPercentIcon.setTextColor(ds.getIntColor(EMColor.WHITE));
         } else if (mStatus.equals("invited")) {
             mPercent.setText("INVITED");
             mPercent.setTextColor(ds.getIntColor(EMColor.NEGATIVE));
-            mPercentIcon.setText(IconManager.getInstance(getActivity()).getIconString("StatusInvited"));
+            mPercentIcon.setText(im.getIconString("StatusInvited"));
             mPercentIcon.setTextColor(ds.getIntColor(EMColor.NEGATIVE));
         } else {
             /*here we need to set match percents*/
 
-            if (mDataMatchResults != null && mDataMatchResults.results != null && mDataMatchResults.results.size() > 0) {
+            if (mDataMatchResults != null && mDataMatchResults.getQuestions_results().size() > 0) {
                 try {
-                    mPercent.setText("" + mDataMatchResults.results.get(0).value.match + "%");
+                    mPercent.setText("" + mDataMatchResults.match + "%");
+                    mPercent.setTextColor(ds.getIntColor(EMColor.WHITE));
+                    mPercent.setOnClickListener(this);
                 } catch (Exception ex) {
                     Log.e(TAG, ex.getMessage());
                 }
@@ -514,12 +517,16 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                         .replace(R.id.event_layout, PeopleViewPagerFragment.getInstance(DataStore.SCREEN_TYPE_EVENT_PARTICIPANTS, mEvent))
                         .commit();
                 break;
+
+            case R.id.event_percent:
+                if ((int) mDataMatchResults.match > 0)
+                    MatchActivity.start(getActivity(), mDataMatchResults, RequestMatch.MATCH_TYPE_USER_TO_EVENT, null, mEvent);
+                break;
         }
     }
 
     public void getFullEvent(final View view) {
         ServerConnector.getInstance().processRequest(new RequestEvent(mEvent._id), new ServerConnector.OnResultListener() {
-
             @Override
             public void onSuccess(BaseResponse baseResponse) {
 
@@ -542,16 +549,33 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
     }
 
     private void getEventMatch() {
-        ServerConnector.getInstance().processRequest(new RequestMatch("user_to_event", mEvent._id, mEvent.activity_client_id), new ServerConnector.OnResultListener() {
+
+        MatchManager.getMatch(RequestMatch.MATCH_TYPE_USER_TO_EVENT, mEvent._id, mEvent.activity_client_id, new GenericCallback() {
+            @Override
+            public void onDone(boolean success, Object data) {
+                if (success) {
+                    mDataMatchResults = (DataMatchResults) data;
+                    if (mDataMatchResults.getQuestions_results().size() > 0) {
+                        mPercent.setText("" + mDataMatchResults.match + "%");
+                        setData(mView);
+                    }
+                } else {
+                    Log.e(TAG, data.toString());
+                }
+            }
+        });
+       /*
+        ServerConnector.getInstance().processRequest(new RequestMatch(RequestMatch.MATCH_TYPE_USER_TO_EVENT, mEvent._id, mEvent.activity_client_id), new ServerConnector.OnResultListener() {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
                 mProgressBar.setVisibility(View.GONE);
                 try {
-                    String res = ((ResponseString) baseResponse).responseStr;
-                    mDataMatchResults = new Gson().fromJson(res, DataMatchResults.class);
+                    //String res = ((ResponseString) baseResponse).responseStr;
+                    //mDataMatchResults = new Gson().fromJson(res, DataMatchResults.class);
+                    mDataMatchResults = (DataMatchResults) baseResponse;
                     if (mDataMatchResults != null) {
-                        if (mDataMatchResults.results != null && mDataMatchResults.results.size() > 0) {
-                            mPercent.setText("" + mDataMatchResults.results.get(0).value.match + "%");
+                        if (mDataMatchResults.questions_results != null && mDataMatchResults.questions_results.size() > 0) {
+                            mPercent.setText("" + mDataMatchResults.match + "%");
                             setData(mView);
                         }
                     }
@@ -566,6 +590,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                 getActivity().onBackPressed();
             }
         }, TAG + RequestEvent.class.getSimpleName());
+   */
     }
 
     @Override

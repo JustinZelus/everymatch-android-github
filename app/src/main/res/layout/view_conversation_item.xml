@@ -25,7 +25,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:paddingRight="10dp" />
+                android:paddingRight="14dp" />
 
             <com.everymatch.saas.view.BaseIconTextView
                 android:id="@+id/tv_view_conversation_iconMore"
@@ -42,7 +42,7 @@
                 app:iconText="MoreV" />
 
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/tv_view_people_icon"
@@ -93,6 +93,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rlAgoHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

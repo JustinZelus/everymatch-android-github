@@ -133,6 +133,7 @@ public class PeopleUsersAdapter extends EmBaseAdapter<DataPeople> {
 
             case DataStore.ADAPTER_MODE_NONE:
                 holder.icon.setText("");
+                view.findViewById(R.id.line).setVisibility(View.INVISIBLE);
                 break;
 
             case DataStore.ADAPTER_MODE_MATCH:

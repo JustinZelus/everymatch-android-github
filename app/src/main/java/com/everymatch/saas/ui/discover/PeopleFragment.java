@@ -13,23 +13,27 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
-import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.IconType;
 import com.everymatch.saas.server.Data.DataActivity;
 import com.everymatch.saas.server.Data.DataIcon;
+import com.everymatch.saas.server.Data.DataMatchResults;
 import com.everymatch.saas.server.Data.DataPeople;
 import com.everymatch.saas.server.ServerConnector;
+import com.everymatch.saas.server.request_manager.MatchManager;
 import com.everymatch.saas.server.requests.RequestAddFriend;
 import com.everymatch.saas.server.requests.RequestDeleteFriend;
+import com.everymatch.saas.server.requests.RequestMatch;
 import com.everymatch.saas.server.requests.RequestOtherUser;
 import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseOtherUser;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.common.EventCarouselFragment;
+import com.everymatch.saas.ui.match.MatchActivity;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.util.TypeFaceProvider;
@@ -178,7 +182,7 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
     private void setUserData() {
 
         // User image
-        if (!TextUtils.isEmpty(mUserFullObject.image_url)){
+        if (!TextUtils.isEmpty(mUserFullObject.image_url)) {
             Picasso.with(getActivity()).load(Utils.getImageUrl(mUserFullObject.image_url, mImageContainer.getLayoutParams().height / 2,
                     0)).into(mUserImage);
         }
@@ -238,27 +242,33 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
             for (DataActivity dataActivity : mUserFullObject.activities) {
 
                 EventDataRow eventDataRow = new EventDataRow(getContext());
-                eventDataRow.setBackgroundColor(DataStore.getInstance().getIntColor(EMColor.WHITE));
+                //the EDR itself will hold the
+                eventDataRow.setTag(dataActivity);
+                //eventDataRow.getRightText().setTag(dataActivity);
+                eventDataRow.setOnClickListener(onClickEdrMatch);
+
+                eventDataRow.setBackgroundColor(ds.getIntColor(EMColor.WHITE));
                 eventDataRow.getDetailsView().setVisibility(View.GONE);
                 eventDataRow.getTitleView().setText(dataActivity.text_title);
                 eventDataRow.getRightIcon().setVisibility(View.GONE);
                 eventDataRow.getRightText().setVisibility(View.VISIBLE);
-                eventDataRow.getRightText().setText(DataManager.getInstance().getResourceText(R.string.See_Your_Match));
+                eventDataRow.getRightText().setText(dm.getResourceText(R.string.See_Your_Match));
 
                 DataIcon dataIcon = dataActivity.icon;
 
                 if (IconType.FONT.equals(dataIcon.getType())) {
                     eventDataRow.getLeftIcon().setText(IconManager.getInstance(getContext()).getIconString(dataIcon.getValue()));
-                    eventDataRow.getLeftIcon().setTextColor(DataStore.getInstance().getIntColor(EMColor.NIGHT));
+                    eventDataRow.getLeftIcon().setTextColor(ds.getIntColor(EMColor.NIGHT));
                 } else {
                     int picturesSize = eventDataRow.getLeftImage().getLayoutParams().width;
                     Picasso.with(getContext()).load(Utils.getImageUrl(dataIcon.getValue(), picturesSize, 0)).into(eventDataRow.getLeftImage());
                 }
 
                 eventDataRow.getLeftImage().setVisibility(View.VISIBLE);
-                eventDataRow.getRightText().setText(DataManager.getInstance().getResourceText(R.string.See_Your_Match));
-                eventDataRow.getRightText().setTextColor(DataStore.getInstance().getIntColor(EMColor.PRIMARY));
+                eventDataRow.getRightText().setText(dm.getResourceText(R.string.See_Your_Match));
+                eventDataRow.getRightText().setTextColor(ds.getIntColor(EMColor.PRIMARY));
                 eventDataRow.getRightText().setTypeface(TypeFaceProvider.getTypeFace(TypeFaceProvider.FONT_LATO));
+
 
                 mActivitiesContainer.addView(eventDataRow);
 
@@ -322,6 +332,39 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
             }, TAG + RequestAddFriend.class.getName());
         }
     }
+
+    private View.OnClickListener onClickEdrMatch = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                final EventDataRow edr = (EventDataRow) v;
+
+                if (edr.getRightText().getTag() != null) {
+                    DataMatchResults dataMatchResults = (DataMatchResults) edr.getRightText().getTag();
+                    if ((int) dataMatchResults.match == 0)
+                        return;
+                    //this is the second time user press the text -> should go to match page
+                    MatchActivity.start(getActivity(), dataMatchResults, RequestMatch.MATCH_TYPE_USER_TO_USER, mUserFullObject, null);
+                    return;
+                }
+                // get match data and set tag to right text
+                DataActivity dataActivity = (DataActivity) v.getTag();
+                if (dataActivity == null) return;
+                MatchManager.getMatch(RequestMatch.MATCH_TYPE_USER_TO_USER, mUserFullObject.users_id, dataActivity.client_id, new GenericCallback() {
+                    @Override
+                    public void onDone(boolean success, Object data) {
+                        if (success) {
+                            DataMatchResults matchResults = (DataMatchResults) data;
+                            edr.getRightText().setTag(matchResults);
+                            edr.setRightText("" + matchResults.match + "%");
+                        }
+                    }
+                });
+            } catch (Exception ex) {
+                EMLog.e(TAG, ex.getMessage());
+            }
+        }
+    };
 
     @Override
     public void onDetach() {

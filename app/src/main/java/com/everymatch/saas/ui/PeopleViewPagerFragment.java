@@ -26,6 +26,7 @@ import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.base.BasePeopleListFragment;
 import com.everymatch.saas.ui.event.InviteParticipantsListFragment;
 import com.everymatch.saas.ui.user.UserActivity;
+import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.view.EventHeader;
 
@@ -118,7 +119,7 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
             mAdapter = new PeopleTabsPagerAdapter(pagerScreenType, getChildFragmentManager(), null/*Event here*/, ds.getUser().getPeople());
 
             // Show the people empty view above the tabs if no people at all
-            if (!ds.getUser().hasPeople()){
+            if (!ds.getUser().hasPeople()) {
                 mEmptyView.setVisibility(View.VISIBLE);
             }
 
@@ -134,8 +135,7 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
             hashMap.put(InviteParticipantsListFragment.TYPE_BEST_MATCH, new DataPeopleHolder());
             hashMap.put(InviteParticipantsListFragment.TYPE_FRIENDS, new DataPeopleHolder());
             mAdapter = new PeopleTabsPagerAdapter(DataStore.SCREEN_TYPE_INVITE_PARTICIPANTS, getChildFragmentManager(), mDataEvent, hashMap);
-        }
-        else if (pagerScreenType == DataStore.SCREEN_TYPE_EVENT_ACTION_INVITE) {
+        } else if (pagerScreenType == DataStore.SCREEN_TYPE_EVENT_ACTION_INVITE) {
             /*dont show */
             HashMap hashMap = new HashMap();
             hashMap.put(InviteParticipantsListFragment.TYPE_BEST_MATCH, new DataPeopleHolder());
@@ -198,8 +198,13 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
 
     @Override
     protected void handleBroadcast(Serializable eventObject, String eventName) {
-        ds.getUser().setPeople((HashMap<String, DataPeopleHolder>) eventObject);
-        getPeople(viewPager.getCurrentItem());
+        try {
+            ds.getUser().setPeople((HashMap<String, DataPeopleHolder>) eventObject);
+            getPeople(viewPager.getCurrentItem());
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
+
     }
 
     @Override

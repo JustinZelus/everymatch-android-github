@@ -22,6 +22,7 @@ public class DataEvent implements Serializable {
     public String client_id;
     public DataDisplaySettings display_settings;
     public DataPrivacySettings privacy_settings;
+    public DataEntity entity;
 
     public DataEvent() {
     }

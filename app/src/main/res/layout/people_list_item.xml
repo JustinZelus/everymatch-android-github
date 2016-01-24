@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.everymatch.saas.view.BaseRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:bg_color="white_color"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    app:bg_color="white_color">
 
     <com.everymatch.saas.view.BaseImageView
         android:id="@+id/people_list_item_image"
@@ -17,66 +17,73 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:layout_marginRight="10dp"
+        android:layout_toRightOf="@+id/people_list_item_image"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <com.everymatch.saas.view.BaseTextView
             android:id="@+id/people_list_item_name"
+            style="@style/EmTextStyleNormal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4.5dp"
             android:ellipsize="end"
             android:singleLine="true"
-            tools:text="title"
             app:text_color="night_color"
-            style="@style/EmTextStyleNormal"
-            />
+            tools:text="title" />
 
         <com.everymatch.saas.view.BaseTextView
             android:id="@+id/people_list_item_details"
+            style="@style/EmTextStyleMeta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            tools:text="details"
             app:text_color="moon_color"
-            style="@style/EmTextStyleMeta"
-            />
+            tools:text="details" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/line"
+        android:layout_width="1dp"
+        android:layout_height="70dp"
+        android:background="@color/moon"
+        android:layout_toLeftOf="@+id/rightPart">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rightPart"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <com.everymatch.saas.view.BaseIconTextView
             android:id="@+id/people_list_item_right_icon"
             android:layout_width="wrap_content"
-            tools:text="A"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textSize="25sp"
             app:text_color="moon_color"
-            android:paddingTop="2dp"
-            android:paddingRight="3dp"
-            android:textSize="16dp"/>
+            tools:text="A" />
 
         <com.everymatch.saas.view.BaseTextView
             android:id="@+id/people_list_item_right_text"
+            style="@style/EmTextStyleMeta"
             android:layout_width="wrap_content"
-            tools:text="A"
-            android:visibility="gone"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:visibility="gone"
             app:text_color="primary_color"
-            style="@style/EmTextStyleMeta"/>
+            tools:text="A" />
 
     </LinearLayout>
 
-</com.everymatch.saas.view.BaseLinearLayout>
+</com.everymatch.saas.view.BaseRelativeLayout>

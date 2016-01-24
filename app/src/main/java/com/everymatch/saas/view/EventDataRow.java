@@ -162,8 +162,7 @@ public class EventDataRow extends LinearLayout {
     }
 
     public void setBackground(int bg) {
-        wrapperLayout.setBackgroundResource(bg);
-
+        wrapperLayout.setBackgroundColor(bg);
     }
 
     /**

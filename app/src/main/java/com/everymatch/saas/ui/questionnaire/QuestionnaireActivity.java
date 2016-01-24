@@ -590,7 +590,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             return new QuestionTime();
         }
 
-        Log.e(TAG, "no fragment found that matches this form type! " + questionForm);
+        EMLog.e(TAG, "no fragment found that matches this form type! " + questionForm);
         return new QuestionnaireQuestionButtonSelectorFragment(); //TODO: this is problem!!!
     }
 
@@ -635,8 +635,9 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
         if (excludeLastQuetion)
             --size;
 
+        // we check if all answers confirmed by clicking next
         for (int i = 0; i < size; ++i)
-            if (mQuestionsAndAnswers.get(i).userAnswerStr == null /*&& !mQuestionsAndAnswers.get(i).question.role*/)
+            if (mQuestionsAndAnswers.get(i).isAnsweredConfirmedByClickingNext == false /*&& !mQuestionsAndAnswers.get(i).question.role*/)
                 return false;
 
         return true;

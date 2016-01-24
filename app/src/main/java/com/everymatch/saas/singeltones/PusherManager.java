@@ -194,10 +194,16 @@ public class PusherManager implements ConnectionEventListener {
                         DataEvent dataEvent = new Gson().fromJson(jsonObject.getJSONObject("data").toString(), DataEvent.class);
                         String action = jsonObject.getString("action");
 
-                        if (action.equals("create")) {
+                        if (action.equals("create") || action.equals("update") || action.equals("add")) {
                             if (filters != null && dataEvent != null) {
                                 for (String filter : filters) {
                                     ds.getUser().addOrUpdateEventIntoMap(dataEvent, filter);
+                                }
+                            }
+                        } else if (action.equals("remove")) {
+                            if (filters != null && dataEvent != null) {
+                                for (String filter : filters) {
+                                    ds.getUser().removeEventFromMap(dataEvent, filter);
                                 }
                             }
                         }
@@ -260,9 +266,14 @@ public class PusherManager implements ConnectionEventListener {
                 break;
             case PUSHER_EVENT_CHANNELS_ADD:
             case PUSHER_EVENT_CHANNELS_REMOVE:
-                ArrayList<DataChannelName> channelNames = gson.fromJson(eventData, new TypeToken<ArrayList<DataChannelName>>() {
-                }.getType());
-                serializable = channelNames;
+                try {
+                    ArrayList<DataChannelName> channelNames = gson.fromJson(eventData, new TypeToken<ArrayList<DataChannelName>>() {
+                    }.getType());
+                    serializable = channelNames;
+                } catch (Exception ex) {
+                    EMLog.e(TAG, ex.getMessage());
+                }
+
                 break;
 
             case PUSHER_EVENT_MY_EVENT_UPDATE:

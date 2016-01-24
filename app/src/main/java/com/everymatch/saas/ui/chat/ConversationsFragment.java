@@ -8,21 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.adapter.AdapterConversations;
 import com.everymatch.saas.adapter.EmBaseAdapter;
 import com.everymatch.saas.server.Data.DataConversation;
-import com.everymatch.saas.server.ServerConnector;
-import com.everymatch.saas.server.requests.RequestConversations;
-import com.everymatch.saas.server.responses.BaseResponse;
-import com.everymatch.saas.server.responses.ErrorResponse;
+import com.everymatch.saas.server.request_manager.ConversationManager;
 import com.everymatch.saas.server.responses.ResponseConversations;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.base.BaseListFragment;
-import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.ui.dialog.menus.MenuConversations;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.view.EventHeader;
 
@@ -33,19 +30,20 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class ConversationsFragment extends BaseListFragment implements EventHeader.OnEventHeader, AdapterConversations.inboxCallback {
-
     public static final String TAG = ConversationsFragment.class.getSimpleName();
-    //private ArrayList<DataConversation> mDataConversation = null;
     private boolean isClicked = false;
+    public static final String CONVERSATION_TYPE_ACTIVE = "active";
+    public static final String CONVERSATION_TYPE_ARCHIVE = "archive";
+
+    //Data
+    private String mCurrentConversationType = CONVERSATION_TYPE_ACTIVE;
 
     //Views
-    //ListView lvMessages;
     AdapterConversations adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //mDataConversation = new ArrayList<DataConversation>();
         getConversations();
     }
 
@@ -55,12 +53,12 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
         View emptyView = EmptyViewFactory.createEmptyView(EmptyViewFactory.TYPE_MESSAGES);
         ((ViewGroup) mAbsListView.getParent()).addView(emptyView);
         mAbsListView.setEmptyView(emptyView);
-
+        mTopContainer.setVisibility(View.VISIBLE);
         //mAbsListView.setAdapter(adapter);
         mAbsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, ChatFragment.getInstance(adapter.data.get(i), adapter.data.get(i)._id,ChatFragment.CHAT_TYPE_USER),
+                ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, ChatFragment.getInstance(adapter.data.get(i), adapter.data.get(i)._id, ChatFragment.CHAT_TYPE_USER),
                         ConversationsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
                         R.anim.enter_from_left, R.anim.exit_to_right);
             }
@@ -84,36 +82,36 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
         mEventHeader.getIconOne().setVisibility(View.GONE);
         mEventHeader.getIconTwo().setVisibility(View.GONE);
         mEventHeader.getIconThree().setText(Consts.Icons.icon_Search);
-        mEventHeader.setTitle("Messaging");
+        mEventHeader.setTitle(dm.getResourceText(R.string.Inbox));
+
+        mEventHeader.getTitle().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open menu
+                ArrayList<String> titles = new ArrayList<>();
+                titles.add("Active");
+                titles.add("Archived");
+                MenuConversations menuConversations = MenuConversations.getInstance(titles);
+                menuConversations.show(getActivity().getSupportFragmentManager(),"");
+            }
+        });
     }
 
     @Override
     protected void fetchNextPage() {
-        //TODO - USE STATIC METHOD IN DATACONVERSATION
-        ServerConnector.getInstance().processRequest(new RequestConversations(adapter.getCount(), PAGE_COUNT), new ServerConnector.OnResultListener() {
+        ConversationManager.getAllConversations(adapter.getCount(), PAGE_COUNT, new GenericCallback() {
             @Override
-            public void onSuccess(BaseResponse baseResponse) {
-                ResponseConversations responseMessage = (ResponseConversations) baseResponse;
-                if (responseMessage != null) {
+            public void onDone(boolean success, Object data) {
+                if (!success)
+                    return;
 
-                    if (responseMessage != null) {
-                        for (DataConversation conversation : responseMessage.array)
-                            adapter.data.add(conversation);
-                    }
-                    //adapter.data = mDataConversation;
-                    adapter.notifyDataSetChanged();
-                    if (responseMessage.array.length < PAGE_COUNT) {
-                        mIsNoMoreResults = true;
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "response = null", Toast.LENGTH_SHORT).show();
-                    EMLog.e(TAG, "RequestConversations is NULL");
-                }
-            }
+                ResponseConversations responseMessage = (ResponseConversations) data;
+                for (DataConversation conversation : responseMessage.array)
+                    adapter.add(conversation);
 
-            @Override
-            public void onFailure(ErrorResponse errorResponse) {
-                Toast.makeText(getActivity(), errorResponse.getServerRawResponse(), Toast.LENGTH_SHORT).show();
+                adapter.refresh(mCurrentConversationType);
+                if (responseMessage.array.length < PAGE_COUNT)
+                    mIsNoMoreResults = true;
             }
         });
     }
