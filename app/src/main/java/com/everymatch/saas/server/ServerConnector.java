@@ -65,7 +65,7 @@ public class ServerConnector {
         processRequest(baseRequest, onResultListener, null);
     }
 
-    public void processRequest(final BaseRequest baseRequest, final OnResultListener onResultListener, Object tag) {
+    public void processRequest(final BaseRequest baseRequest, final OnResultListener onResultListener, Object tag){
 
         if (!Utils.hasInternetConnection()) {
             Intent intent = new Intent(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
@@ -73,7 +73,6 @@ public class ServerConnector {
             LocalBroadcastManager.getInstance(EverymatchApplication.getContext()).sendBroadcast(intent);
             return;
         }
-
 
         String url = baseRequest.getServiceUrl() + baseRequest.getUrlFunction();
         String body = null;

@@ -13,14 +13,18 @@ import com.everymatch.saas.R;
 import com.everymatch.saas.adapter.AdapterNotification;
 import com.everymatch.saas.adapter.EmBaseAdapter;
 import com.everymatch.saas.client.data.DataManager;
-import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.Data.DataEvent;
 import com.everymatch.saas.server.Data.DataNotifications;
+import com.everymatch.saas.server.request_manager.NotificationManager;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.ui.base.BaseListFragment;
+import com.everymatch.saas.ui.chat.ConversationsFragment;
 import com.everymatch.saas.ui.event.EventFragment;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.util.Utils;
+import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.EventHeader;
 
 import java.util.ArrayList;
@@ -54,7 +58,7 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        notifications = DataStore.getInstance().getUser().notifications.getNotifications();
+        notifications = ds.getUser().notifications.getNotifications();
     }
 
     @Override
@@ -67,14 +71,39 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
         mAbsListView.setAdapter(adapter);
         mAbsListView.setOnItemClickListener(this);
         mAbsListView.setDividerHeight(Utils.dpToPx(1));
-        mAbsListView.setPadding(0,0,0,0);
+        mAbsListView.setPadding(0, 0, 0, 0);
+
+        setInBox();
+    }
+
+    private void setInBox() {
+        mTopContainer.removeAllViews();
+        mTopContainer.setVisibility(View.VISIBLE);
+        EventDataRow edr = new EventDataRow(getActivity());
+        edr.setLeftIconVisibility(true);
+        edr.getLeftIcon().setText(Consts.Icons.icon_Mail);
+        edr.setDetails(null);
+        edr.setTitle(dm.getResourceText(R.string.Inbox));
+        edr.getTitleView().setTextColor(ds.getIntColor(EMColor.MOON));
+        edr.setRightIconText(Consts.Icons.icon_Arrowright);
+        edr.getWrapperLayout().setBackgroundColor(ds.getIntColor(EMColor.WHITE));
+
+        edr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, new ConversationsFragment(),
+                        ConversationsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                        R.anim.enter_from_left, R.anim.exit_to_right);
+            }
+        });
+        mTopContainer.addView(edr);
     }
 
     protected void setHeader() {
         mEventHeader.setListener(this);
         mEventHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
         mEventHeader.getIconOne().setVisibility(View.GONE);
-        mEventHeader.getIconTwo().setText(Consts.Icons.icon_Mail);
+        mEventHeader.getIconTwo().setVisibility(View.GONE);
         mEventHeader.getIconThree().setText(Consts.Icons.icon_Search);
         mEventHeader.setTitle(DataManager.getInstance().getResourceText(R.string.Notification));
     }
@@ -123,7 +152,14 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DataNotifications dataNotification = notifications.get(position);
+        dataNotification.read = true;
+        adapter.notifyDataSetChanged();
+        NotificationManager.markNotificationsAsReadOrSeen("read", dataNotification._id, new GenericCallback() {
+            @Override
+            public void onDone(boolean success, Object data) {
 
+            }
+        });
         switch (dataNotification.notification_type) {
             case NOTIFICATION_TYPE_INVITATION_REJECTED:
             case NOTIFICATION_TYPE_Join_Request:
