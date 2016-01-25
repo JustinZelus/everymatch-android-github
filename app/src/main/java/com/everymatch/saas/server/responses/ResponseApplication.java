@@ -1,9 +1,9 @@
 package com.everymatch.saas.server.responses;
 
 import com.everymatch.saas.EverymatchApplication;
+import com.everymatch.saas.server.Data.ApplicationSettings;
 import com.everymatch.saas.server.Data.DataActivity;
 import com.everymatch.saas.server.Data.DataQuestion;
-import com.everymatch.saas.server.Data.ApplicationSettings;
 import com.everymatch.saas.server.Data.DataTimeZone;
 
 import java.io.Serializable;
@@ -98,6 +98,14 @@ public class ResponseApplication extends BaseResponse {
     public DataActivity getActivityById(String id) {
         for (DataActivity activity : getActivities()) {
             if (("" + activity.client_id).equals(id))
+                return activity;
+        }
+        return null;
+    }
+
+    public DataActivity getActivityById(int id) {
+        for (DataActivity activity : getActivities()) {
+            if (activity._id == (id))
                 return activity;
         }
         return null;

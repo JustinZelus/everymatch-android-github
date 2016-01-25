@@ -32,8 +32,9 @@ import java.util.ArrayList;
 public class ConversationsFragment extends BaseListFragment implements EventHeader.OnEventHeader, AdapterConversations.inboxCallback {
     public static final String TAG = ConversationsFragment.class.getSimpleName();
     private boolean isClicked = false;
-    public static final String CONVERSATION_TYPE_ACTIVE = "active";
-    public static final String CONVERSATION_TYPE_ARCHIVE = "archive";
+
+    public static final String CONVERSATION_TYPE_ACTIVE = dm.getResourceText(R.string.Inbox_title);
+    public static final String CONVERSATION_TYPE_ARCHIVE = dm.getResourceText(R.string.Archive);
 
     //Data
     private String mCurrentConversationType = CONVERSATION_TYPE_ACTIVE;
@@ -82,19 +83,30 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
         mEventHeader.getIconOne().setVisibility(View.GONE);
         mEventHeader.getIconTwo().setVisibility(View.GONE);
         mEventHeader.getIconThree().setText(Consts.Icons.icon_Search);
-        mEventHeader.setTitle(dm.getResourceText(R.string.Inbox));
+        updateHeaderTitle();
 
         mEventHeader.getTitle().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //open menu
                 ArrayList<String> titles = new ArrayList<>();
-                titles.add("Active");
-                titles.add("Archived");
+                titles.add(CONVERSATION_TYPE_ACTIVE);
+                titles.add(CONVERSATION_TYPE_ARCHIVE);
                 MenuConversations menuConversations = MenuConversations.getInstance(titles);
-                menuConversations.show(getActivity().getSupportFragmentManager(),"");
+                menuConversations.setTargetFragment(ConversationsFragment.this, 0);
+                menuConversations.show(getActivity().getSupportFragmentManager(), "");
             }
         });
+    }
+
+    public void handleConversationFilterChange(String title) {
+        mCurrentConversationType = title;
+        adapter.refresh(title);
+        updateHeaderTitle();
+    }
+
+    private void updateHeaderTitle() {
+        mEventHeader.setTitle(dm.getResourceText(R.string.Inbox) + " (" + mCurrentConversationType + ") ▼");
     }
 
     @Override
@@ -156,7 +168,7 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
             isClicked = true;
         } else {
             mEventHeader.getTitle().setVisibility(View.VISIBLE);
-            mEventHeader.setTitle("People");
+            mEventHeader.setTitle(dm.getResourceText(R.string.Inbox));
             mEventHeader.getEditTitle().setVisibility(View.GONE);
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
@@ -174,17 +186,43 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
     }
 
     @Override
-    public void onReplyClick(int pos) {
-        mAbsListView.getOnItemClickListener().onItemClick(null, null, pos, pos);
+    public void onReplyClick(DataConversation dataConversation) {
+        ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, ChatFragment.getInstance(dataConversation, dataConversation._id, ChatFragment.CHAT_TYPE_USER),
+                ConversationsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
     @Override
-    public void onArchiveClick(int pos) {
+    public void onArchiveClick(DataConversation dataConversation) {
+        dataConversation.status = "archive";
+        adapter.refresh(mCurrentConversationType);
+        ConversationManager.setConversationStatus(dataConversation._id, "archive", new GenericCallback() {
+            @Override
+            public void onDone(boolean success, Object data) {
 
+            }
+        });
     }
 
     @Override
-    public void onReportClick(int pos) {
+    public void onDeleteClick(DataConversation dataConversation) {
+        adapter.data.remove(dataConversation);
+        ConversationManager.setConversationStatus(dataConversation._id, "deleted", new GenericCallback() {
+            @Override
+            public void onDone(boolean success, Object data) {
+            }
+        });
+        adapter.refresh(mCurrentConversationType);
+    }
 
+    @Override
+    public void onUnArchiveClick(DataConversation dataConversation) {
+        dataConversation.status = "active";
+        ConversationManager.setConversationStatus(dataConversation._id, "active", new GenericCallback() {
+            @Override
+            public void onDone(boolean success, Object data) {
+            }
+        });
+        adapter.refresh(mCurrentConversationType);
     }
 }

@@ -1,7 +1,7 @@
 package com.everymatch.saas.client.data;
 
-import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.R;
+import com.everymatch.saas.server.Data.DataConversation;
 import com.everymatch.saas.singeltones.GenericCallback;
 
 import java.util.ArrayList;
@@ -20,16 +20,21 @@ public class DataHelper {
     public static List<PopupMenuItem> createDiscoverMenuItems() {
         List<PopupMenuItem> items = new ArrayList<>();
         int unread = DataStore.getInstance().getUser().getInbox().getUnread();
-        items.add(new PopupMenuItem(dm.getResourceText(R.string.Inbox_Title), MENU_MESSAGES_ICON, unread <= 0 ? null : "" + unread));
+        items.add(new PopupMenuItem(dm.getResourceText(R.string.Inbox), MENU_MESSAGES_ICON, unread <= 0 ? null : "" + unread));
         items.add(new PopupMenuItem(dm.getResourceText(R.string.Me), MENU_PROFILE_ICON));
         return items;
     }
 
-    public static List<PopupMenuItem> createInboxMenuItems() {
+    public static List<PopupMenuItem> createInboxMenuItems(DataConversation item) {
         List<PopupMenuItem> items = new ArrayList<>();
         items.add(new PopupMenuItem(dm.getResourceText(R.string.Reply), null));
-        items.add(new PopupMenuItem(dm.getResourceText(R.string.Archive), null));
-        items.add(new PopupMenuItem(EverymatchApplication.getContext().getResources().getString(R.string.report_abuse), null));
+
+        if (item.status.equals("archive"))
+            items.add(new PopupMenuItem(dm.getResourceText(R.string.Unarchive), null));
+        else if (item.status.equals("active"))
+            items.add(new PopupMenuItem(dm.getResourceText(R.string.Archive), null));
+
+        items.add(new PopupMenuItem(dm.getResourceText(R.string.Delete), null));
 
         return items;
     }

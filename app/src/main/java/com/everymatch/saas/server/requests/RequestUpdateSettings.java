@@ -53,7 +53,7 @@ public class RequestUpdateSettings extends BaseRequest {
         m.put("Id", user.users_id);
         m.put("LastName", user.last_name);
         m.put("MonthOfBirth", "3");
-        m.put("PhoneNumber", "0524667179");
+        m.put("PhoneNumber", user.phone);
         m.put("UserName", user.email);
         m.put("YearOfBirth", "1970");
         m.put("CountryCode", user.country_code);

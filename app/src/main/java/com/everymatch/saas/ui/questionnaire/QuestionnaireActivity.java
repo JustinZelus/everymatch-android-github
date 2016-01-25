@@ -68,6 +68,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
     public static EDIT_EVENT_TYPE edit_event_type = null;
 
     public static final String EXTRA_ACTIVITY_ID = "activity_id";
+    public static final String EXTRA_SELECTED_EVENT_ID = "extra.selected.event.id";
     public static final String EXTRA_QUESTIONS = "extra_questions";
     public static final String EXTRA_ANSWERS = "extra_answers";
     public static final String EXTRA_ANSWER_STR = "extra_answer_str";
@@ -123,7 +124,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                 int activityId = getIntent().getIntExtra(EXTRA_ACTIVITY_ID, 0);
                 if (activityId != 0) {
                     //we got an activity id go to that activity
-                    DataActivity[] allDataActivities = DataStore.getInstance().getApplicationData().getActivities();
+                    DataActivity[] allDataActivities = ds.getApplicationData().getActivities();
                     DataActivity dataActivity;
                     for (int i = 0; i < allDataActivities.length; ++i) {
                         dataActivity = allDataActivities[i];
@@ -146,7 +147,17 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
                 break;
             case CREATE_EVENT:
-                goToSelectEvent();
+                int activityIdd = getIntent().getIntExtra(EXTRA_ACTIVITY_ID, 0);
+                mDataActivity = ds.getApplicationData().getActivityById(activityIdd);
+                String eventId = getIntent().getStringExtra(EXTRA_SELECTED_EVENT_ID);
+                for (DataEvent_Activity dataEventActivity : mDataActivity.events) {
+                    if (dataEventActivity.event_id.equals(eventId)) {
+                        mDataEvent_activity = dataEventActivity;
+                        break;
+                    }
+                }
+                prepareArrays(mDataEvent_activity.questions);
+                goToNextQuestion(null);
                 break;
 
             case ANSWER_SINGLE_QUESTION:
@@ -199,6 +210,14 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
         intent.putExtra(QuestionnaireActivity.EXTRA_QUESTIONS, question);
         intent.putExtra(QuestionnaireActivity.EXTRA_EVENT_EDIT_TYPE, type);
         fragment.startActivityForResult(intent, requestCode);
+    }
+
+    public static void createEvent(Activity activity, int activityId, String eventId) {
+        QuestionnaireActivity.create_mode = CREATE_MODE.CREATE_EVENT;
+        Intent intent = new Intent(activity, QuestionnaireActivity.class);
+        intent.putExtra(QuestionnaireActivity.EXTRA_ACTIVITY_ID, activityId);
+        intent.putExtra(QuestionnaireActivity.EXTRA_SELECTED_EVENT_ID, eventId);
+        activity.startActivity(intent);
     }
 
     /**
@@ -391,9 +410,14 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
     }
 
     private void goToSelectEvent() {
-        getSupportFragmentManager().beginTransaction()
+       /* mDataActivity = getIntent().getSerializableExtra(EXTRA_ACTIVITY_ID) selectedActivity;
+        prepareArrays(selectedActivity.events[selectedEventPosition].questions);
+        mDataEvent_activity = selectedActivity.events[selectedEventPosition];
+        goToNextQuestion(null);
+*/
+       /* getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_full, new QuestionarePickEventFragment())
-                .commit();
+                .commit();*/
     }
 
     public void goToPickActivity() {

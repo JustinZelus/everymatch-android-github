@@ -22,6 +22,7 @@ import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.base.BaseEventListFragment;
 import com.everymatch.saas.ui.dialog.EventTypeSelectionDialog;
+import com.everymatch.saas.ui.dialog.menus.MenuCreateEvent;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.EmptyViewFactory;
@@ -210,7 +211,10 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
 
     @Override
     public void onOneIconClicked() {
-        createEvent();
+        MenuCreateEvent menuCreateEvent = MenuCreateEvent.getInstance(mEventHeader.getMeasuredHeight());
+        menuCreateEvent.setTargetFragment(MyEventsFragment.this, MenuCreateEvent.REQUEST_CODE_CREATE_EVENT);
+        menuCreateEvent.show(getChildFragmentManager(), "");
+        //createEvent();
     }
 
     private void createEvent() {
@@ -236,9 +240,7 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == CODE_EVENT_SELECTION && resultCode == Activity.RESULT_OK) {
-
             mDialog.dismiss();
 
             String key = data.getStringExtra(EventTypeSelectionDialog.EXTRA_RESULT);
@@ -246,23 +248,24 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
             if (key == null || mCurrentEventKey.equals(key)) {
                 return;
             }
-
             mCurrentEventKey = key;
-
             EMLog.i(TAG, "Selected event type - " + mCurrentEventKey);
-
             setEventTypeTitle(mEventMap.get(mCurrentEventKey));
             mAdapter.refreshData(mEventMap.get(mCurrentEventKey).getEvents());
 
             // Initialize pagination data for the next type
             mIsNoMoreResults = false;
+        } else if (requestCode == MenuCreateEvent.REQUEST_CODE_CREATE_EVENT && resultCode == Activity.RESULT_OK) {
+            int activityId = data.getIntExtra(QuestionnaireActivity.EXTRA_ACTIVITY_ID, 0);
+            String eventId = data.getStringExtra(QuestionnaireActivity.EXTRA_SELECTED_EVENT_ID);
+            QuestionnaireActivity.createEvent(getActivity(), activityId, eventId);
         }
     }
 
     @Override
     protected void handleBroadcast(Serializable eventObject, String eventName) {
         // super.handleBroadcast(eventObject, eventName);
-         if (PusherManager.PUSHER_EVENT_MY_EVENT_UPDATE.equals(eventName)) {
+        if (PusherManager.PUSHER_EVENT_MY_EVENT_UPDATE.equals(eventName)) {
 
             if (ds.getUser().getTotalEventsCount() > 0)
                 mTopContainer.setVisibility(View.VISIBLE);

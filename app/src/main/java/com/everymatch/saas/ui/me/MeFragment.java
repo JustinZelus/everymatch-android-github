@@ -96,7 +96,7 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
         String str[] = user.user_settings.user_activity_profile_id_list.split(",");
         ArrayList<DataActivity> tmp = new ArrayList<DataActivity>();
         for (String id : str) {
-            final DataActivity activity = DataStore.getInstance().getApplicationData().getActivityById(id);
+            final DataActivity activity = ds.getApplicationData().getActivityById(id);
             if (activity != null) {
                 tmp.add(activity);
 
@@ -128,11 +128,10 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
         mHeader.getIconOne().setVisibility(View.GONE);
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setVisibility(View.GONE);
-        mHeader.setTitle(dm.getResourceText(R.string.Me)); // TODO put in resources
+        mHeader.setTitle(dm.getResourceText(R.string.Me));
 
         String imageUrl = Utils.getImageUrl(user.image_url, imgUser.getLayoutParams().width, imgUser.getLayoutParams().width);
         Picasso.with(getContext()).load(imageUrl).into(imgUser);
-
     }
 
     @Override
@@ -185,7 +184,6 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
-
 
     @Override
     public void onClick(View v) {

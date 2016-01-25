@@ -78,7 +78,7 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     private int mNoDataVisibility = View.GONE;
 
     // Data
-    private DataActivity mCurrentActivity;
+    public static DataActivity mCurrentActivity;
     private ArrayList<DataActivity> mActivities;
     private List<PopupMenuItem> mMoreData;
     private DiscoverCallbacks mCallbacks;

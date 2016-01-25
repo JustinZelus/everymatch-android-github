@@ -8,19 +8,20 @@
     android:orientation="horizontal">
 
     <com.everymatch.saas.view.BaseLinearLayout
+        android:id="@+id/llEdrWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="7dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="7dp"
-        android:paddingLeft="10dp"
-        android:minHeight="53dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
         android:background="@color/white"
-        android:layout_marginTop="0dp">
+        android:gravity="center"
+        android:minHeight="53dp"
+        android:orientation="horizontal"
+        android:paddingBottom="7dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="7dp">
 
         <FrameLayout
             android:id="@+id/view_vent_data_row_left_media_container"
@@ -33,21 +34,22 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:gravity="center_vertical|left"
-                tools:text="\@"
                 android:paddingRight="10dp"
+                android:textSize="25dp"
                 app:text_color="fog_color"
-                android:textSize="25dp" />
+                tools:text="\@" />
 
             <FrameLayout
                 android:layout_width="30dp"
                 android:layout_height="30dp">
+
                 <com.everymatch.saas.view.BaseImageView
-                    android:scaleType="centerCrop"
-                    android:visibility="gone"
                     android:id="@+id/view_event_data_row_image_left"
-                    android:layout_gravity="center_vertical|left"
                     android:layout_width="25dp"
-                    android:layout_height="25dp" />
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical|left"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
 
             </FrameLayout>
 
@@ -68,20 +70,20 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="false"
-                tools:text="title"
+                android:textSize="16sp"
                 app:text_color="night_color"
-                android:textSize="16sp" />
+                tools:text="title" />
 
             <com.everymatch.saas.view.BaseTextView
                 android:id="@+id/event_data_row_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="4.5dp"
                 android:ellipsize="end"
+                android:paddingTop="4.5dp"
                 android:singleLine="true"
                 android:text="details"
-                app:text_color="moon_color"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:text_color="moon_color" />
 
         </LinearLayout>
 
@@ -92,27 +94,26 @@
             android:orientation="horizontal">
 
             <com.everymatch.saas.view.BaseTextView
-                android:paddingRight="5dp"
                 android:id="@+id/event_data_row_text_right"
-                app:text_color="moon_color"
-                android:textSize="14dp"
-                app:font="lato_light"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="rightText"/>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:textSize="14dp"
+                app:font="lato_light"
+                app:text_color="moon_color"
+                tools:text="rightText" />
 
             <com.everymatch.saas.view.BaseIconTextView
                 android:id="@+id/event_data_row_icon_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:gravity="center"
                 android:text="\@"
-                app:text_color="fog_color"
                 android:textSize="24sp"
-                android:layout_alignParentLeft="true"
-               />
+                app:text_color="fog_color" />
 
         </LinearLayout>
 

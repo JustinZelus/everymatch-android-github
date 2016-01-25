@@ -33,25 +33,26 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
     private static final String TAG = BaseListFragment.class.getSimpleName();
 
     protected static final int PAGE_COUNT = 10;
+    protected DataStore ds = DataStore.getInstance();
+    protected static DataManager dm = DataManager.getInstance();
 
     // Views
     protected BaseListView mAbsListView;
     protected View mFooterWrapper;
     protected EventHeader mEventHeader;
-    protected BaseRelativeLayout mEmptyViewContainer;
 
+    protected BaseRelativeLayout mEmptyViewContainer;
     /*belongs to people fragments*/
     protected BaseButton mActionButtonPrimary;
+
     protected BaseButton mActionButtonSecondary;
 
     // A container for adding extra items above the list
     /*belongs to my events fragment*/
     protected FrameLayout mTopContainer;
-
     // Data
     protected boolean mLoading;
     protected boolean mIsNoMoreResults;
-    protected DataManager dm = DataManager.getInstance();
     protected boolean mIsSearching;
     protected int mMode = DataStore.ADAPTER_MODE_TEXT;
     private boolean mIsUserScrolled;

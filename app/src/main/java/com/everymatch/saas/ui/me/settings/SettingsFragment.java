@@ -148,6 +148,9 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
         if (Constants.API_SERVICE_URL.equals("https://api.everymatch.me/")) {
             toggleButton.setChecked(true);
         }
+
+        toggleButton.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
+
         return v;
     }
 

@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
@@ -23,7 +22,7 @@ public class EventDataRow extends LinearLayout {
 
     private Context mContext;
 
-    private RelativeLayout wrapperLayout;
+    private LinearLayout wrapperLayout;
     private BaseIconTextView mLeftIcon;
     private BaseTextView mTitle;
     private BaseTextView mDetails;
@@ -62,7 +61,7 @@ public class EventDataRow extends LinearLayout {
         mTitle = (BaseTextView) findViewById(R.id.event_data_row_title);
         mDetails = (BaseTextView) findViewById(R.id.event_data_row_details);
         mRightIcon = (BaseIconTextView) findViewById(R.id.event_data_row_icon_right);
-        wrapperLayout = (RelativeLayout) findViewById(R.id.view_event_data_row);
+        wrapperLayout = (LinearLayout) findViewById(R.id.llEdrWrapper);
         mTextRight = (BaseTextView) findViewById(R.id.event_data_row_text_right);
         mImageLeft = (BaseImageView) findViewById(R.id.view_event_data_row_image_left);
         mLeftMediaContainer = findViewById(R.id.view_vent_data_row_left_media_container);
@@ -145,7 +144,7 @@ public class EventDataRow extends LinearLayout {
         return mRightIcon;
     }
 
-    public RelativeLayout getWrapperLayout() {
+    public LinearLayout getWrapperLayout() {
         return wrapperLayout;
     }
 

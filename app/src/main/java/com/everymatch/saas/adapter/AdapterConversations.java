@@ -8,15 +8,14 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
-import android.widget.PopupWindow;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataHelper;
+import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.PopupMenuItem;
 import com.everymatch.saas.server.Data.DataConversation;
 import com.everymatch.saas.server.Data.DataParticipant;
-import com.everymatch.saas.ui.chat.ConversationsFragment;
 import com.everymatch.saas.ui.discover.DiscoverFragment;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseIconTextView;
@@ -33,7 +32,7 @@ import java.util.List;
 public class AdapterConversations extends BaseAdapter {
 
     public ArrayList<DataConversation> data, filtered;
-    private String conversationType = ConversationsFragment.CONVERSATION_TYPE_ACTIVE;
+    private String conversationType = "Active";
     Context con;
     LayoutInflater inflater;
     private ListPopupWindow mMorePopup;
@@ -65,7 +64,7 @@ public class AdapterConversations extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        DataConversation item = filtered.get(i);
+        final DataConversation item = filtered.get(i);
 
         View v = view;
         if (view == null)
@@ -84,9 +83,9 @@ public class AdapterConversations extends BaseAdapter {
                     mMorePopup.dismiss();
                     return;
                 }
-                if (mMoreData == null) {
-                    mMoreData = DataHelper.createInboxMenuItems();
-                }
+                //if (mMoreData == null) {
+                    mMoreData = DataHelper.createInboxMenuItems(item);
+                //}
 
                 if (mMorePopup == null) {
                     mMorePopup = new ListPopupWindow(con);
@@ -99,20 +98,18 @@ public class AdapterConversations extends BaseAdapter {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (position == 0) {
-                            if (callback != null) callback.onReplyClick(i);
+                            if (callback != null) callback.onReplyClick(item);
                         } else if (position == 1) {
-                            if (callback != null) callback.onArchiveClick(i);
-                        } else {
-                            if (callback != null) callback.onReportClick(i);
+                            if (callback != null) {
+                                if (item.status.toLowerCase().equals("active"))
+                                    callback.onArchiveClick(item);
+                                else if (item.status.toLowerCase().equals("archive"))
+                                    callback.onUnArchiveClick(item);
+                            }
+                        } else if (position == 2) {
+                            if (callback != null) callback.onDeleteClick(item);
                         }
                         mMorePopup.dismiss();
-                    }
-                });
-
-                mMorePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        int abc = 3;
                     }
                 });
 
@@ -138,7 +135,7 @@ public class AdapterConversations extends BaseAdapter {
             }
 
             //set userImage
-            final String urlString = "https://cdn2.everymatch.com/remote/emprod.everymatchintern.netdna-cdn.com/memberprofilepictures/" + userId + "/Current/L." + userId + ".jpg?width=500&height=500&format=jpg";
+            final String urlString = "https://cdn2.everymatch.com/remote/emprod.everymatchintern.netdna-cdn.com/memberprofilepictures/" + userId + "/Current/L." + userId + ".jpg?width=200&height=200&format=jpg";
             Picasso.with(con)
                     .load(urlString)
                             //.placeholder(R.drawable.ic_placeholder) // optional
@@ -146,7 +143,7 @@ public class AdapterConversations extends BaseAdapter {
                     .into(imgUserImage);
         } else {
             // the last message is not me!
-            final String urlString = "https://cdn2.everymatch.com/remote/emprod.everymatchintern.netdna-cdn.com/memberprofilepictures/" + item.getLast_message().sender + "/Current/L." + item.getLast_message().sender + ".jpg?width=500&height=500&format=jpg";
+            final String urlString = "https://cdn2.everymatch.com/remote/emprod.everymatchintern.netdna-cdn.com/memberprofilepictures/" + item.getLast_message().sender + "/Current/L." + item.getLast_message().sender + ".jpg?width=200&height=200&format=jpg";
             Picasso.with(con)
                     .load(urlString)
                             //.placeholder(R.drawable.ic_placeholder) // optional
@@ -175,21 +172,32 @@ public class AdapterConversations extends BaseAdapter {
     }
 
     public void refresh(String conversationType) {
-        this.conversationType = conversationType;
+        String realFilter = "";
+
+        if (conversationType.equals(DataManager.getInstance().getResourceText(R.string.Archive)))
+            realFilter = "Archive";
+        else if (conversationType.equals(DataManager.getInstance().getResourceText(R.string.Inbox_title)))
+            realFilter = "Active";
+
+        this.conversationType = realFilter;
+
         filtered.clear();
         for (DataConversation conversation : data) {
-            if (conversation.status.equals(this.conversationType))
+            if (conversation.status.toLowerCase().equals(this.conversationType.toLowerCase()))
                 filtered.add(conversation);
         }
+
         notifyDataSetChanged();
     }
 
     public interface inboxCallback {
-        void onReplyClick(int pos);
+        void onReplyClick(DataConversation dataConversation);
 
-        void onArchiveClick(int pos);
+        void onArchiveClick(DataConversation dataConversation);
 
-        void onReportClick(int pos);
+        void onDeleteClick(DataConversation dataConversation);
+
+        void onUnArchiveClick(DataConversation dataConversation);
     }
 }
 

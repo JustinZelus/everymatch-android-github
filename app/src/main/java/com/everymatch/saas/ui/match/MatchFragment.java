@@ -32,6 +32,7 @@ public class MatchFragment extends BaseFragment implements EventHeader.OnEventHe
     //Data
     MatchActivity matchActivity;
     DataMatchResults dataMatchResults;
+    boolean isAnimationLoaded;
 
     //Views
     private EventHeader mHeader;
@@ -116,8 +117,8 @@ public class MatchFragment extends BaseFragment implements EventHeader.OnEventHe
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
-                int duration = 1500;
+                int duration = isAnimationLoaded ? 100 : 1500;
+                int alphaDuration = isAnimationLoaded ? 100 : 1300;
                 int halfWidth = getView().getMeasuredWidth() / 2;
                 int imgWidth = imgRight.getMeasuredWidth();
 
@@ -129,14 +130,16 @@ public class MatchFragment extends BaseFragment implements EventHeader.OnEventHe
                         .setDuration(duration)
                         .start();
 
-                ObjectAnimator.ofFloat(imgRight, View.ALPHA.getName(), 0, 1).setDuration(1300).start();
+                ObjectAnimator.ofFloat(imgRight, View.ALPHA.getName(), 0, 1).setDuration(alphaDuration).start();
 
                 //animate left image
                 ObjectAnimator.ofFloat(imgLeft, "X", halfWidth - (imgWidth * 2), halfWidth - imgWidth + imgWidth / 4)
                         .setDuration(duration)
                         .start();
 
-                ObjectAnimator.ofFloat(imgLeft, View.ALPHA.getName(), 0, 1).setDuration(1300).start();
+                ObjectAnimator.ofFloat(imgLeft, View.ALPHA.getName(), 0, 1).setDuration(alphaDuration).start();
+
+                isAnimationLoaded = true;
             }
         }, 300);
     }

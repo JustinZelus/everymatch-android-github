@@ -33,8 +33,9 @@
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:gravity="left"
+            android:gravity="start"
             android:textSize="16sp"
+            android:padding="6dp"
             android:textStyle="bold"
             app:font="lato_font"
             app:text_color="white_color" />

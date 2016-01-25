@@ -189,6 +189,27 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
 
         // How you match text
         mTextHowYouMatch.setText(mTextHowYouMatch.getText() + " " + mUserFullObject.first_name);
+        mTextHowYouMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTextHowYouMatch.getTag() == null) {
+                    //this is the first click -> get match
+                    MatchManager.getMatch(RequestMatch.MATCH_TYPE_USER_TO_USER, mUserFullObject.users_id, DiscoverFragment.mCurrentActivity.client_id, new GenericCallback() {
+                        @Override
+                        public void onDone(boolean success, Object data) {
+                            if (success) {
+                                DataMatchResults matchResults = (DataMatchResults) data;
+                                mTextHowYouMatch.setTag(matchResults);
+                                mTextHowYouMatch.setText("" + matchResults.match + "%");
+                            }
+                        }
+                    });
+                } else {
+                    // this is the second call - go to match activity
+                    MatchActivity.start(getActivity(), (DataMatchResults) mTextHowYouMatch.getTag(), RequestMatch.MATCH_TYPE_USER_TO_USER, mUserFullObject, null);
+                }
+            }
+        });
 
         // Age
         mTextAge.setTitle(dm.getResourceText("Age"));
