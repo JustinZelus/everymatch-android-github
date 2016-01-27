@@ -104,7 +104,7 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
         mEventHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
         mEventHeader.getIconOne().setVisibility(View.GONE);
         mEventHeader.getIconTwo().setVisibility(View.GONE);
-        mEventHeader.getIconThree().setText(Consts.Icons.icon_Search);
+        mEventHeader.getIconThree().setVisibility(View.GONE);
         mEventHeader.setTitle(DataManager.getInstance().getResourceText(R.string.Notification));
     }
 

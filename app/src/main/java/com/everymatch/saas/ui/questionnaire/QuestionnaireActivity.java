@@ -150,7 +150,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                 int activityIdd = getIntent().getIntExtra(EXTRA_ACTIVITY_ID, 0);
                 mDataActivity = ds.getApplicationData().getActivityById(activityIdd);
                 String eventId = getIntent().getStringExtra(EXTRA_SELECTED_EVENT_ID);
-                for (DataEvent_Activity dataEventActivity : mDataActivity.events) {
+                for (DataEvent_Activity dataEventActivity : mDataActivity.getEvents()) {
                     if (dataEventActivity.event_id.equals(eventId)) {
                         mDataEvent_activity = dataEventActivity;
                         break;
@@ -323,7 +323,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
             if (activity.client_id.equals(mGeneratedEvent.activity_client_id)) {
 
-                for (DataEvent_Activity event : activity.events) {
+                for (DataEvent_Activity event : activity.getEvents()) {
 
                     if (event.event_id.equals(mGeneratedEvent.dataPublicEvent.event_id)) {
 

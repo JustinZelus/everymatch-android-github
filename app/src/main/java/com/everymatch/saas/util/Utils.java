@@ -357,22 +357,26 @@ public class Utils {
     }
 
     public static String makeTextCamelCase(String text) {
-
-        if (TextUtils.isEmpty(text)) {
-            return "";
-        }
-
-        String[] words = text.split(" ");
-        StringBuilder sb = new StringBuilder();
-        if (words[0].length() > 0) {
-            sb.append(Character.toUpperCase(words[0].charAt(0)) + words[0].subSequence(1, words[0].length()).toString().toLowerCase());
-            for (int i = 1; i < words.length; i++) {
-                sb.append(" ");
-                sb.append(Character.toUpperCase(words[i].charAt(0)) + words[i].subSequence(1, words[i].length()).toString().toLowerCase());
+        try {
+            if (TextUtils.isEmpty(text)) {
+                return "";
             }
+
+            String[] words = text.split(" ");
+            StringBuilder sb = new StringBuilder();
+            if (words[0].length() > 0) {
+                sb.append(Character.toUpperCase(words[0].charAt(0)) + words[0].subSequence(1, words[0].length()).toString().toLowerCase());
+                for (int i = 1; i < words.length; i++) {
+                    sb.append(" ");
+                    sb.append(Character.toUpperCase(words[i].charAt(0)) + words[i].subSequence(1, words[i].length()).toString().toLowerCase());
+                }
+            }
+            String titleCaseValue = sb.toString();
+            return titleCaseValue;
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
         }
-        String titleCaseValue = sb.toString();
-        return titleCaseValue;
+        return "";
     }
 
     public static String getEventImportantAnswersText(DataEvent event) {
@@ -386,7 +390,7 @@ public class Utils {
 
             DataAnswer[] eventAnswers = event.profile.answers;
 
-            for (DataEvent_Activity event_activity : dataActivity.events) {
+            for (DataEvent_Activity event_activity : dataActivity.getEvents()) {
                 if (event.client_id.equals(event_activity.client_id)) {
 
                     for (DataQuestion question : event_activity.questions) {

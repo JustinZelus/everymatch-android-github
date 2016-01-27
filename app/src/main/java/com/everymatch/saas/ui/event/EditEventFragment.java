@@ -92,7 +92,7 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
 
             if (activity.client_id.equals(mEvent.activity_client_id)) {
 
-                for (DataEvent_Activity event : activity.events) {
+                for (DataEvent_Activity event : activity.getEvents()) {
 
                     if (event.event_id.equals(mEvent.dataPublicEvent.event_id)) {
 

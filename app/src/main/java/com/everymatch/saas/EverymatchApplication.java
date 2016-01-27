@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.server.VolleyHelper;
 import com.everymatch.saas.singeltones.Preferences;
@@ -70,6 +71,7 @@ public class EverymatchApplication extends Application implements ActivityLifecy
         PusherManager.getInstance();
         DataStore.getInstance();
         Preferences.getInstance();
+        DataManager.getInstance();
 
         VolleyHelper.init(this);
         registerActivityLifecycleCallbacks(this);

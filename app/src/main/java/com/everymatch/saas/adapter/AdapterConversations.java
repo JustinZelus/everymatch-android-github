@@ -1,6 +1,8 @@
 package com.everymatch.saas.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.graphics.ColorUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,14 +10,17 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
+import android.widget.RelativeLayout;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataHelper;
 import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.PopupMenuItem;
 import com.everymatch.saas.server.Data.DataConversation;
 import com.everymatch.saas.server.Data.DataParticipant;
+import com.everymatch.saas.server.Data.DataReadBy;
 import com.everymatch.saas.ui.discover.DiscoverFragment;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseIconTextView;
@@ -31,6 +36,7 @@ import java.util.List;
  */
 public class AdapterConversations extends BaseAdapter {
 
+    private DataStore ds = DataStore.getInstance();
     public ArrayList<DataConversation> data, filtered;
     private String conversationType = "Active";
     Context con;
@@ -84,7 +90,7 @@ public class AdapterConversations extends BaseAdapter {
                     return;
                 }
                 //if (mMoreData == null) {
-                    mMoreData = DataHelper.createInboxMenuItems(item);
+                mMoreData = DataHelper.createInboxMenuItems(item);
                 //}
 
                 if (mMorePopup == null) {
@@ -155,8 +161,20 @@ public class AdapterConversations extends BaseAdapter {
         tvContent.setText(item.getLast_message().message);
         PrettyTime p = new PrettyTime();
 
-        //String t = (p.format(getDate(item.last_message.updated_date)));
-        String t = (p.format(Utils.getDateDromDataDate(item.getLast_message().updated_date)));
+        boolean isRead = false;
+        try {
+            for (DataReadBy dataReadBy : item.getLast_message().getRead_by()) {
+                if (dataReadBy.users_id.equals(ds.getUser().users_id)) {
+                    isRead = true;
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+        }
+        RelativeLayout rlHolder = (RelativeLayout) v.findViewById(R.id.relativeLayout2);
+        rlHolder.setBackgroundColor(isRead ? Color.WHITE : ColorUtils.setAlphaComponent(ds.getIntColor(EMColor.PRIMARY), (int) (255 * 0.3)));
+
+        String t = (p.format(Utils.getDateDromDataDate(item.getLast_message().getUpdated_date())));
         tvAgo.setText(t);
         return v;
     }

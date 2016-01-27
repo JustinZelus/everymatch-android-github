@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.everymatch.saas.Constants;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.ServerConnector;
 import com.everymatch.saas.server.requests.BaseRequest;
 import com.everymatch.saas.server.requests.RequestLoadProviders;
@@ -52,6 +53,11 @@ public class ChangePasswordFragment extends BaseFragment implements EventHeader.
         etOd = (BaseEditText) v.findViewById(R.id.etChangePasswordOld);
         etNew = (BaseEditText) v.findViewById(R.id.etChangePasswordNew);
         etConfirm = (BaseEditText) v.findViewById(R.id.etChangePasswordNewAgain);
+
+        etOd.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton(ds.getIntColor(EMColor.WHITE), Utils.dpToPx(3), Utils.dpToPx(1), ds.getIntColor(EMColor.FOG)));
+        etNew.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton(ds.getIntColor(EMColor.WHITE), Utils.dpToPx(3), Utils.dpToPx(1), ds.getIntColor(EMColor.FOG)));
+        etConfirm.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton(ds.getIntColor(EMColor.WHITE), Utils.dpToPx(3), Utils.dpToPx(1), ds.getIntColor(EMColor.FOG)));
+
 
         v.findViewById(R.id.btnChangePassword).setOnClickListener(this);
         v.findViewById(R.id.btnChangePassword).setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton());

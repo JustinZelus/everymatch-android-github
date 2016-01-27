@@ -186,6 +186,10 @@ public class PusherManager implements ConnectionEventListener {
                     //return;
                 }
 
+                /*update user unread messages*/
+                if (PUSHER_EVENT_EVENT_NEW_MESSAGE.equals(eventName)) {
+                    ds.getUser().getInbox().unread++;
+                }
                 if (PUSHER_EVENT_MY_EVENT_UPDATE.equals(eventName)) {
                     try {
                         JSONObject jsonObject = new JSONObject(data);

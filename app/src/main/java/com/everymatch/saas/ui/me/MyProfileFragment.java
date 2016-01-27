@@ -37,10 +37,8 @@ import java.io.Serializable;
 public class MyProfileFragment extends BaseFragment implements EventHeader.OnEventHeader, View.OnClickListener {
 
     public static final String TAG = MyProfileFragment.class.getSimpleName();
-
     private static final int TAG_QUESTION = 100;
     private static final int TAG_ANSWER = 101;
-
     private static final int MAX_IMAGE_SIZE = 800;
 
     // Views

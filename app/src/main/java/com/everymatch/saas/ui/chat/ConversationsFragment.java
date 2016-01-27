@@ -17,12 +17,14 @@ import com.everymatch.saas.server.request_manager.ConversationManager;
 import com.everymatch.saas.server.responses.ResponseConversations;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.singeltones.GenericCallback;
+import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.base.BaseListFragment;
 import com.everymatch.saas.ui.dialog.menus.MenuConversations;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.view.EventHeader;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -45,7 +47,6 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getConversations();
     }
 
     @Override
@@ -73,7 +74,6 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
         mAbsListView.setAdapter(adapter);
         fetchNextPage();
     }
-
 
     @Override
     protected void setHeader() {
@@ -181,10 +181,6 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
         return null;
     }
 
-    public void getConversations() {
-
-    }
-
     @Override
     public void onReplyClick(DataConversation dataConversation) {
         ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, ChatFragment.getInstance(dataConversation, dataConversation._id, ChatFragment.CHAT_TYPE_USER),
@@ -224,5 +220,12 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
             }
         });
         adapter.refresh(mCurrentConversationType);
+    }
+
+    @Override
+    protected void handleBroadcast(Serializable eventObject, String eventName) {
+        if (PusherManager.PUSHER_EVENT_EVENT_NEW_MESSAGE.equals(eventName)) {
+            initAdapter();
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.server.Data.DataActivity;
 import com.everymatch.saas.server.ServerConnector;
@@ -17,6 +18,8 @@ import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
+import com.everymatch.saas.ui.sign.SignActivity;
+import com.everymatch.saas.util.EMLog;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -68,11 +71,20 @@ public abstract class BaseLoginActivity extends BaseActivity {
             @Override
             public void onFailure(ErrorResponse errorResponse) {
                 super.onFailure(errorResponse);
-                Log.i(TAG, "RequestApplication onFailure");
+                EMLog.e(TAG, "Request getUser onFailure" + errorResponse.getServerRawResponse());
                 //check if status code == 403 (authorisation)
-                //performLoginOperations();
+                //performLoginOperation();
+                goToLogin();
             }
         }, TAG + "RequestGetUser");
+    }
+
+    protected void goToLogin() {
+        //go to login screen
+        Intent intent = new Intent(BaseLoginActivity.this, SignActivity.class);
+        BaseLoginActivity.this.finish();
+        BaseLoginActivity.this.startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     public void performLoginOperation() {

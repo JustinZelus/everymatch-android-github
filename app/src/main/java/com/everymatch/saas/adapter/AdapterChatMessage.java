@@ -126,10 +126,10 @@ public class AdapterChatMessage extends EmBaseAdapter<DataChatMessage> {
         //decide if to show time window
         RelativeLayout rlTime = (RelativeLayout) v.findViewById(R.id.rlViewChatTime);
 
-        if (i > 1 && !item.updated_date.isSameDay(mData.get(i - 1).updated_date)) {
+        if (i > 1 && !item.getUpdated_date().isSameDay(mData.get(i - 1).getUpdated_date())) {
             rlTime.setVisibility(View.VISIBLE);
             TextView tvTime = (TextView) v.findViewById(R.id.tvViewChatTime);
-            tvTime.setText("" + item.updated_date.day + "/" + item.updated_date.month + "/" + item.updated_date.year);
+            tvTime.setText("" + item.getUpdated_date().day + "/" + item.getUpdated_date().month + "/" + item.getUpdated_date().year);
         } else {
             rlTime.setVisibility(View.GONE);
         }

@@ -143,6 +143,7 @@ public class SplashActivity extends BaseLoginActivity {
             public void postFetch(Boolean success) {
                 if (success) {
                     EMLog.i(TAG, "fetched Resources ");
+                    //resources already saved in prefs!
                     checkIfCanContinue();
                 } else {
                     // TODO show error dialog
@@ -184,7 +185,7 @@ public class SplashActivity extends BaseLoginActivity {
         });
         animateToCenter.start();
 
-        ObjectAnimator.ofFloat(findViewById(R.id.activity_splash_view_loader), View.ALPHA.getName(),0).setDuration(500).start();
+        ObjectAnimator.ofFloat(findViewById(R.id.activity_splash_view_loader), View.ALPHA.getName(), 0).setDuration(500).start();
     }
 
     private void PreGoToNextScreen() {

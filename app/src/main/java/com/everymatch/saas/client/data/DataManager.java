@@ -53,7 +53,10 @@ public class DataManager {
         return sInstance;
     }
 
-
+    private DataManager() {
+        if (hasResources())
+            mResources = Preferences.getInstance().getResources();
+    }
     // ============================== Resources ================================ //
 
     public boolean hasResources() {
@@ -78,7 +81,7 @@ public class DataManager {
     }
 
     public String getResourceText(int keyRest) {
-      return getResourceText(keyRest, false);
+        return getResourceText(keyRest, false);
     }
 
     public String getResourceText(int keyRest, boolean firstLetterUpperCase) {
@@ -88,7 +91,7 @@ public class DataManager {
             return strKey;
         }
 
-        if (firstLetterUpperCase){
+        if (firstLetterUpperCase) {
             return Utils.setFirstLetterUpperCase(resource.value);
         }
 

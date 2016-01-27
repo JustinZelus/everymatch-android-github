@@ -142,7 +142,7 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                     .addToBackStack("question_role")
-                    .replace(R.id.fragment_container_full, QuestionnaireQuestionRole.getInstance(ans))
+                    .add(R.id.fragment_container_full, QuestionnaireQuestionRole.getInstance(ans))
                     .commit();
         }
     };

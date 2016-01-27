@@ -10,6 +10,8 @@ import com.everymatch.saas.singeltones.Preferences;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.Utils;
 
+import java.util.Locale;
+
 /**
  * Created by PopApp_laptop on 06/09/2015.
  */
@@ -68,12 +70,35 @@ public class DataStore {
     }
 
     // ============================== Culture ================================ //
+
+    public String getLocal() {
+        String country = Locale.getDefault().getCountry().toUpperCase();
+        switch (country) {
+            case "US":
+                return "en_US";
+            case "IL":
+                return "he_IL";
+            case "FR":
+                return "fr_FR";
+            case "SA":
+                return "ar_SA";
+            case "BR":
+                return "pt_BR";
+            case "UK":
+                return "en_UK";
+            default:
+                return "en_US";
+        }
+    }
+
     public String getCulture() {
+
         String answer = "";
+
+        String local = getLocal();
 
         try {
             if (Preferences.getInstance().getTokenType() == null) {
-
                 // no logged user
                 if (Preferences.getInstance().getTimestamp() == null) {
                     // no application -> get from build

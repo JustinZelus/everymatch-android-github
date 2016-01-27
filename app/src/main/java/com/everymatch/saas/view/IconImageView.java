@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by dors on 11/30/15.
  */
-public class IconImageView extends FrameLayout{
+public class IconImageView extends FrameLayout {
 
     private BaseImageView mImage;
     private BaseIconTextView mIcon;
@@ -34,26 +34,25 @@ public class IconImageView extends FrameLayout{
         parseAttributes(attrs);
     }
 
-    private void parseAttributes(AttributeSet attrs){
-        if (attrs != null){
+    private void parseAttributes(AttributeSet attrs) {
+        if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ResourceColor);
-
-            if (typedArray != null){
+            if (typedArray != null) {
                 int bgColor = typedArray.getInt(R.styleable.ResourceColor_bg_color, -1);
 
-                if (bgColor != -1){
+                if (bgColor != -1) {
                     mIcon.setBackgroundColor(Color.parseColor(DataStore.getInstance().getColor(bgColor)));
                 }
 
                 int textColor = typedArray.getInt(R.styleable.ResourceColor_text_color, -1);
 
-                if (textColor != -1){
+                if (textColor != -1) {
                     mIcon.setTextColor(Color.parseColor(DataStore.getInstance().getColor(textColor)));
                 }
 
                 int textSize = (int) typedArray.getDimension(R.styleable.ResourceColor_text_size, -1);
 
-                if (textSize != -1){
+                if (textSize != -1) {
                     mIcon.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Utils.pxToDp(textSize));
                 }
 
@@ -62,23 +61,23 @@ public class IconImageView extends FrameLayout{
         }
     }
 
-    public void setIconImage(DataIcon icon){
-        if (icon != null){
-            if (IconType.FONT.equals(icon.getType())){
+    public void setIconImage(DataIcon icon) {
+        if (icon != null) {
+            if (IconType.FONT.equals(icon.getType())) {
                 mIcon.setVisibility(View.VISIBLE);
                 mIcon.setText(IconManager.getInstance(getContext()).getIconString(icon.getValue()));
-            } else{
+            } else {
                 mImage.setVisibility(View.VISIBLE);
                 Picasso.with(getContext()).load(icon.getValue()).into(mImage);
             }
         }
     }
 
-    public void setIconImage(String icon, final String url){
-        if (TextUtils.isEmpty(url)){
+    public void setIconImage(String icon, final String url) {
+        if (TextUtils.isEmpty(url)) {
             mIcon.setVisibility(View.VISIBLE);
             mIcon.setText(IconManager.getInstance(getContext()).getIconString(icon));
-        } else{
+        } else {
             mImage.setVisibility(View.VISIBLE);
             mImage.post(new Runnable() {
                 @Override
@@ -89,7 +88,7 @@ public class IconImageView extends FrameLayout{
         }
     }
 
-    public BaseIconTextView getIconTextView(){
+    public BaseIconTextView getIconTextView() {
         return mIcon;
     }
 }

@@ -265,10 +265,10 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
         //update more popUp
         mMoreData = DataHelper.createDiscoverMenuItems();
 
-        if (moreAdapter != null) {
-            moreAdapter.setItems(mMoreData);
-            moreAdapter.notifyDataSetChanged();
-        }
+        //if (moreAdapter != null) {
+        moreAdapter.setItems(mMoreData);
+        moreAdapter.notifyDataSetChanged();
+        //}
 
         //update more icon
         if (ds.getUser().getInbox().getUnread() <= 0) {
@@ -552,9 +552,13 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
 
     @Override
     public void onEmptyViewSecondButtonClick() {
-        QuestionnaireActivity.create_mode = QuestionnaireActivity.CREATE_MODE.CREATE_EVENT;
+        ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, MyEventsFragment.getInstance(true),
+                MyEventsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                R.anim.enter_from_left, R.anim.exit_to_right);
+
+        /*QuestionnaireActivity.create_mode = QuestionnaireActivity.CREATE_MODE.CREATE_EVENT;
         final Intent intent = new Intent(getActivity(), QuestionnaireActivity.class);
-        getActivity().startActivity(intent);
+        getActivity().startActivity(intent);*/
     }
 
     public interface DiscoverCallbacks {
@@ -566,8 +570,9 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
         if (eventName.equals(PusherManager.PUSHER_EVENT_EVENT_INBOX_UNREAD)) {
             fetchUnReadMessages();
         }
+
+        //update unread messages
         if (eventName.equals(PusherManager.PUSHER_EVENT_EVENT_NEW_MESSAGE)) {
-            //ds.getUser().getInbox().getUnread() += 1;
             fetchUnReadMessages();
         }
     }

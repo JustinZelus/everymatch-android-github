@@ -84,6 +84,17 @@ public class MenuCreateEvent extends BaseMenuDialogFragment {
 
     private void addActivities() {
         ActivitiesListHolder.removeAllViews();
+        //Add title
+        EventDataRow edrTitle = new EventDataRow(getActivity());
+        edrTitle.setTitle(DataManager.getInstance().getResourceText(R.string.Select_Activity));
+        edrTitle.getRightIcon().setVisibility(View.GONE);
+        edrTitle.getLeftIcon().setText("");
+        edrTitle.getLeftMediaContainer().setVisibility(View.GONE);
+        edrTitle.setDetails(null);
+        edrTitle.getWrapperLayout().setBackgroundColor(ds.getIntColor(EMColor.PRIMARY));
+        edrTitle.getTitleView().setTextColor(ds.getIntColor(EMColor.WHITE));
+        ActivitiesListHolder.addView(edrTitle);
+        ActivitiesListHolder.addView(new ViewSeperator(getActivity(), null));
 
         int i = 0;
         for (final DataActivity dataActivity : activities) {
@@ -129,7 +140,7 @@ public class MenuCreateEvent extends BaseMenuDialogFragment {
 
         //Add Events Rows
         int i = 0;
-        for (DataEvent_Activity event : dataActivity.events) {
+        for (DataEvent_Activity event : dataActivity.getEvents()) {
             EventDataRow edr = new EventDataRow(getActivity());
             edr.setTag(event);
             edr.setOnClickListener(onEventClick);
@@ -142,7 +153,7 @@ public class MenuCreateEvent extends BaseMenuDialogFragment {
             edr.getTitleView().setTextColor(ds.getIntColor(EMColor.PRIMARY));
             EventsListHolder.addView(edr);
 
-            if (dataActivity.events.length - 1 != i)
+            if (dataActivity.getEvents().length - 1 != i)
                 EventsListHolder.addView(new ViewSeperator(getActivity(), null));
             i++;
         }

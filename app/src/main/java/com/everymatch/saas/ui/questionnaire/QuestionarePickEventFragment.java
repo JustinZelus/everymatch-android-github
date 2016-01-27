@@ -144,7 +144,7 @@ public class QuestionarePickEventFragment extends BaseFragment implements View.O
 
         //update event list
         ArrayList<String> eventsStrings = new ArrayList<>();
-        for (DataEvent_Activity dataEvent : selectedActivity.events)
+        for (DataEvent_Activity dataEvent : selectedActivity.getEvents())
             eventsStrings.add(dataEvent.text_title);
 
         adapterEvents.updateData(eventsStrings);
@@ -176,8 +176,8 @@ public class QuestionarePickEventFragment extends BaseFragment implements View.O
         //((QuestionnaireActivity) getActivity()).mCurrentQuestionIndex = 0;
 
         ((QuestionnaireActivity) getActivity()).mDataActivity = selectedActivity;
-        ((QuestionnaireActivity) getActivity()).prepareArrays(selectedActivity.events[selectedEventPosition].questions);
-        ((QuestionnaireActivity) getActivity()).mDataEvent_activity = selectedActivity.events[selectedEventPosition];
+        ((QuestionnaireActivity) getActivity()).prepareArrays(selectedActivity.getEvents()[selectedEventPosition].questions);
+        ((QuestionnaireActivity) getActivity()).mDataEvent_activity = selectedActivity.getEvents()[selectedEventPosition];
         ((QuestionnaireActivity) getActivity()).goToNextQuestion(null);
     }
 

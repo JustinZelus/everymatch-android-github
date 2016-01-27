@@ -11,7 +11,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
-
+    signingConfigs {
+        config {
+            keyAlias 'pass'
+            keyPassword 'gibson1212'
+            storeFile file('C:/Users/PopApp_laptop/Dropbox/PopApp/ks')
+            storePassword 'gibson1212'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
     defaultConfig {
@@ -19,8 +26,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         renderscriptSupportModeEnabled true
-        versionCode 15
-        versionName "1.5"
+        versionCode 16
+        versionName "1.6"
         multiDexEnabled true
 
     }
@@ -46,15 +53,26 @@ android {
                 applicationId "com.everymatch.ucpa"
                 versionName "ucpa 1.0"
             }
+
+            activo {
+                applicationId "com.everymatch.activo"
+                versionName "activo 1.0"
+
+            }
         }
         debug {
             debuggable true
         }
     }
-
     packagingOptions {
         exclude 'META-INF/maven/com.squareup.okhttp/okhttp/pom.properties'
         exclude 'META-INF/maven/com.squareup.okhttp/okhttp/pom.xml'
+    }
+    productFlavors {
+        activo {
+            minSdkVersion 18
+            targetSdkVersion 22
+        }
     }
 }
 

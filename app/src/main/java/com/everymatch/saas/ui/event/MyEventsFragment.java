@@ -39,15 +39,26 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
 
     public static final String TAG = MyEventsFragment.class.getSimpleName();
     private static final int CODE_EVENT_SELECTION = 1212;
+    public static final String ARG_OPEN_CREATE_EVENT_MENU = "arg.open.create.event.menu";
 
+    //Views
     private TextView mTextEventType;
-
     private EventTypeSelectionDialog mDialog;
 
+    //Data
+    boolean mOpenCreateEventMenu;
     private boolean mHasEventsAtAll; // Indicates that all the users in all the hashmaps are empty
 
     public static MyEventsFragment getInstance() {
         MyEventsFragment fragment = new MyEventsFragment();
+        return fragment;
+    }
+
+    public static MyEventsFragment getInstance(boolean openMenu) {
+        MyEventsFragment fragment = new MyEventsFragment();
+        Bundle bundle = new Bundle(1);
+        bundle.putBoolean(ARG_OPEN_CREATE_EVENT_MENU, true);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -56,6 +67,8 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
         super.onCreate(savedInstanceState);
         mEventMap = ds.getUser().getAllEvents();
         mCurrentEventKey = getCurrentEventKey();
+        if (getArguments() != null && getArguments().containsKey(ARG_OPEN_CREATE_EVENT_MENU))
+            mOpenCreateEventMenu = true;
     }
 
     /**
@@ -110,6 +123,10 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
         } else {
             setEmptyView(inflater);
         }
+
+        //check if we came from discover emptyView
+        if (mOpenCreateEventMenu)
+            onOneIconClicked();
     }
 
     @Override
@@ -298,6 +315,9 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
 
     @Override
     public void onEmptyViewSecondButtonClick() {
-        createEvent();
+        //createEvent();
+
+        //simulate create event click
+        onOneIconClicked();
     }
 }

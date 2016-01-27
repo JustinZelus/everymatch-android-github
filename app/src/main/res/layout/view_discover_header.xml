@@ -5,8 +5,8 @@
     android:id="@+id/event_header"
     android:layout_width="match_parent"
     android:layout_height="54dp"
-    app:bg_color="primary_color"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    app:bg_color="primary_color">
 
     <LinearLayout
         android:id="@+id/view_discover_header_title_container"
@@ -18,7 +18,8 @@
             android:id="@+id/view_discover_header_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:paddingLeft="10dp"
+            android:visibility="gone"
             app:text_color="white_color"
             app:text_size="20dp" />
 
@@ -27,9 +28,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            app:text_color="white_color"
             android:textSize="16dp"
             android:textStyle="bold"
+            app:text_color="white_color"
 
             tools:text="Title" />
 
@@ -38,9 +39,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:paddingTop="3dp"
-            app:text_color="white_color"
             android:textSize="12dp"
-            app:iconText="Arrowdown" />
+            app:iconText="Arrowdown"
+            app:text_color="white_color" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,9 +56,9 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:gravity="center"
-            app:text_color="white_color"
             android:textSize="20dp"
-            app:iconText="Event" />
+            app:iconText="Event"
+            app:text_color="white_color" />
 
         <com.everymatch.saas.view.BaseIconTextView
             android:id="@+id/tv_view_people_icon"
@@ -65,14 +66,14 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:gravity="center"
-            app:text_color="white_color"
             android:textSize="20dp"
-            app:iconText="People" />
+            app:iconText="People"
+            app:text_color="white_color" />
 
         <FrameLayout
-            android:animateLayoutChanges="true"
             android:layout_width="40dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true">
 
             <com.everymatch.saas.view.BaseIconTextView
                 android:id="@+id/tv_view_notification_icon"
@@ -80,25 +81,27 @@
                 android:layout_height="match_parent"
                 android:clickable="true"
                 android:gravity="center"
-                app:text_color="white_color"
                 android:textSize="20dp"
-                app:iconText="NotificationFull" />
+                app:iconText="NotificationFull"
+                app:text_color="white_color" />
 
         </FrameLayout>
+
         <FrameLayout
-            android:animateLayoutChanges="true"
-            android:layout_width="40dp"
-            android:layout_height="match_parent">
-        <com.everymatch.saas.view.BaseIconTextView
-            android:id="@+id/view_discover_header_menu_more"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="\@"
-            app:text_color="white_color"
-            android:textSize="25dp"
-            app:iconText="MoreV" />
+            android:animateLayoutChanges="true">
+
+            <com.everymatch.saas.view.BaseIconTextView
+                android:id="@+id/view_discover_header_menu_more"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="\@"
+                android:textSize="25dp"
+                app:iconText="MoreV"
+                app:text_color="white_color" />
 
         </FrameLayout>
     </LinearLayout>

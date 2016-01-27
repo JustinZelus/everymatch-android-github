@@ -20,8 +20,15 @@ public class DataActivity implements Serializable {
     public String status;
     public DataQuestion questions[];
     public DataLanguage languages[];
+
+    public DataEvent_Activity[] getEvents() {
+        if (events == null)
+            events = new DataEvent_Activity[0];
+        return events;
+    }
+
     //public DataEvent events[];
-    public DataEvent_Activity events[];
+    private DataEvent_Activity events[];
     public DataGroup groups[];
     public DataUrl background;
     public String client_id;
