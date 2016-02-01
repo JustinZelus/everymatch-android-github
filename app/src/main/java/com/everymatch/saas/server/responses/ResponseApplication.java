@@ -111,6 +111,15 @@ public class ResponseApplication extends BaseResponse {
         return null;
     }
 
+
+    public DataActivity getActivityClientIdById(int clientId) {
+        for (DataActivity activity : getActivities()) {
+            if (activity.client_id.equals(""+clientId))
+                return activity;
+        }
+        return null;
+    }
+
     public ApplicationSettings getSettings() {
         if (settings == null)
             settings = new ApplicationSettings();

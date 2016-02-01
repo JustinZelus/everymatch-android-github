@@ -54,8 +54,8 @@ public class DataManager {
     }
 
     private DataManager() {
-        if (hasResources())
-            mResources = Preferences.getInstance().getResources();
+        //if (hasResources())
+        // mResources = Preferences.getInstance().getResources();
     }
     // ============================== Resources ================================ //
 
@@ -68,7 +68,15 @@ public class DataManager {
     }
 
     public Resource getResource(String key) {
-        return mResources.resourcesMap.get(key);
+        if (mResources == null) {
+            EMLog.e(TAG, "resourced object is null");
+            Resource resource = new Resource();
+            resource.key = key;
+            resource.value = key;
+            return resource;
+        }
+
+        return mResources.getResourcesMap().get(key);
     }
 
     public String getResourceText(String key) {
@@ -86,6 +94,9 @@ public class DataManager {
 
     public String getResourceText(int keyRest, boolean firstLetterUpperCase) {
         String strKey = EverymatchApplication.getContext().getString(keyRest);
+        if (mResources == null)
+            return strKey;
+
         Resource resource = getResource(strKey);
         if (resource == null) {
             return strKey;

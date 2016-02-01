@@ -23,7 +23,8 @@ public class QuestionnaireQuestionNumberSilderFragment extends QuestionnaireQues
     BaseSeekBar mSeekBar;
     boolean isTouched = false;
 
-    int mMin, mMax, mStep;
+    int mMin, mMax;
+    float mStep;
     int currentValue;
 
     private String TAG = this.getClass().getSimpleName();
@@ -48,7 +49,7 @@ public class QuestionnaireQuestionNumberSilderFragment extends QuestionnaireQues
         String[] rangeStr = mQuestionAndAnswer.question.range.split(",");
         mMin = Integer.parseInt(rangeStr[0]);
         mMax = Integer.parseInt(rangeStr[1]);
-        mSeekBar.setKeyProgressIncrement(mStep);
+        mSeekBar.setKeyProgressIncrement((int) Math.max(mStep, 1f));
         mSeekBar.setMax(mMax - mMin);
 
         recoverAnswerData();

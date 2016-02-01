@@ -173,17 +173,6 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                 break;
         }
 
-        /* no need to -> was taking care by stefan
-
-        // put hidden questions in separate array
-        for (QuestionAndAnswer qaa : mQuestionsAndAnswers) {
-            try {
-                hideQuestionIfNeeded(qaa, mQuestionsAndAnswers);
-            } catch (Exception ex) {
-                EMLog.e(TAG, ex.getMessage());
-            }
-        }
-        */
     }
 
     public static void answerSingleQuestion(Activity activity, DataQuestion dataQuestion, DataAnswer answer, String answerStr, int requestCode) {
@@ -224,26 +213,35 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
      * Use this method in order to create a process for answering a single question
      */
     private void createSingleQuestionProcess() {
+        try {
+            // Get the data
+            DataQuestion dataQuestion = (DataQuestion) getIntent().getSerializableExtra(EXTRA_QUESTIONS);
+            DataAnswer answer = (DataAnswer) getIntent().getSerializableExtra(EXTRA_ANSWERS);
+            String answerStr = getIntent().getStringExtra(EXTRA_ANSWER_STR);
 
-        // Get the data
-        DataQuestion dataQuestion = (DataQuestion) getIntent().getSerializableExtra(EXTRA_QUESTIONS);
-        DataAnswer answer = (DataAnswer) getIntent().getSerializableExtra(EXTRA_ANSWERS);
-        String answerStr = getIntent().getStringExtra(EXTRA_ANSWER_STR);
+            QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer(dataQuestion);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("questions_id", dataQuestion.questions_id);
+            jsonObject.put("status", "active");
+            jsonObject.put("value", QuestionUtils.getAnswerValue(dataQuestion.question_type, answer));
 
-        QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer(dataQuestion);
-        questionAndAnswer.userAnswerData = QuestionUtils.setAnswerData(dataQuestion.question_type, answer);
-        questionAndAnswer.userAnswerStr = answerStr;
+            questionAndAnswer.userAnswerData = jsonObject;
+            //questionAndAnswer.userAnswerData = QuestionUtils.getAnswerValue(dataQuestion.question_type, answer);
+            questionAndAnswer.userAnswerStr = answerStr;
 
-        mCurrentQuestionIndex = 0;
-        mQuestionsAndAnswers.add(questionAndAnswer);
+            mCurrentQuestionIndex = 0;
+            mQuestionsAndAnswers.add(questionAndAnswer);
 
-        // Create the appropriate fragment
-        Fragment questionFragment = getNextQuestionFragment(dataQuestion.form_type, -1);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_full, questionFragment).commitAllowingStateLoss();
+            // Create the appropriate fragment
+            Fragment questionFragment = getNextQuestionFragment(dataQuestion.form_type, -1);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_full, questionFragment).commitAllowingStateLoss();
 
 
-        // Hide summary in this case
-        mHeader.getBackButton().setVisibility(View.GONE);
+            // Hide summary in this case
+            mHeader.getBackButton().setVisibility(View.GONE);
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
     }
 
     /**
@@ -260,39 +258,41 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
         DataAnswer[] activityAnswers = null;
 
         // Find the questions and answers
-        for (DataActivity dataActivity : responseApplication.getActivities()) {
-            if (Integer.valueOf(dataActivity.client_id) == activityId) {
+        mDataActivity = ds.getApplicationData().getActivityClientIdById(activityId);
 
-                mDataActivity = dataActivity;
+        activityQuestions = mDataActivity.questions;
+        /*get the  answers for the activity questions (not necessarily answered))*/
+        for (DataProfile profile : responseGetUser.profiles.activity_profiles) {
+            if (profile.client_id.equals(mDataActivity.client_id)) {
+                activityAnswers = profile.answers;
+                break;
+            }
+        }
 
-                activityQuestions = dataActivity.questions;
-                /*get the  answers for the activity qestions (not necessarily answered))*/
-                for (DataProfile profile : responseGetUser.profiles.activity_profiles) {
-                    if (profile.client_id.equals(dataActivity.client_id)) {
-                        activityAnswers = profile.answers;
+        /* prepare arrays but now...with answers */
+        for (DataQuestion question : activityQuestions) {
+            try {
+                QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer(question);
+
+                for (DataAnswer answer : activityAnswers) {
+                    if (answer.questions_id == question.questions_id) {
+                        questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTitle(question, answer);
+                        /* answer server form */
+                        JSONObject jsonObject = new JSONObject();
+                        questionAndAnswer.userAnswerData = jsonObject;
+                        jsonObject.put("questions_id", question.questions_id);
+                        jsonObject.put("status", "active");
+                        QuestionUtils.updateValueItem(question.question_type, answer, questionAndAnswer.userAnswerData);
                         break;
                     }
                 }
 
-                break;
+                questionAndAnswer.isAnsweredConfirmedByClickingNext = true;
+                mQuestionsAndAnswers.add(questionAndAnswer);
+            } catch (Exception ex) {
+                EMLog.e(TAG, ex.getMessage());
+                continue;
             }
-        }
-        /* prepare arrays but now...with answers */
-        for (DataQuestion question : activityQuestions) {
-
-            QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer(question);
-
-            for (DataAnswer answer : activityAnswers) {
-                if (answer.questions_id == question.questions_id) {
-                    questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTextByAnswer(question, answer);
-                    questionAndAnswer.userAnswerData = QuestionUtils.setAnswerData(question.question_type, answer);
-                    break;
-                }
-            }
-
-            questionAndAnswer.isAnsweredConfirmedByClickingNext = true;
-
-            mQuestionsAndAnswers.add(questionAndAnswer);
         }
 
         mCurrentQuestionIndex = 0;
@@ -341,18 +341,26 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                             QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer(question);
 
                             for (DataAnswer answer : mGeneratedEvent.profile.answers) {
-                                if (answer.questions_id == question.questions_id) {
-                                    questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTextByAnswer(question, answer);
-                                    questionAndAnswer.userAnswerData = QuestionUtils.setAnswerData(question.question_type, answer);
-                                    break;
+                                try {
+                                    if (answer.questions_id == question.questions_id) {
+                                        questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTitle(question, answer);
+                                        JSONObject jsonObject = new JSONObject();
+                                        jsonObject.put("questions_id", question.questions_id);
+                                        jsonObject.put("status", "active");
+                                        jsonObject.put("value", QuestionUtils.getAnswerValue(question.question_type, answer));
+                                        //questionAndAnswer.userAnswerData = QuestionUtils.getAnswerValue(question.question_type, answer);
+                                        break;
+                                    }
+                                } catch (Exception ex) {
+                                    EMLog.e(TAG, ex.getMessage());
                                 }
+
                             }
 
                             questionAndAnswer.isAnsweredConfirmedByClickingNext = true;
 
                             /* Location and schedule should not be visible in the summary, hence save them for later*/
-                            if (edit_event_type == EDIT_EVENT_TYPE.PROFILE && (FormType.SCHEDULE.equals(question.form_type)
-                                    || FormType.LOCATION.equals(question.form_type))) {
+                            if (edit_event_type == EDIT_EVENT_TYPE.PROFILE && (FormType.SCHEDULE.equals(question.form_type) || FormType.LOCATION.equals(question.form_type))) {
                                 mTemporaryQuestionsAndAnswers.add(questionAndAnswer);
                             } else {
                                 mQuestionsAndAnswers.add(questionAndAnswer);
@@ -407,17 +415,6 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
     private void initHeader() {
         mHeader = (EventHeader) findViewById(R.id.eventHeader);
-    }
-
-    private void goToSelectEvent() {
-       /* mDataActivity = getIntent().getSerializableExtra(EXTRA_ACTIVITY_ID) selectedActivity;
-        prepareArrays(selectedActivity.events[selectedEventPosition].questions);
-        mDataEvent_activity = selectedActivity.events[selectedEventPosition];
-        goToNextQuestion(null);
-*/
-       /* getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_full, new QuestionarePickEventFragment())
-                .commit();*/
     }
 
     public void goToPickActivity() {
@@ -595,6 +592,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             return new QuestionnaireQuestionList();
         } else if ("from_to".equals(questionForm)) {
             return new QuestionFromTo();
+            //return new QuestionnaireQuestionRangeFragment();
         } else if ("event_list".equals(questionForm)) {
             //return QuestionnaireQuestionSelectionFragment.newInstance(questionIndex);
             return new QuestionnaireQuestionList();
@@ -698,8 +696,13 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             if (mDataActivity != null) {
                 profile.put("activities_id", mDataActivity.client_id);
             }
+            if (create_mode == CREATE_MODE.CREATE_ACTIVITY)
+                profile.put("status", "active");
+            else if (create_mode == CREATE_MODE.EDIT_ACTIVITY)
+                profile.put("status", mDataActivity.status);
 
-            profile.put("status", "draft");
+            // profile.put("status", "draft");
+
             profile.put("answers", answers);
 
             JSONObject output = new JSONObject();
@@ -746,7 +749,6 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
             case CREATE_ACTIVITY:
             case EDIT_ACTIVITY:
-
                 ServerConnector.getInstance().processRequest(new RequestActivityProfile(mDataActivity.client_id, output.toString()), new ServerConnector.OnResultListener() {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
@@ -946,7 +948,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
             for (int j = 0; j < activityAnswers.length; j++) {
                 if (activityAnswers[j].questions_id == mDataActivity.questions[mCurrentQuestionIndex].questions_id) {
-                    questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTextByAnswer(mDataActivity.questions[mCurrentQuestionIndex],
+                    questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTitle(mDataActivity.questions[mCurrentQuestionIndex],
                             activityAnswers[j]);
                     questionAndAnswer.userAnswerData = new JSONObject(new Gson().toJson(activityAnswers[j]));
                     questionAndAnswer.isAnsweredConfirmedByClickingNext = true;

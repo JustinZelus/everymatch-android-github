@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.server.Data.DataEvent;
+import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseIconTextView;
 import com.squareup.picasso.Picasso;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
  * Created by PopApp_laptop on 09/09/2015.
  */
 public class EventsAdapter extends EmBaseAdapter<DataEvent> {
+    public final String TAG = getClass().getName();
 
     private LayoutInflater inflater;
     private int imageWidth;
@@ -85,7 +87,13 @@ public class EventsAdapter extends EmBaseAdapter<DataEvent> {
                     break;
 
                 case TYPE_STATUS:
-                    match.setText(event.dataPublicEvent.user_event_status.status.toString().toUpperCase());
+                    try {
+                        match.setText(event.dataPublicEvent.user_event_status.status.toString().toUpperCase());
+
+                    } catch (Exception ex) {
+                        EMLog.e(TAG, ex.getMessage());
+                    }
+
                     break;
             }
             matchIcon.setVisibility(showType == TYPE_MATCH ? View.VISIBLE : View.INVISIBLE);

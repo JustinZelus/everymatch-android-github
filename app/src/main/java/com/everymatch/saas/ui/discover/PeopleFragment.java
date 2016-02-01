@@ -46,11 +46,8 @@ import com.squareup.picasso.Picasso;
  * Created by PopApp_laptop on 31/08/2015.
  */
 public class PeopleFragment extends BaseFragment implements EventHeader.OnEventHeader {
-
     public static final String TAG = PeopleFragment.class.getSimpleName();
-
     private static final String EXTRA_PEOPLE = "extra.people";
-
 
     // Views
     private EventHeader mHeader;
@@ -108,11 +105,16 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //((DiscoverActivity) getActivity()).setSelectedMenuItem(DiscoverActivity.DISCOVER_MENU_ITEMS.PEOPLE);
+
         mUserImage = (ImageView) view.findViewById(R.id.fragment_people_image);
         mScrollView = (ScrollView) view.findViewById(R.id.fragment_people_scroll_view);
         mImageContainer = view.findViewById(R.id.fragment_people_image_container);
         mDetailsContainer = (LinearLayout) view.findViewById(R.id.fragment_people_details_container);
         mHeader = (EventHeader) view.findViewById(R.id.fragment_people_event_header);
+
+        //mHeader = (EventHeader) getActivity().findViewById(R.id.eventHeader);
+
         mTextAbout = (TextView) view.findViewById(R.id.fragment_people_text_about);
         mTextAboutTitle = (TextView) view.findViewById(R.id.fragment_people_text_about_title);
         mTextHowYouMatch = (TextView) view.findViewById(R.id.fragment_people_text_how_your_match);
@@ -146,6 +148,8 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
         mHeader.getIconThree().setText(Consts.Icons.icon_Favorite); // Place holder for space
         mHeader.getIconThree().setVisibility(View.INVISIBLE);
         mHeader.setTitle(mCacheUser.first_name + " " + mCacheUser.last_name);
+        mHeader.getTitle().setOnClickListener(null);
+        mHeader.setArrowDownVisibility(false);
     }
 
     /**
@@ -212,11 +216,11 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
         });
 
         // Age
-        mTextAge.setTitle(dm.getResourceText("Age"));
+        mTextAge.setTitle(dm.getResourceText(R.string.Age));
         mTextAge.setRightText(mUserFullObject.age);
 
         // Location
-        mTextLocation.setTitle(dm.getResourceText("Location"));
+        mTextLocation.setTitle(dm.getResourceText(R.string.Location));
         if (mUserFullObject.location != null) {
             String location = "";
 
@@ -246,11 +250,14 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
 
         // Events
         if (!Utils.isArrayListEmpty(mUserFullObject.events)) {
-            mEventsContainer.setVisibility(View.VISIBLE);
-            String eventsText = String.format(dm.getResourceText(R.string.Events) + " (%d)", mUserFullObject.events.size());
-            EventCarouselFragment eventCarouselFragment = EventCarouselFragment.getInstance(mUserFullObject.events, eventsText, "");
-            getActivity().getSupportFragmentManager().beginTransaction().add(mEventsContainer.getId(),
-                    eventCarouselFragment, EventCarouselFragment.TAG).commit();
+            try {
+                mEventsContainer.setVisibility(View.VISIBLE);
+                String eventsText = String.format(dm.getResourceText(R.string.Events) + " (%d)", mUserFullObject.events.size());
+                EventCarouselFragment eventCarouselFragment = EventCarouselFragment.getInstance(mUserFullObject.events, eventsText, "");
+                getActivity().getSupportFragmentManager().beginTransaction().add(mEventsContainer.getId(), eventCarouselFragment, EventCarouselFragment.TAG).commit();
+            } catch (Exception ex) {
+                EMLog.e(TAG, ex.getMessage());
+            }
         }
 
         // Activities

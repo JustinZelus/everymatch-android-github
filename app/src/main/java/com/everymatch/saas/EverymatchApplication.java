@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Application.ActivityLifecycleCallbacks;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -13,6 +16,7 @@ import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.server.VolleyHelper;
 import com.everymatch.saas.singeltones.Preferences;
 import com.everymatch.saas.singeltones.PusherManager;
+import com.everymatch.saas.ui.BaseActivity;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
@@ -33,6 +37,22 @@ public class EverymatchApplication extends Application implements ActivityLifecy
     private static final String TAG = EverymatchApplication.class.getSimpleName();
 
     private static Context context;
+    private static FragmentManager fragmentManager;
+
+    public static String getVersion() {
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(getContext().getPackageName(), 0);
+            String version = info.versionName;
+            return version;
+        } catch (Exception ex) {
+            return "";
+        }
+    }
+
+    public static FragmentManager getFragmentManager() {
+        return fragmentManager;
+    }
 
     @Override
     public void onCreate() {
@@ -80,6 +100,7 @@ public class EverymatchApplication extends Application implements ActivityLifecy
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         Log.i(TAG, "onActivityCreated " + activity.getLocalClassName());
+        fragmentManager = ((BaseActivity) activity).getSupportFragmentManager();
     }
 
     @Override

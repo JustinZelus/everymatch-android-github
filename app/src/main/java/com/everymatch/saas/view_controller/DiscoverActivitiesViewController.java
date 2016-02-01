@@ -32,7 +32,7 @@ public class DiscoverActivitiesViewController implements View.OnClickListener {
     private DiscoverActivitiesListener mListener;
     private boolean mIsAnimating;
 
-    public DiscoverActivitiesViewController(View activitiesPopup, ArrayList<DataActivity> activities) {
+    public  DiscoverActivitiesViewController(View activitiesPopup, ArrayList<DataActivity> activities) {
         this.mActivities = activities;
         this.mActivitiesPopup = activitiesPopup;
         mRecyclerView = (RecyclerView) activitiesPopup.findViewById(R.id.view_activities_popup_recycler);

@@ -27,7 +27,7 @@ android {
         targetSdkVersion 23
         renderscriptSupportModeEnabled true
         versionCode 16
-        versionName "1.6"
+        versionName "0.0.0.1"
         multiDexEnabled true
 
     }
@@ -46,17 +46,17 @@ android {
         productFlavors {
             wigan {
                 applicationId "com.everymatch.wigan"
-                versionName "wigan 1.0"
+                //versionName "wigan 1.0"
             }
 
             ucpa {
                 applicationId "com.everymatch.ucpa"
-                versionName "ucpa 1.0"
+                //versionName "ucpa 0.0.0.1"
             }
 
             activo {
                 applicationId "com.everymatch.activo"
-                versionName "activo 1.0"
+                //versionName "activo 1.0"
 
             }
         }

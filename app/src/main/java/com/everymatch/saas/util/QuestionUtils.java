@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataManager;
-import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.FormType;
 import com.everymatch.saas.client.data.QuestionType;
 import com.everymatch.saas.server.Data.DataAnswer;
@@ -26,6 +25,7 @@ import java.util.Arrays;
 public class QuestionUtils {
 
     private static final String TAG = QuestionUtils.class.getSimpleName();
+    private static DataManager dm = DataManager.getInstance();
 
     public static void createJsonAnswerByQuestionType(String question_type, JSONObject
             jsonObject, String answer, DataAnswer[] answers) throws JSONException {
@@ -104,8 +104,7 @@ public class QuestionUtils {
      * @param answer
      * @return the text to show on
      */
-    public static String getAnsweredTextByAnswer(DataQuestion question, DataAnswer answer) {
-
+    public static String getAnsweredTitle(DataQuestion question, DataAnswer answer) {
         String value = "";
 
         if (answer == null || answer.value == null) {
@@ -119,7 +118,10 @@ public class QuestionUtils {
 
                     case FormType.LOCATION:
                         gson = new Gson();
-                        DataLocation location = gson.fromJson(gson.toJson(answer.value), DataLocation.class);
+                        // DataLocation location = gson.fromJson(gson.toJson(answer.value), DataLocation.class);
+                        String json = gson.toJson(answer.value);
+                        JSONObject jsonObject = new JSONObject(json);
+                        DataLocation location = DataLocation.fromJsonObject(jsonObject);
 
                         if (!TextUtils.isEmpty(location.text_address)) {
                             value = location.text_address;
@@ -167,6 +169,15 @@ public class QuestionUtils {
                         }
 
                         break;
+                    case FormType.TIME:
+                        int sec = Integer.parseInt(answer.value.toString());
+                        value = Utils.getHourMinSecFromSeconds(sec);
+                        break;
+
+                    case FormType.FROM_TO:
+                        value = answer.value.toString().replace(",", "-");
+                        break;
+
 
                     default:
                         value = (String) answer.value;
@@ -177,33 +188,102 @@ public class QuestionUtils {
             }
         }
 
-        return TextUtils.isEmpty(value) ? DataManager.getInstance().getResourceText(R.string.Unanswered) : value;
+        return TextUtils.isEmpty(value) ? dm.getResourceText(R.string.Unanswered) : value;
     }
 
-    public static JSONObject setAnswerData(String questionType, DataAnswer answer) {
-        JSONObject object = null;
+
+    public static void updateValueItem(String questionType, DataAnswer answer, JSONObject userAnswerData) {
         try {
-            Gson gson = new Gson();
-
-            object = new JSONObject(gson.toJson(answer));
-
             switch (questionType) {
                 case QuestionType.LOCATION:
                 case QuestionType.MY_LOCATION:
                 case QuestionType.EVENT_LOCATION:
                 case QuestionType.EVENT_LIST:
-                    JSONObject valueObject = object.getJSONObject("value");
-                    DataLocation dataLocation = gson.fromJson(valueObject.toString(), DataLocation.class);
-                    JSONObject addressJson = new JSONObject();
-                    addressJson.put(DataStore.getInstance().getCulture(), dataLocation.text_address);
-                    //addressJson.put(EverymatchApplication.getContext().getString(R.string.host_language), dataLocation.text_address);
-                    valueObject.put("text_address", addressJson);
+                    //here we need to converts answer.value to json object
+                    String str = new Gson().toJson(answer.value);
+                    JSONObject jsonObject = new JSONObject(str);
+                    userAnswerData.put("value", jsonObject);
+                    return;
+                default:
+                    userAnswerData.put("value", answer.value);
                     break;
             }
         } catch (Exception e) {
-            EMLog.e(TAG, "error in QuestionUtils.setAnswerData: " + e.getMessage());
+            EMLog.e(TAG, "error in QuestionUtils.getAnswerValue: " + e.getMessage());
+        }
+    }
+
+    /**
+     * return the value answer in server format - not must to be a jsonObject
+     */
+    public static Object getAnswerValue(String questionType, DataAnswer answer) {
+        JSONObject value = new JSONObject();
+        try {
+            Gson gson = new Gson();
+            value = new JSONObject(gson.toJson(answer));
+
+            switch (questionType) {
+                case QuestionType.NUMBER:
+                case QuestionType.GENDER:
+                case QuestionType.GENDER_RANGE:
+                case QuestionType.NUMBER_RANGE:
+                case QuestionType.SCALE:
+                case QuestionType.ABOUT_ME:
+                case QuestionType.IMAGE_UPLOAD:
+                    return answer;
+                case QuestionType.AGE:
+                case QuestionType.DATE:
+                case QuestionType.EVENT_DATE:
+                    //TODO implement this
+                    return "";
+                //jsonObject.put("value", createDateJsonObject(answer));
+
+                case QuestionType.LOCATION:
+                case QuestionType.MY_LOCATION:
+                case QuestionType.EVENT_LOCATION:
+                case QuestionType.EVENT_LIST:
+
+                    JSONObject valueObject = value.getJSONObject("value");
+                    DataLocation dataLocation = DataLocation.fromJsonObject(valueObject);
+
+                    value.put("city", dataLocation.city);
+                    value.put("country_code", dataLocation.country_code);
+                    value.put("country_name ", dataLocation.country_name);
+                    value.put("country_code", dataLocation.country_code);
+                    value.put("text_address", dataLocation.text_address);
+                    value.put("distance_units", dataLocation.distance_units);
+                    value.put("distance_value", dataLocation.distance_value);
+                    value.put("distance_units", dataLocation.distance_units);
+                    value.put("distance_units", dataLocation.distance_units);
+                    value.put("place_name", dataLocation.place_name);
+                    value.put("place_id", dataLocation.place_id);
+
+                    return value;
+                case QuestionType.IDS:
+                    //jsonObject.put("value", createIdsList());
+                    //TODO implement this
+                    return "";
+                case QuestionType.EVENT_SCHEDULE:
+                    //TODO implement this
+                    //jsonObject.put("value", createJsonObject());
+                    return "";
+                case QuestionType.SETUP:
+                    //TODO implement this
+                    //jsonObject.put("value", createJsonObject());
+                    return "";
+                case QuestionType.PACE:
+                case QuestionType.TIME:
+                    //TODO implement this
+                    //jsonObject.put("value", getAnswerValue()/*ust number in this case*/);
+                    return "";
+
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            EMLog.e(TAG, "error in QuestionUtils.getAnswerValue: " + e.getMessage());
         }
 
-        return object;
+        return value;
     }
 }

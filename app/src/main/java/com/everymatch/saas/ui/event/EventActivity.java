@@ -32,7 +32,7 @@ public class EventActivity extends BaseActivity implements PeopleListener {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.event_layout, eventFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     public static void startActivity(Activity activity, DataEvent event) {

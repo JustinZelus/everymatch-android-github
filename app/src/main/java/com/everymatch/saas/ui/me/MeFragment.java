@@ -71,6 +71,15 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
         View v = inflater.inflate(R.layout.fragment_me, container, false);
 
         imgUser = (CircularImageView) v.findViewById(R.id.imgMeImage);
+        imgUser.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams params = imgUser.getLayoutParams();
+                params.height = params.width;
+                imgUser.setLayoutParams(params);
+                imgUser.requestLayout();
+            }
+        });
         ((TextView) v.findViewById(R.id.tvMeUserName)).setText(user.getName());
         ((TextView) v.findViewById(R.id.tvMeMemberSince)).setText(Utils.getDateStringFromDataDate(user.created_date, "MMM,yyyy"));
 

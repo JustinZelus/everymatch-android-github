@@ -330,11 +330,11 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
         }
 
         if (capturedImage.getWidth() <= 320) {
-            new NetworkErrorMessageDialog(getActivity(), dm.getResourceText(R.string.Blob_InvalidMinWidth)).show();
+            NetworkErrorMessageDialog.start(getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinWidth));
             return;
         }
         if (capturedImage.getHeight() <= 320) {
-            new NetworkErrorMessageDialog(getActivity(), dm.getResourceText(R.string.Blob_InvalidMinHeight)).show();
+            NetworkErrorMessageDialog.start(getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinHeight));
             return;
         }
 

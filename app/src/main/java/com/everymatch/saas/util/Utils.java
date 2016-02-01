@@ -91,7 +91,7 @@ public class Utils {
             //Date date = getDateDromDataDate(dataDate);
             //SimpleDateFormat fmt = new SimpleDateFormat(format);
             //return fmt.format(date);
-            return dataDate.month + "," + dataDate.day + "," + dataDate.year;
+            return dataDate.month + "." + dataDate.day + "." + dataDate.year;
         } catch (Exception ex) {
             return "";
         }
@@ -400,7 +400,7 @@ public class Utils {
                                 if (dataAnswers.questions_id == question.questions_id) {
 
                                     if (TextUtils.isEmpty(dataAnswers.text_label)) {
-                                        result += ", " + QuestionUtils.getAnsweredTextByAnswer(question, dataAnswers);
+                                        result += ", " + QuestionUtils.getAnsweredTitle(question, dataAnswers);
 
                                     } else {
                                         result += ", " + dataAnswers.text_label;
@@ -482,5 +482,32 @@ public class Utils {
         if (str.trim().length() == 0)
             return true;
         return false;
+    }
+
+    public static String getHourMinSecFromSeconds(int seconds) {
+        JSONObject answer = new JSONObject();
+        String timeString = "";
+        try {
+            int hours = seconds / 3600;
+            int minutes = (seconds % 3600) / 60;
+            int sec = seconds % 60;
+
+            if (hours > 0)
+                timeString += String.format("%02d", hours);
+            if (minutes > 0) {
+                if (hours > 0) timeString += ":";
+                timeString += String.format("%02d", minutes);
+            }
+            if (sec > 0) {
+                if (minutes > 0) timeString += ":";
+                timeString += String.format("%02d", sec);
+            }
+
+            answer.put("hours", "" + hours);
+            //timeString = String.format("%02d:%02d:%02d", hours, minutes, sec);
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
+        return timeString;
     }
 }

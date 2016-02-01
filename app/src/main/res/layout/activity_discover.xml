@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/fragment_discover_header"
+        layout="@layout/view_discover_header"
+        android:visibility="gone" />
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/discoverMenu"
+        android:layout_below="@+id/eventHeader">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/discoverMenu"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <com.everymatch.saas.view.DiscoverMenuItem
+            android:id="@+id/dmiDiscover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:dmi_icon_code="\ue690"
+            app:dmi_title_res="@string/Discover" />
+
+        <com.everymatch.saas.view.DiscoverMenuItem
+            android:id="@+id/dmiEvents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:dmi_icon_code="\ue692"
+            app:dmi_title_res="@string/Events" />
+
+        <com.everymatch.saas.view.DiscoverMenuItem
+            android:id="@+id/dmiPeople"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:dmi_icon_code="\ue64f"
+            app:dmi_title_res="@string/People" />
+
+        <com.everymatch.saas.view.DiscoverMenuItem
+            android:id="@+id/dmiNotification"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:dmi_icon_code="\ue651"
+            app:dmi_title_res="@string/Notification" />
+
+        <com.everymatch.saas.view.DiscoverMenuItem
+            android:id="@+id/dmiMore"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:dmi_icon_code="\ue630"
+            app:dmi_title_res="@string/More" />
+
+
+    </LinearLayout>
+</RelativeLayout>

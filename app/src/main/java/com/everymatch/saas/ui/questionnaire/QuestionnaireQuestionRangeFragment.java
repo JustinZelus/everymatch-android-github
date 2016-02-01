@@ -15,13 +15,14 @@ import com.everymatch.saas.view.RangeSeekBar;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBaseFragment{
+public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBaseFragment {
     private static final String TAG = "QuestionRange";
 
     TextView mValueTextView;
     RangeSeekBar<Integer> mRangeBar;
 
-    int mMin, mMax, mStep;
+    int mMin, mMax;
+    float mStep;
 
     public QuestionnaireQuestionRangeFragment() {
     }
@@ -42,7 +43,7 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
         RangeSeekBar.OnRangeSeekBarChangeListener<Integer> listener = new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar rangeSeekBar, Integer low, Integer high) {
-                Log.d(TAG, "low = " + low + " high = "+ high);
+                Log.d(TAG, "low = " + low + " high = " + high);
                 mValueTextView.setText(low.toString() + " - " + high);
                 setAnswer(low.toString() + " - " + high);
             }

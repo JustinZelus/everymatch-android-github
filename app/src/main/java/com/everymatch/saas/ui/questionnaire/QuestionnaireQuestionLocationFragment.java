@@ -1,6 +1,5 @@
 package com.everymatch.saas.ui.questionnaire;
 
-import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -16,10 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
@@ -30,7 +27,6 @@ import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.Types;
 import com.everymatch.saas.server.Data.DataLocation;
-import com.everymatch.saas.server.Data.DataLocation2;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.ShapeDrawableUtils;
@@ -48,14 +44,12 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -68,31 +62,29 @@ import java.util.Locale;
  * A placeholder fragment containing a simple view.
  */
 public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestionBaseFragment implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
-
     private static final String TAG = QuestionnaireQuestionLocationFragment.class.getSimpleName();
     public static final float DEFAULT_ZOOM_LEVEL = 12;
+
+    //Views
     MapView mMapView;
-    TextView mSetCurrentLoctionButton;
-    Button mRadiusPlusButton, mRadiusMinusButton;
+    TextView mSetCurrentLocationButton;
     TextView mRadiusTextView;
     EditText mRadiusEditText;
-    AutoCompleteTextView mLoctionmAutocompleteView;
+    AutoCompleteTextView etAddressInput;
     BaseTextView tvSetSpecificArea;
     ViewAnimator viewAnimator;
 
+    //Data
     double radius;
     private boolean isPlace;
-    private String placeName;
-    LatLng mSelectedPlaceLatLng;
-    String mCountryCode, mCountryName, mAddress, mCityCode;
+    //String mCountryCode, mCountryName, mAddress, mCityCode;
     boolean flagUserSetRadius = false;
+    DataLocation mDataLocation;
 
+    //MapData
     GoogleApiClient mGoogleApiClient;
     private PlaceAutocompleteAdapter mAdapter;
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
-
-    public QuestionnaireQuestionLocationFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +97,9 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
 //                .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        mAdapter = new PlaceAutocompleteAdapter(mActivity, R.layout.view_place_auto_complete, mGoogleApiClient, BOUNDS_GREATER_SYDNEY, null);
+        mDataLocation = new DataLocation();
     }
 
     @Override
@@ -132,76 +127,19 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
 
         mMapView = (MapView) view.findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
-        mSetCurrentLoctionButton = (TextView) view.findViewById(R.id.set_loction_button);
-        mSetCurrentLoctionButton.setText(Consts.Icons.icon_GPS);
-        mSetCurrentLoctionButton.setOnClickListener(this);
+        mSetCurrentLocationButton = (TextView) view.findViewById(R.id.set_loction_button);
+        mSetCurrentLocationButton.setText(Consts.Icons.icon_GPS);
+        mSetCurrentLocationButton.setOnClickListener(this);
 
-        mLoctionmAutocompleteView = (AutoCompleteTextView) view.findViewById(R.id.location_input);
-        mLoctionmAutocompleteView.setHint(dm.getResourceText(getString(R.string.Type_Name_Or_Location)));
-        mLoctionmAutocompleteView.setTextColor(ds.getIntColor(EMColor.NIGHT));
-
+        etAddressInput = (AutoCompleteTextView) view.findViewById(R.id.location_input);
         mRadiusEditText = (EditText) view.findViewById(R.id.radius_edittext);
-
         setRadiusValue();
-
-        mRadiusEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                flagUserSetRadius = true;
-                if (mHaveAnswer) {
-                    onLocationSelected(mSelectedPlaceLatLng, false);
-                    setAnswer(mAddress);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().trim().equals("0"))
-                    mRadiusEditText.setText("1");
-            }
-        });
-
-        mLoctionmAutocompleteView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() > 0)
-                    mSetCurrentLoctionButton.setText(Consts.Icons.icon_StatusNegative);
-                else mSetCurrentLoctionButton.setText(Consts.Icons.icon_GPS);
-            }
-        });
+        mRadiusEditText.addTextChangedListener(radiusTextWatcher);
 
         view.findViewById(R.id.typeLocationHolder).setBackgroundDrawable(ShapeDrawableUtils.getButtonStroked(ds.getIntColor(EMColor.FOG)));
         view.findViewById(R.id.radiusWrapper).setBackgroundDrawable(ShapeDrawableUtils.getButtonStroked(ds.getIntColor(EMColor.FOG)));
-        mLoctionmAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
-        mAdapter = new PlaceAutocompleteAdapter(mActivity, R.layout.view_place_auto_complete, mGoogleApiClient, BOUNDS_GREATER_SYDNEY, null);
-        mLoctionmAutocompleteView.setAdapter(mAdapter);
-        mLoctionmAutocompleteView.post(new Runnable() {
-            @Override
-            public void run() {
-                mLoctionmAutocompleteView.setDropDownWidth(mLoctionmAutocompleteView.getMeasuredWidth() + Utils.dpToPx(50));
-            }
-        });
 
-
-        //TODO: not always should be visible!
         mRadiusTextView = (TextView) view.findViewById(R.id.radius_textview);
-        mRadiusPlusButton = (Button) view.findViewById(R.id.button_plus);
-        mRadiusMinusButton = (Button) view.findViewById(R.id.button_minus);
-        mRadiusPlusButton.setOnClickListener(this);
-        mRadiusMinusButton.setOnClickListener(this);
-
         tvSetSpecificArea = (BaseTextView) view.findViewById(R.id.tvSetRadiusStageOne);
         tvSetSpecificArea.setOnClickListener(this);
 
@@ -209,12 +147,6 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
         viewAnimator.setInAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left));
         viewAnimator.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right));
 
-        if (!TextUtils.isEmpty(mQuestionAndAnswer.userAnswerStr))
-            recoverAnswer();
-        else {
-            if (mQuestionAndAnswer.question.default_value != null)
-                recoverDefaultAnswer();
-        }
 
         if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_EVENT) {
             tvSetSpecificArea.setVisibility(View.GONE);
@@ -222,16 +154,27 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
         if (flagUserSetRadius && mActivity.create_mode != QuestionnaireActivity.CREATE_MODE.CREATE_EVENT)
             tvSetSpecificArea.setVisibility(View.VISIBLE);
 
-        mLoctionmAutocompleteView.setInputType((InputType.TYPE_TEXT_FLAG_AUTO_CORRECT));
-
-        mMapView.getMap().setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+        //set input field settings
+        etAddressInput.setHint(dm.getResourceText(getString(R.string.Type_Name_Or_Location)));
+        etAddressInput.setTextColor(ds.getIntColor(EMColor.NIGHT));
+        etAddressInput.setInputType((InputType.TYPE_TEXT_FLAG_AUTO_CORRECT));
+        etAddressInput.setOnItemClickListener(mAutocompleteClickListener);
+        etAddressInput.setAdapter(mAdapter);
+        etAddressInput.addTextChangedListener(textWatcher);
+        etAddressInput.post(new Runnable() {
             @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                float zoom = cameraPosition.zoom;
-                Log.d(TAG, "zoom is:" + zoom);
+            public void run() {
+                etAddressInput.setDropDownWidth(etAddressInput.getMeasuredWidth() + Utils.dpToPx(50));
             }
         });
 
+
+        if (!TextUtils.isEmpty(mQuestionAndAnswer.userAnswerStr))
+            recoverAnswer();
+        else {
+            if (mQuestionAndAnswer.question.default_value != null)
+                recoverDefaultAnswer();
+        }
     }
 
     private void setRadiusValue() {
@@ -265,7 +208,17 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
             return;
 
         try {
+            //Gson gson = new Gson();
+            //String json = new Gson().toJson(mQuestionAndAnswer.userAnswerData);
+            JSONObject jsonObject = mQuestionAndAnswer.userAnswerData.getJSONObject("value");
+            mDataLocation = DataLocation.fromJsonObject(jsonObject);
+            //onLocationSelected(mDataLocation.getLatLng());
 
+            etAddressInput.setText(mDataLocation.text_address);
+            onLocationSelected(mDataLocation.getLatLng());
+
+            setAnswer(mDataLocation.getTitle());
+            /*
             try {
                 DataLocation2 dataLocation = new Gson().fromJson(mQuestionAndAnswer.userAnswerData.get("value").toString(), DataLocation2.class);
                 LatLng latLng = new LatLng(dataLocation.coordinates.value[0][0], dataLocation.coordinates.value[0][1]);
@@ -276,7 +229,7 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
                 mCountryName = dataLocation.country;
                 mCityCode = dataLocation.city_code;
 
-                mLoctionmAutocompleteView.setText(mAddress);
+                etAddressInput.setText(mAddress);
 
                 onLocationSelected(latLng);
                 setAnswer(mAddress);
@@ -290,19 +243,18 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
                 mAddress = mQuestionAndAnswer.userAnswerStr;
                 //(new JSONObject(dataLocation.text_address)).get(getString(R.string.host_language)).toString();
                 mCountryCode = dataLocation.country_code;
-                mCountryName = dataLocation.country;
+                mCountryName = dataLocation.country_name;
                 mCityCode = dataLocation.city_code;
                 int radius = dataLocation.distance_value;
                 mRadiusEditText.setText(radius);
 
-                mLoctionmAutocompleteView.setText(mAddress);
+                etAddressInput.setText(mAddress);
 
                 onLocationSelected(latLng);
                 setAnswer(mAddress);
             } catch (Exception e1) {
             }
-
-
+    */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -334,16 +286,11 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
                 if (mActivity.create_mode != QuestionnaireActivity.CREATE_MODE.CREATE_EVENT)
                     tvSetSpecificArea.setVisibility(View.VISIBLE);
 
-                if (mSetCurrentLoctionButton.getText().equals(Consts.Icons.icon_GPS))
-                    setCurrentLoctionSelected();
+                if (mSetCurrentLocationButton.getText().equals(Consts.Icons.icon_GPS))
+                    setCurrentLocationSelected();
                 else clearAnswer();
                 break;
-            case R.id.button_plus:
-                //TODO
-                break;
-            case R.id.button_minus:
-                //TODO
-                break;
+
             case R.id.tvSetRadiusStageOne:
                 viewAnimator.showNext();
                 mRadiusEditText.setText(mRadiusEditText.getText());
@@ -353,13 +300,13 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
 
     public void clearAnswer() {
         super.clearAnswer();
-        mLoctionmAutocompleteView.setText("");
-        mLoctionmAutocompleteView.clearListSelection();
+        etAddressInput.setText("");
+        etAddressInput.clearListSelection();
 
         clearMarksOnMap();
     }
 
-    private void setCurrentLoctionSelected() {
+    private void setCurrentLocationSelected() {
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (lastLocation != null) {
             onLocationSelected(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
@@ -404,7 +351,6 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
 
             Log.i(TAG, "Called getPlaceById to get Place details for " + item.placeId);
 
-            //mLoctionmAutocompleteView.setSelection(0);
         }
     };
 
@@ -418,14 +364,13 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
         public void onResult(PlaceBuffer places) {
             if (!places.getStatus().isSuccess()) {
                 // Request did not complete successfully
-                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                EMLog.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
                 places.release();
                 return;
             }
             try {
                 // Get the Place object from the buffer.
                 final Place place = places.get(0);
-                mAddress = place.getAddress().toString();
                 List<Integer> type = place.getPlaceTypes();
                 if (type.contains(Place.TYPE_STREET_ADDRESS) || type.contains(Place.TYPE_ROUTE) || type.contains(Place.TYPE_LOCALITY) || type.contains(Place.TYPE_POSTAL_CODE)) {
                     EMLog.d(TAG, "Place is street address");
@@ -433,9 +378,11 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
                 } else {
                     EMLog.d(TAG, "Place is not address");
                     isPlace = true;
-                    placeName = place.getName().toString();
+                    mDataLocation.place_name = place.getName().toString();
                 }
 
+                /*
+                mAddress = place.getAddress().toString();
                 mCountryCode = place.getLocale().getCountry();
                 mCountryName = place.getLocale().getDisplayCountry();
                 mCityCode = place.getName().toString();
@@ -447,13 +394,16 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
                     mCityCode = mAddress;
 
                 onLocationSelected(place.getLatLng());
-                setAnswer(mAddress);
 
+                setAnswer(mAddress);
+                */
+
+                onLocationSelected(place.getLatLng());
                 getLocationAddress(place.getLatLng().latitude, place.getLatLng().longitude, false);
 
                 Log.i(TAG, "Place details received: " + place.getName());
             } catch (Exception e) {
-                e.printStackTrace();
+                EMLog.e(TAG, e.getMessage());
             }
             places.release();
         }
@@ -465,24 +415,20 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
     }
 
     private void onLocationSelected(final LatLng selectedPlaceLatLng, boolean closeKeyboard) {
-        mSelectedPlaceLatLng = selectedPlaceLatLng;
-
+        //mSelectedPlaceLatLng = selectedPlaceLatLng;
+        mDataLocation.setLatLon(selectedPlaceLatLng);
         GoogleMap map = mMapView.getMap();
         if (map != null) {
             Log.i(TAG, "setting the map to lat/lng: " + selectedPlaceLatLng);
 
-            // close keyboard
-            if (closeKeyboard) {
-                InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mLoctionmAutocompleteView.getWindowToken(), 0);
-            }
-            Handler h = new Handler();
-            h.postDelayed(new Runnable() {
+            hideKeyboard();
+
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    markPlaceOnMap(selectedPlaceLatLng);
+                    markPlaceOnMap(mDataLocation.getLatLng());
                 }
-            }, 2000);
+            }, 1000);
         }
     }
 
@@ -551,33 +497,13 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
 
         try {
             Geocoder geocoder = new Geocoder(mActivity, Locale.getDefault());
-            addresses = geocoder.getFromLocation(
-                    latitude,
-                    longitude,
-                    // In this sample, get just a single address.
-                    1);
-//        } catch (IOException ioException) {
-//            // Catch network or other I/O problems.
-//            errorMessage = getString(R.string.service_not_available);
-//            Log.e(TAG, errorMessage, ioException);
-//        } catch (IllegalArgumentException illegalArgumentException) {
-//            // Catch invalid latitude or longitude values.
-//            errorMessage = getString(R.string.invalid_lat_long_used);
-//            Log.e(TAG, errorMessage + ". " +
-//                    "Latitude = " + location.getLatitude() +
-//                    ", Longitude = " +
-//                    location.getLongitude(), illegalArgumentException);
+            addresses = geocoder.getFromLocation(latitude, longitude,/*In this sample, get just a single address.*/ 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         // Handle case where no address was found.
         if (addresses == null || addresses.size() == 0) {
-//            if (errorMessage.isEmpty()) {
-//                errorMessage = getString(R.string.no_address_found);
-//                Log.e(TAG, errorMessage);
-//            }
-//            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
         } else {
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<String>();
@@ -590,56 +516,51 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
                 addressStringBuilder.append(address.getAddressLine(i)).append(' ');
             }
 
-            mCountryCode = address.getCountryCode();
-            mCountryName = address.getCountryName();
+            mDataLocation.country_code = address.getCountryCode();
+            mDataLocation.city = address.getLocality();
+            mDataLocation.distance_units = ds.getUser().user_settings.distance;
+            mDataLocation.distance_value = getRadius();
+            mDataLocation.place_name = (isPlace ? mDataLocation.place_name : "");
+            mDataLocation.text_address = etAddressInput.getText().toString();
 
-            mCityCode = address.getLocality();
+            setAnswer(mDataLocation.getTitle());
 
-            if (setTextToEditText) {
-                mAddress = addressStringBuilder.toString();
-                mLoctionmAutocompleteView.setText(addressStringBuilder.toString());
-            }
-
-            setAnswer(mAddress);
         }
-
     }
 
     @Override
     public JSONObject createLocationJsonObject(String locationStr) {
-        JSONObject jsonObject = new JSONObject();
-        String raiusStr = mRadiusEditText.getText().toString();
-        radius = TextUtils.isEmpty(raiusStr) ? 0 : Double.parseDouble(raiusStr);
+        JSONObject value = new JSONObject();
+        String radiusStr = mRadiusEditText.getText().toString();
+        radius = TextUtils.isEmpty(radiusStr) ? 0 : Double.parseDouble(radiusStr);
 
         try {
-            //"{\"type\":\"point\",\"value\":[[" + mSelectedPlaceLatLng.latitude + "," + mSelectedPlaceLatLng.longitude + "]]}"
             JSONObject coordinateJsonObject = new JSONObject();
             JSONArray coordinateJsonArray1 = new JSONArray();
             JSONArray coordinateJsonArray2 = new JSONArray();
-            coordinateJsonArray2.put(mSelectedPlaceLatLng.latitude);
-            coordinateJsonArray2.put(mSelectedPlaceLatLng.longitude);
+            coordinateJsonArray2.put(mDataLocation.getLatLng().latitude);
+            coordinateJsonArray2.put(mDataLocation.getLatLng().longitude);
             coordinateJsonArray1.put(coordinateJsonArray2);
             coordinateJsonObject.put("type", "point");
             coordinateJsonObject.put("value", coordinateJsonArray1);
 
-            JSONObject addressJson = new JSONObject();
-            addressJson.put(ds.getCulture(), mAddress);
+            value.put("coordinates", coordinateJsonObject);
+            value.put("city", mDataLocation.city);
+            value.put("country_code", mDataLocation.country_code);
+            value.put("country_name ", mDataLocation.country_name);
+            value.put("text_address", mDataLocation.text_address);
+            value.put("distance_units", ds.getUser().user_settings.distance);
+            value.put("distance_value", getRadius());
+            value.put("place_name", isPlace ? mDataLocation.place_name : "");
+            value.put("place_id", mDataLocation.place_id);
 
-            jsonObject.put("coordinates", coordinateJsonObject);
-            //jsonObject.put("city_code", mCityCode);
-            jsonObject.put("city", mCityCode);
-            jsonObject.put("country_code", mCountryCode);
-            jsonObject.put("text_address", addressJson);
-            jsonObject.put("distance_units", "km");
-            jsonObject.put("country_name ", mCountryName);
-            jsonObject.put("distance_value", getRadius());
-            jsonObject.put("place_name", isPlace ? placeName : "");
-            jsonObject.put("place_id", "");
+
         } catch (Exception e) {
             e.printStackTrace();
+            EMLog.e(TAG, e.getMessage());
         }
 
-        return jsonObject;
+        return value;
     }
 
     private double getUnit() {
@@ -669,4 +590,46 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
         double radius = TextUtils.isEmpty(radiusStr) ? 0 : Double.parseDouble(radiusStr);
         return radius * getUnit();
     }
+
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.length() > 0)
+                mSetCurrentLocationButton.setText(Consts.Icons.icon_StatusNegative);
+            else mSetCurrentLocationButton.setText(Consts.Icons.icon_GPS);
+        }
+    };
+
+    TextWatcher radiusTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            flagUserSetRadius = true;
+            if (mHaveAnswer) {
+                onLocationSelected(mDataLocation.getLatLng(), false);
+                setAnswer(mDataLocation.getTitle());
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.toString().trim().equals("0"))
+                mRadiusEditText.setText("1");
+        }
+    };
+
 }

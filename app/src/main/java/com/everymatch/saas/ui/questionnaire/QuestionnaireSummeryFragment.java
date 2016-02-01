@@ -83,7 +83,7 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
         mHeader = (EventHeader) view.findViewById(R.id.eventHeader);
         mHeader.setListener(this);
         mHeader.getBackButton().setText(Consts.Icons.icon_New_Close);
-        mHeader.getIconOne().setText(dm.getResourceText(R.string.Cancel));
+        mHeader.getIconOne().setText(dm.getResourceText(R.string.Cancel_Exit));
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setVisibility(View.GONE);
         mHeader.setTitle(dm.getResourceText(R.string.Summary));

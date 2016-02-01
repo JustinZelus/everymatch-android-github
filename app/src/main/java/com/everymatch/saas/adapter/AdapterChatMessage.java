@@ -1,7 +1,6 @@
 package com.everymatch.saas.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,22 +9,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
+import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
-import com.everymatch.saas.server.Data.DataChatBlock;
 import com.everymatch.saas.server.Data.DataChatMessage;
 import com.everymatch.saas.server.Data.DataConversation;
 import com.everymatch.saas.server.Data.DataDate;
-import com.everymatch.saas.server.ServerConnector;
-import com.everymatch.saas.server.requests.RequestChatMessages;
-import com.everymatch.saas.server.responses.BaseResponse;
-import com.everymatch.saas.server.responses.ErrorResponse;
-import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.util.ShapeDrawableUtils;
+import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseTextView;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,6 +36,8 @@ public class AdapterChatMessage extends EmBaseAdapter<DataChatMessage> {
     private DataConversation conversation;
     ChatCallback callback;
     DataStore ds = DataStore.getInstance();
+    int mPictureSize;
+
 
     public AdapterChatMessage(ArrayList<DataChatMessage> data, Context con, DataConversation conversation) {
         mData = data;
@@ -50,6 +45,7 @@ public class AdapterChatMessage extends EmBaseAdapter<DataChatMessage> {
         this.con = con;
         inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         myUserId = ds.getUser().users_id;
+        mPictureSize = Utils.dpToPx(40);
     }
 
     @Override
@@ -66,27 +62,23 @@ public class AdapterChatMessage extends EmBaseAdapter<DataChatMessage> {
 
         tvContent.setText(item.message);
 
-        final String urlString = "https://cdn2.everymatch.com/remote/emprod.everymatchintern.netdna-cdn.com/memberprofilepictures/" + item.sender + "/Current/L." + item.sender + ".jpg?width=500&height=500&format=jpg";
-
         //this is my message
         if (item.sender.equals(myUserId)) {
             tvContent.setTextColor(ds.getIntColor(EMColor.NIGHT));
-            //balloon.setBackgroundResource(R.drawable.bg_chat_sent_first);
             balloon.setBackgroundDrawable(ShapeDrawableUtils.getMyChatMessage(true, true));
 
             // is this the same sender that have sent more then one message???
             if (i > 0 && mData.get(i - 1).sender.equals(item.sender)) {
                 imgUserImage.setVisibility(View.INVISIBLE);
-                //balloon.setBackgroundResource(R.drawable.bg_chat_sent);
                 balloon.setBackgroundDrawable(ShapeDrawableUtils.getMyChatMessage(true, false));
 
 
             } else {
                 imgUserImage.setVisibility(View.VISIBLE);
-                Picasso.with(imgUserImage.getContext())
-                        .load(urlString)
-                                //.placeholder(DataManager.getInstance().getAvatarDrawable())
-                        .placeholder(R.drawable.picasso_loader)
+
+                Picasso.with(con)
+                        .load(item.image_url)
+                        .placeholder(DataManager.getInstance().getAvatarDrawable())
                         .into(imgUserImage);
             }
 
@@ -96,22 +88,21 @@ public class AdapterChatMessage extends EmBaseAdapter<DataChatMessage> {
             //other user message
         } else {
             tvContent.setTextColor(ds.getIntColor(EMColor.WHITE));
-            //balloon.setBackgroundResource(R.drawable.bg_chat_received_first);
             balloon.setBackgroundDrawable(ShapeDrawableUtils.getMyChatMessage(false, true));
 
 
             // is this the same sender?
             if (i > 1 && mData.get(i - 1).sender.equals(item.sender)) {
                 imgOtherUserImage.setVisibility(View.INVISIBLE);
-                //balloon.setBackgroundResource(R.drawable.bg_chat_received);
                 balloon.setBackgroundDrawable(ShapeDrawableUtils.getMyChatMessage(false, false));
             } else {
                 // load other user image
                 imgOtherUserImage.setVisibility(View.VISIBLE);
-                Picasso.with(imgOtherUserImage.getContext())
-                        .load(urlString)
-                                //.placeholder(DataManager.getInstance().getAvatarDrawable())
-                        .placeholder(R.drawable.picasso_loader)
+
+
+                Picasso.with(con)
+                        .load(item.image_url)
+                        .placeholder(DataManager.getInstance().getAvatarDrawable())
                         .into(imgOtherUserImage);
             }
 
@@ -148,28 +139,6 @@ public class AdapterChatMessage extends EmBaseAdapter<DataChatMessage> {
     public void addMessages(DataChatMessage msg) {
         mData.add(msg);
         this.notifyDataSetChanged();
-    }
-
-    private void loadMoreMessages() {
-        flag_loading = true;
-        ServerConnector.getInstance().processRequest(new RequestChatMessages(conversation._id, -1/*not really metter*/, ((mData.size() - 1) * -1) - 10), new ServerConnector.OnResultListener() {
-            @Override
-            public void onSuccess(BaseResponse baseResponse) {
-                try {
-                    JSONObject jsonObject = new JSONObject(((ResponseString) baseResponse).responseStr);
-                    DataChatBlock dataChatBlock = new DataChatBlock(jsonObject);
-                    addMessages(dataChatBlock.messages);
-                    flag_loading = false;
-                } catch (Exception ex) {
-                    Log.i("parse Error", ex.getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(ErrorResponse errorResponse) {
-                //Toast.makeText(getActivity(), errorResponse.getServerRawResponse(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public static Date getDate(DataDate dataDate) {

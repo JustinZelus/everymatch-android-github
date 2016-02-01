@@ -35,7 +35,7 @@ public class RequestChatMessageSend extends BaseRequest {
 
     @Override
     public String getEncodedBody() {
-        Map m = new HashMap<String, String>();
+        Map m = new HashMap<>();
         m.put("message", message);
         if (isFirstCall)
             m.put("channel_name", id);

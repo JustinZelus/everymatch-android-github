@@ -33,7 +33,7 @@ public class DataQuestion implements Serializable {
     public String irrelevant_default_state;
     public boolean deal_breaker;
     public DataIcon icon;
-    public int step;
+    public float step;
     public String range;
     public boolean mandatory;
     public boolean user_profile;

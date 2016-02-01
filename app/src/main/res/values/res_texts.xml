@@ -136,7 +136,9 @@
     <string name="Reply">Reply</string>
     <string name="Me">Me</string>
     <string name="Change_Language_Alert_Subtitle">Change_Language_Alert_Subtitle</string>
+<!--
     <string name="Inbox">Inbox</string>
+-->
     <string name="Inbox_title">Inbox_title</string>
     <string name="Profile_Label">Profile_Label</string>
     <string name="Pending">Pending</string>
@@ -145,5 +147,10 @@
     <string name="Unarchive">Unarchive</string>
     <string name="Delete">Delete</string>
     <string name="Back">Back</string>
+    <string name="More">More</string>
+    <string name="Activate_Account">Activate_Account</string>
+    <string name="Cancel_Exit">Cancel_Exit</string>
+    <string name="Participating">Participating</string>
+    <string name="Age">Age</string>
 
 </resources>

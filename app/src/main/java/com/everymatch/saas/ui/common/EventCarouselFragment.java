@@ -109,7 +109,7 @@ public class EventCarouselFragment extends Fragment {
 
     }
 
-    public void refreshData(DataEventHolder dataEventHolder, String leftText, String rightText){
+    public void refreshData(DataEventHolder dataEventHolder, String leftText, String rightText) {
         getArguments().putSerializable(EXTRA_EVENT_HOLDER, dataEventHolder);
         getArguments().putString(EXTRA_LEFT_TEXT, leftText);
         getArguments().putString(EXTRA_RIGHT_TEXT, rightText);
@@ -126,7 +126,7 @@ public class EventCarouselFragment extends Fragment {
 
         mEventHolder = (DataEventHolder) getArguments().getSerializable(EXTRA_EVENT_HOLDER);
 
-        if (Utils.isArrayListEmpty(mEventHolder.getEvents())){
+        if (Utils.isArrayListEmpty(mEventHolder.getEvents())) {
             mRootView.setVisibility(View.GONE);
             return;
         }

@@ -63,18 +63,22 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
         btnSelect.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton());
         btnSelect.setOnClickListener(this);
         mListView.setAdapter(mAdapter);
+
+        //simulate search click and insert text
+        onTwoIconClicked();
+        mHeader.getEditTitle().setText(ds.getUser().user_settings.getTime_zone().title);
+
     }
 
     private void setHeader() {
         mHeader.getBackButton().setText(Consts.Icons.icon_New_Close);
-        mHeader.getIconOne().setText("Time Zone");
 
         mHeader.setListener(this);
         mHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
         mHeader.getIconOne().setVisibility(View.GONE);
         mHeader.getIconTwo().setText(Consts.Icons.icon_Search);
         mHeader.getIconThree().setVisibility(View.GONE);
-        mHeader.setTitle("Time Zone");
+        mHeader.setTitle(dm.getResourceText(R.string.Time_Zone));
 
         mHeader.getEditTitle().addTextChangedListener(new TextWatcher() {
             @Override
@@ -90,6 +94,8 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
                 mAdapter.getFilter().filter(s);
             }
         });
+
+
     }
 
     @Override
@@ -102,7 +108,7 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
 
     @Override
     public void onBackButtonClicked() {
-        getActivity().onBackPressed();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override
@@ -123,7 +129,7 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
             isClicked = true;
         } else {
             mHeader.getTitle().setVisibility(View.VISIBLE);
-            mHeader.setTitle("Events");
+            mHeader.setTitle(dm.getResourceText(R.string.Time_Zone));
             mHeader.getEditTitle().setVisibility(View.GONE);
 
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);

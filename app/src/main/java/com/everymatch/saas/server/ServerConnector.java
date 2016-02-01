@@ -65,7 +65,7 @@ public class ServerConnector {
         processRequest(baseRequest, onResultListener, null);
     }
 
-    public void processRequest(final BaseRequest baseRequest, final OnResultListener onResultListener, Object tag){
+    public void processRequest(final BaseRequest baseRequest, final OnResultListener onResultListener, Object tag) {
 
         if (!Utils.hasInternetConnection()) {
             Intent intent = new Intent(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
@@ -98,12 +98,13 @@ public class ServerConnector {
             case Request.Method.DELETE:
             case Request.Method.PATCH:
                 // my patch here (idan) - did it because unsave event base on delete with body
-                if (!Utils.isEmpty(baseRequest.getEncodedBody()) && GsonRequest.CONTENT_TYPE_X_URL_ENCODED.equals(baseRequest.getBodyContentType())) {
+                /*if (!Utils.isEmpty(baseRequest.getEncodedBody())) {
                     body = "=" + baseRequest.getEncodedBody();
-                } else {
-                    url = url.replaceAll(" ", "%20");
-                }
-                break;
+                } else*/
+            {
+                url = url.replaceAll(" ", "%20");
+            }
+            break;
         }
 
         Log.i(TAG, "serverConnector processRequest: " + url + "\n" + "with body: " + body);
@@ -157,10 +158,13 @@ public class ServerConnector {
                     }
                 }
 
-                Intent intent = new Intent(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
-                intent.putExtra(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR_TITLE, errorStr);
-                LocalBroadcastManager.getInstance(EverymatchApplication.getContext()).sendBroadcast(intent);
-                //new NetworkErrorMessageDialog(EverymatchApplication.getContext(), errorStr).show();
+                //Intent intent = new Intent(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
+                //intent.putExtra(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR_TITLE, errorStr);
+                //LocalBroadcastManager.getInstance(EverymatchApplication.getContext()).sendBroadcast(intent);
+
+                NetworkErrorMessageDialog.start(EverymatchApplication.getFragmentManager(), errorStr);
+                //NetworkErrorMessageDialog(EverymatchApplication.getContext(), errorStr).show();
+
             }
         });
 

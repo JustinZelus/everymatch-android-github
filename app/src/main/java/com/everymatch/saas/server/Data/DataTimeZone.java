@@ -26,4 +26,8 @@ public class DataTimeZone implements Serializable {
             return 0;
         }
     }
+
+    public DataTimeZone() {
+        title = "";
+    }
 }

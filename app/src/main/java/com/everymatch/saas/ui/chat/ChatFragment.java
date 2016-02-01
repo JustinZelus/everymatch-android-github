@@ -145,7 +145,7 @@ public class ChatFragment extends BaseFragment implements EventHeader.OnEventHea
         mHeader.getIconOne().setVisibility(View.GONE);
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setText(Consts.Icons.icon_Search);
-        mHeader.setTitle("Chat");
+        mHeader.setTitle(dm.getResourceText(R.string.Inbox_title));
         mHeader.getEditTitle().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -226,7 +226,7 @@ public class ChatFragment extends BaseFragment implements EventHeader.OnEventHea
             isClicked = true;
         } else {
             mHeader.getTitle().setVisibility(View.VISIBLE);
-            mHeader.setTitle("Chat");
+            mHeader.setTitle(dm.getResourceText(R.string.Inbox_title));
             mHeader.getEditTitle().setVisibility(View.GONE);
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
@@ -289,7 +289,11 @@ public class ChatFragment extends BaseFragment implements EventHeader.OnEventHea
     private void sendChatMessage(String msg) {
         //  we get string response not Json
         //String id = getPrefix() + (mChatType.equals(CHAT_TYPE_USER) ? mConversationId : mDataConversation._id);
-        ServerConnector.getInstance().processRequest(new RequestChatMessageSend(getChannelName(), msg, mDataConversation._id == null), new ServerConnector.OnResultListener() {
+        String id = getChannelName();
+        if(mDataConversation._id != null){
+            id = mDataConversation._id;
+        }
+        ServerConnector.getInstance().processRequest(new RequestChatMessageSend(id, msg, mDataConversation._id == null), new ServerConnector.OnResultListener() {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
                 try {

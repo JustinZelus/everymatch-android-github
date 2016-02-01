@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.everymatch.saas.view.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/event_header"
     android:layout_width="match_parent"
     android:layout_height="54dp">
 
-    <com.everymatch.saas.view.BaseLinearLayout
+    <com.everymatch.saas.view.BaseRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
@@ -17,6 +18,7 @@
             android:id="@+id/event_header_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center|center_vertical"
             android:layout_marginRight="10dp"
             android:clickable="true"
@@ -30,24 +32,46 @@
             android:id="@+id/event_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="2dp"
+            android:layout_toRightOf="@+id/event_header_back"
             android:layout_weight="1"
             android:gravity="start"
+            android:paddingBottom="6dp"
+            android:paddingLeft="6dp"
+            android:paddingTop="6dp"
             android:textSize="16sp"
-            android:padding="6dp"
             android:textStyle="bold"
             app:font="lato_font"
-            app:text_color="white_color" />
-        <!--android:layout_marginTop="18dp"
-            android:layout_marginBottom="18dp"-->
+            app:text_color="white_color"
+            tools:text="title" />
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/event_header_arrowDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/event_header_title"
+            android:gravity="start"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:font="lato_font"
+            app:iconText="icon-ArrowDown"
+            app:text_color="white_color"
+            tools:text="▼" />
 
         <com.everymatch.saas.view.BaseEditText
             android:id="@+id/event_header_title_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/actionsHolder"
+            android:layout_toRightOf="@+id/event_header_arrowDown"
             android:layout_weight="1"
             android:focusable="true"
             android:gravity="left|center_vertical"
@@ -62,8 +86,11 @@
             android:layout_marginBottom="18dp"-->
 
         <LinearLayout
+            android:id="@+id/actionsHolder"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -107,7 +134,7 @@
         </LinearLayout>
 
 
-    </com.everymatch.saas.view.BaseLinearLayout>
+    </com.everymatch.saas.view.BaseRelativeLayout>
 
     <com.everymatch.saas.view.BaseTextView
         android:id="@+id/view_event_header_center_text"

@@ -6,14 +6,14 @@
     app:bg_color="background_color"
     tools:context=".ui.discover.DiscoverActivity">
 
-    <include
+    <!--<include
         android:id="@+id/fragment_discover_header"
-        layout="@layout/view_discover_header" />
+        layout="@layout/view_discover_header" />-->
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="54dp">
+        android:layout_marginTop="0dp">
 
         <ScrollView
             android:layout_width="match_parent"

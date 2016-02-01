@@ -30,7 +30,7 @@ public class ResourcesDeserializer implements JsonDeserializer<ResponseResources
         for (int i = 0; i < size; i++) {
             JsonElement jsonElement = resourcesJsonArray.get(i);
             Resource resource = context.deserialize(jsonElement, Resource.class);
-            responseResources.dataResources.resourcesMap.put(resource.key, resource);
+            responseResources.dataResources.getResourcesMap().put(resource.key, resource);
         }
 
         return responseResources;

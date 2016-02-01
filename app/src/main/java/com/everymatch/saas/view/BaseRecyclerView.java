@@ -6,17 +6,28 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.everymatch.saas.util.EMLog;
+
 /**
  * Created by dors on 12/2/15.
  */
 public class BaseRecyclerView extends RecyclerView {
+     public final String TAG = getClass().getName();
+
     public BaseRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+
     @Override
     public boolean fling(int velocityX, int velocityY) {
+        if(getAdapter().getItemCount()<=1){
+            EMLog.d(TAG,"has on event in recycler");
+            return super.fling(velocityX, velocityY);
+        }
+
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
+
 
         int lastVisibleView = linearLayoutManager.findLastVisibleItemPosition();
         int firstVisibleView = linearLayoutManager.findFirstVisibleItemPosition();

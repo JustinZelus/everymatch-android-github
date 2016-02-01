@@ -39,12 +39,14 @@ import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.chat.ConversationsFragment;
 import com.everymatch.saas.ui.common.EventCarouselFragment;
 import com.everymatch.saas.ui.common.PeopleCarouselFragment;
+import com.everymatch.saas.ui.dialog.menus.MenuChangeActivity;
 import com.everymatch.saas.ui.event.MyEventsFragment;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseIconTextView;
+import com.everymatch.saas.view.EventHeader;
 import com.everymatch.saas.view.IconImageView;
 import com.everymatch.saas.view_controller.DiscoverActivitiesViewController;
 import com.everymatch.saas.view_controller.DiscoverActivitiesViewController.DiscoverActivitiesListener;
@@ -68,7 +70,9 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
 
     // Views
     private LinearLayout mFragmentContainer;
-    private View mHeader, mActivityPopup;
+    private View mHeaderTmp, mActivityPopup;
+    private EventHeader mHeader;
+
     private BaseIconTextView mButtonMore;
     private TextView mHeaderTitle;
     private IconImageView mIcon;
@@ -116,24 +120,35 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((DiscoverActivity)getActivity()).setSelectedMenuItem(DiscoverActivity.DISCOVER_MENU_ITEMS.DISCOVER);
         // Bind views
         mProgressBar.setVisibility(View.GONE);
         mFragmentContainer = (LinearLayout) view.findViewById(R.id.fragment_discover_container);
-        mHeader = view.findViewById(R.id.fragment_discover_header);
-        mHeaderTitle = (TextView) mHeader.findViewById(R.id.view_discover_header_title);
-        mIcon = (IconImageView) mHeader.findViewById(R.id.view_discover_header_icon);
+        //here we get the header from the activity
+        mHeaderTmp = (getActivity()).findViewById(R.id.fragment_discover_header);
+        mHeaderTmp.setVisibility(View.GONE);
+        mHeader = (EventHeader) getActivity().findViewById(R.id.eventHeader);
+        setHeader();
+
+        //mHeaderTmp = view.findViewById(R.id.fragment_discover_header);
+        mHeaderTitle = (TextView) mHeaderTmp.findViewById(R.id.view_discover_header_title);
+        mIcon = (IconImageView) mHeaderTmp.findViewById(R.id.view_discover_header_icon);
         mActivityPopup = view.findViewById(R.id.fragment_discover_activities_popup);
-        mButtonMore = (BaseIconTextView) view.findViewById(R.id.view_discover_header_menu_more);
-        mButtonNotifications = (BaseIconTextView) view.findViewById(R.id.tv_view_notification_icon);
+        mButtonMore = (BaseIconTextView) mHeaderTmp.findViewById(R.id.view_discover_header_menu_more);
+        mButtonNotifications = (BaseIconTextView) mHeaderTmp.findViewById(R.id.tv_view_notification_icon);
 
         // click listeners
-        view.findViewById(R.id.tv_view_people_icon).setOnClickListener(this);
-        view.findViewById(R.id.tv_view_my_event_icon).setOnClickListener(this);
-        view.findViewById(R.id.tv_view_notification_icon);
+        mHeaderTmp.findViewById(R.id.tv_view_people_icon).setOnClickListener(this);
+        mHeaderTmp.findViewById(R.id.tv_view_my_event_icon).setOnClickListener(this);
+        mHeaderTmp.findViewById(R.id.tv_view_notification_icon);
+
+        //view.findViewById(R.id.tv_view_people_icon).setOnClickListener(this);
+        //view.findViewById(R.id.tv_view_my_event_icon).setOnClickListener(this);
+        //view.findViewById(R.id.tv_view_notification_icon);
 
         mButtonNotifications.setOnClickListener(this);
 
-        mHeader.findViewById(R.id.view_discover_header_title_container).setOnClickListener(this);
+        mHeaderTmp.findViewById(R.id.view_discover_header_title_container).setOnClickListener(this);
         mButtonMore.setOnClickListener(this);
 
         mViewNoDataContainer = (FrameLayout) view.findViewById(R.id.fragment_discover_view_no_data_container);
@@ -146,8 +161,48 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
         fetchUnReadMessages();
     }
 
-    private void handleActivities(Bundle savedInstanceState) {
+    private void setHeader() {
+        mHeader.setListener(new EventHeader.OnEventHeader() {
+            @Override
+            public void onBackButtonClicked() {
 
+            }
+
+            @Override
+            public void onOneIconClicked() {
+
+            }
+
+            @Override
+            public void onTwoIconClicked() {
+
+            }
+
+            @Override
+            public void onThreeIconClicked() {
+
+            }
+        });
+
+        mHeader.getBackButton().setVisibility(View.GONE);
+        //mHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
+        mHeader.getIconOne().setVisibility(View.GONE);
+        mHeader.getIconTwo().setVisibility(View.GONE);
+        mHeader.getIconThree().setVisibility(View.GONE);
+        mHeader.setArrowDownVisibility(true);
+        mHeader.getTitle().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MenuChangeActivity menuChangeActivity = new MenuChangeActivity();
+                menuChangeActivity.setTargetFragment(DiscoverFragment.this, MenuChangeActivity.REQUEST_CODE_CHANGE_ACTIVITY);
+                menuChangeActivity.show(getActivity().getSupportFragmentManager(), "");
+            }
+        });
+
+        //mHeader.setTitle();
+    }
+
+    private void handleActivities(Bundle savedInstanceState) {
         if (mActivities == null) {
             setUserActivities();
             // Check if we have saved state
@@ -162,16 +217,18 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
             } else {
                 setCurrentActivity(savedInstanceState.getString(ACTIVITY_ID));
             }
+            ((DiscoverActivity)(getActivity())).currentActivityId = mCurrentActivity.client_id;
+
             fetchNotifications();
             fetchUnReadMessages();
         }
+
 
         mDiscoverActivitiesViewController = new DiscoverActivitiesViewController(mActivityPopup, mActivities);
         mDiscoverActivitiesViewController.setActivitiesListener(this);
         mDiscoverActivitiesViewController.setSelectedActivity(mCurrentActivity.client_id);
         updateUiByActivity();
     }
-
 
     /**
      * init user activities to mActivities variable
@@ -183,28 +240,6 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
 
         mActivities.clear();
         mActivities = ds.getUser().getUserActivities();
-
-        /*
-        // Get activities from local store
-        DataActivity[] activities = DataStore.getInstance().getApplicationData().getActivities();
-
-        // Filter only the ones that the user attached to
-        String[] activityIds = DataStore.getInstance().getUser().getAnswerActivityProfile();
-
-        if (mActivities == null){
-            mActivities = new ArrayList<>();
-        }
-
-        mActivities.clear();
-
-        for (DataActivity dataActivity : activities) {
-            for (String activityId : activityIds) {
-                if (activityId.equals(dataActivity.client_id)) {
-                    mActivities.add(dataActivity);
-                }
-            }
-        }
-        */
     }
 
     /**
@@ -213,6 +248,9 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     private void updateUiByActivity() {
         mIcon.setIconImage(mCurrentActivity.icon);
         mHeaderTitle.setText(mCurrentActivity.text_title);
+
+
+        mHeader.setTitle(mCurrentActivity.text_title);
     }
 
     /**
@@ -564,6 +602,26 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     public interface DiscoverCallbacks {
         void onMeClick();
     }
+
+    /* menu click responses  ******************************/
+    public void onEditActivityClick(DataActivity activity) {
+        onActivitySettingsButtonClick(activity);
+    }
+
+    public void onActivitySelected(DataActivity activity) {
+        mCurrentActivity = activity;
+        fetchActivityInfo(mCurrentActivity.client_id);
+        fetchNotifications();
+        fetchUnReadMessages();
+        updateUiByActivity();
+    }
+
+    public void onAddActivityClick() {
+        onAddActivityButtonClick();
+    }
+
+    /*********************************************************/
+
 
     @Override
     protected void handleBroadcast(Serializable eventObject, String eventName) {

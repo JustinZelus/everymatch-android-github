@@ -22,14 +22,10 @@ public class QuestionAndAnswer implements Serializable {
     public HashMap<Integer, ArrayList<QuestionAndAnswer>> subQuestionsMap;
 
     //original values
-    private boolean originalIsDependentsQuestion;
     private HashMap<Integer, ArrayList<QuestionAndAnswer>> originalSubQuestionsMap;
     private String originalUserAnswerStr;
     private JSONObject originalUserAnswerData;
-    /*
-    private boolean originalIsAnsweredConfirmedByClickingNext;
-    private DataQuestion originalQuestion;
-    */
+
 
     public QuestionAndAnswer(DataQuestion dataQuestion) {
         this.question = dataQuestion;
@@ -39,6 +35,7 @@ public class QuestionAndAnswer implements Serializable {
             try {
                 this.userAnswerData = new JSONObject(question.default_value);
             } catch (Exception ex) {
+                EMLog.e(TAG, ex.getMessage());
             }
         }
         // check if we have a isDefault answers
@@ -46,7 +43,6 @@ public class QuestionAndAnswer implements Serializable {
 
         if (this.question.default_value != null)
             setUserAnswerStrByDefaultValue();
-
 
         subQuestionsMap = new HashMap<>();
         //originalSubQuestionsMap = new HashMap<>();
@@ -74,11 +70,6 @@ public class QuestionAndAnswer implements Serializable {
     private void setOriginalData() {
         originalUserAnswerData = userAnswerData;
         originalUserAnswerStr = userAnswerStr;
-        originalIsDependentsQuestion = isDependentsQuestion;
-
-        //originalIsAnsweredConfirmedByClickingNext = isAnsweredConfirmedByClickingNext;
-        //originalQuestion = question;
-        // originalSubQuestionsMap already taken care
     }
 
     /**

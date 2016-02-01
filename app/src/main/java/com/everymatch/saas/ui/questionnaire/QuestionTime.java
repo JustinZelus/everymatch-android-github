@@ -30,7 +30,8 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
     WheelView wheelSec, wheelMin, wheelHour;
 
     //Data
-    private int mStep, mMin, mMax;
+    private float mStep;
+    int mMin, mMax;
     private int mValue;
     private TIME_MODE time_mode;
     private boolean isUnitMile;

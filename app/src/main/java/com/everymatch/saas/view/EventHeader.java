@@ -25,6 +25,7 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
     private BaseIconTextView icon2;
     private BaseIconTextView icon3;
     private TextView mTextCenter;
+    private BaseIconTextView tvArrowDown;
 
     public boolean mClick = false;
 
@@ -42,8 +43,14 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
         icon2 = (BaseIconTextView) findViewById(R.id.event_header_icon_2);
         icon3 = (BaseIconTextView) findViewById(R.id.event_header_icon_3);
         mTextCenter = (TextView) findViewById(R.id.view_event_header_center_text);
+        tvArrowDown = (BaseIconTextView) findViewById(R.id.event_header_arrowDown);
+        tvArrowDown.setVisibility(GONE);
 
         mBackButton.setOnClickListener(this);
+        setArrowDownVisibility(false);
+        getTitle().setOnClickListener(null);
+
+
         icon1.setOnClickListener(this);
         icon2.setOnClickListener(this);
         icon3.setOnClickListener(this);
@@ -63,6 +70,10 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
 
     public void setTitle(int resId) {
         mTitle.setText(getResources().getString(resId));
+    }
+
+    public void setArrowDownVisibility(boolean visibility) {
+        tvArrowDown.setVisibility(visibility ? VISIBLE : GONE);
     }
 
     public void setEditTitle(String title) {

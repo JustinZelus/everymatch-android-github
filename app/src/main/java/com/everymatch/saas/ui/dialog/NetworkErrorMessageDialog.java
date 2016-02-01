@@ -1,11 +1,12 @@
 package com.everymatch.saas.ui.dialog;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
@@ -14,42 +15,67 @@ import com.everymatch.saas.client.data.DataManager;
 /**
  * Created by PopApp_laptop on 26/11/2015.
  */
-public class NetworkErrorMessageDialog extends Dialog {
+public class NetworkErrorMessageDialog extends DialogFragment {
 
     public static final String ACTION_NETWORK_ERROR = "action.network.error";
     public static final String ACTION_NETWORK_ERROR_TITLE = "action.network.error.title";
-
+    public static final String ARG_MESSAGE = "arg.message";
+    public static final String ARG_TITLE = "arg.title";
 
     private String title;
     private String message;
 
+    public static boolean isShowing = false;
+
     //Views
     TextView tvTitle, tvMessage, tvClose;
 
-
-    public NetworkErrorMessageDialog(Context context, String message) {
-        this(context, DataManager.getInstance().getResourceText(R.string.Error), message);
+    public static void start(FragmentManager fragmentManager, String message) {
+        NetworkErrorMessageDialog.getInstance(message).show(fragmentManager, "");
     }
 
-    public NetworkErrorMessageDialog(Context context, String title, String message) {
-        super(context);
-        this.title = title;
-        this.message = message;
+    public static NetworkErrorMessageDialog getInstance(String message) {
+        NetworkErrorMessageDialog answer = new NetworkErrorMessageDialog();
+        Bundle bundle = new Bundle(2);
+        bundle.putString(ARG_MESSAGE, message);
+        bundle.putString(ARG_TITLE, DataManager.getInstance().getResourceText(R.string.Error));
+        answer.setArguments(bundle);
+        return answer;
+    }
+
+    public static NetworkErrorMessageDialog getInstance(String message, String title) {
+        NetworkErrorMessageDialog answer = new NetworkErrorMessageDialog();
+        Bundle bundle = new Bundle(2);
+        bundle.putString(ARG_MESSAGE, message);
+        bundle.putString(ARG_TITLE, title);
+        answer.setArguments(bundle);
+        return answer;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_network_error_message);
-        init();
+        //getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT)
+        message = getArguments().getString(ARG_MESSAGE);
+        title = getArguments().getString(ARG_TITLE);
     }
 
-    private void init() {
-        tvClose = (TextView) findViewById(R.id.tvClose);
-        tvTitle = (TextView) findViewById(R.id.tvTitle);
-        tvMessage = (TextView) findViewById(R.id.tvMessage);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_network_error_message, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(view);
+    }
+
+    private void init(View v) {
+        tvClose = (TextView) v.findViewById(R.id.tvClose);
+        tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+        tvMessage = (TextView) v.findViewById(R.id.tvMessage);
 
         tvTitle.setText(title);
         tvMessage.setText(message);
@@ -57,6 +83,7 @@ public class NetworkErrorMessageDialog extends Dialog {
         tvClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isShowing = true;
                 dismiss();
             }
         });

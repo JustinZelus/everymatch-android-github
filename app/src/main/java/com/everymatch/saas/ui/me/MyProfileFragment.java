@@ -185,7 +185,7 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         eventDataRow.getRightIcon().setText(Consts.Icons.icon_Next);
         eventDataRow.getLeftMediaContainer().setVisibility(View.GONE);
         eventDataRow.setOnClickListener(this);
-        eventDataRow.getDetailsView().setText(QuestionUtils.getAnsweredTextByAnswer(dataQuestion, requiredAnswer));
+        eventDataRow.getDetailsView().setText(QuestionUtils.getAnsweredTitle(dataQuestion, requiredAnswer));
 
         eventDataRow.setTag(R.id.TAG_1, dataQuestion);
         eventDataRow.setTag(R.id.TAG_2, requiredAnswer);

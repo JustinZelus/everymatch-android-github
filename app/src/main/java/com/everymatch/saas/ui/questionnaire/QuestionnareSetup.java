@@ -52,6 +52,7 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
 
         switchSetupEventJoinType.setOnCheckedChangeListener(this);
         switchSetupIsParticipating.setOnCheckedChangeListener(this);
+        switchSetupEventJoinType.setChecked(false);
 
         view.findViewById(R.id.edrSetupNumberOfSpots).setOnClickListener(this);
         view.findViewById(R.id.edrSetupPrivacy).setOnClickListener(this);
@@ -61,7 +62,7 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
 
     @Override
     public void recoverDefaultAnswer() {
-
+        //can't have default answer here
     }
 
     @Override

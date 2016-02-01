@@ -37,7 +37,7 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
 
     public static final String EXTRA_TIME_ZONE = "extra.time.zone";
     private static final int REQUEST_CODE_DIALOG_FRAGMENT = 2;
-    public static final String TIME_FORMAT = "dd,MM,yyyy";
+    public static final String TIME_FORMAT = "dd.MM.yyyy";
 
 
     TextView edrTimeZone;

@@ -24,6 +24,7 @@ import com.everymatch.saas.server.Data.DataPeopleHolder;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.base.BasePeopleListFragment;
+import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.ui.event.InviteParticipantsListFragment;
 import com.everymatch.saas.ui.user.UserActivity;
 import com.everymatch.saas.util.EMLog;
@@ -94,13 +95,20 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getActivity() instanceof DiscoverActivity) {
+            ((DiscoverActivity) getActivity()).setSelectedMenuItem(DiscoverActivity.DISCOVER_MENU_ITEMS.PEOPLE);
+            mHeader = (EventHeader) getActivity().findViewById(R.id.eventHeader);
+        } else {
+            mHeader = (EventHeader) view.findViewById(R.id.participants_eventHeader);
+        }
 
-        mHeader = (EventHeader) view.findViewById(R.id.participants_eventHeader);
         mHeader.setListener(this);
-        mHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
+        mHeader.getBackButton().setVisibility(View.GONE);
         mHeader.getIconOne().setVisibility(View.GONE);
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setText(Consts.Icons.icon_Search);
+        mHeader.getTitle().setOnClickListener(null);
+        mHeader.setArrowDownVisibility(false);
         mHeader.getEditTitle().addTextChangedListener(this);
         if (pagerScreenType == DataStore.SCREEN_TYPE_FRIENDS)
             mHeader.setTitle(DataManager.getInstance().getResourceText(R.string.People));
@@ -136,7 +144,7 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
             hashMap.put(InviteParticipantsListFragment.TYPE_FRIENDS, new DataPeopleHolder());
             mAdapter = new PeopleTabsPagerAdapter(DataStore.SCREEN_TYPE_INVITE_PARTICIPANTS, getChildFragmentManager(), mDataEvent, hashMap);
         } else if (pagerScreenType == DataStore.SCREEN_TYPE_EVENT_ACTION_INVITE) {
-            /*dont show */
+            /*don't show */
             HashMap hashMap = new HashMap();
             hashMap.put(InviteParticipantsListFragment.TYPE_BEST_MATCH, new DataPeopleHolder());
             hashMap.put(InviteParticipantsListFragment.TYPE_FRIENDS, new DataPeopleHolder());
@@ -183,7 +191,7 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
             isClicked = true;
         } else {
             mHeader.getTitle().setVisibility(View.VISIBLE);
-            mHeader.setTitle("People");
+            mHeader.setTitle(dm.getResourceText(R.string.People));
             mHeader.getEditTitle().setVisibility(View.GONE);
 
 

@@ -154,7 +154,7 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
                 header.getIconThree().setText(DataManager.getInstance().getResourceText(R.string.Em2_register_title).toUpperCase());
 
             } else{ // Coming from registration
-                header.setTitle(DataManager.getInstance().getResourceText(R.string.Verification));
+                header.setTitle(DataManager.getInstance().getResourceText(R.string.Activate_Account));
                 header.getIconThree().setVisibility(View.GONE);
 
                 header.postDelayed(new Runnable() {

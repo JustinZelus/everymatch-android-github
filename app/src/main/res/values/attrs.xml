@@ -35,6 +35,13 @@
 
     </declare-styleable>
 
+    <declare-styleable name="DiscoverMenuItem">
+        <attr name="dmi_title_res" format="string" />
+        <attr name="dmi_title_prev_text" format="string" />
+        <attr name="dmi_icon_code" format="string" />
+
+    </declare-styleable>
+
 
     <declare-styleable name="ButtonBarContainerTheme">
         <attr name="metaButtonBarStyle" format="reference" />

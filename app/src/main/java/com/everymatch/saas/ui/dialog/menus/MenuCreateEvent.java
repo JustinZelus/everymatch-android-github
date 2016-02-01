@@ -41,7 +41,6 @@ public class MenuCreateEvent extends BaseMenuDialogFragment {
     private int selectedActivityId;
     private String selectedEventId;
 
-
     //Views
     LinearLayout EventsListHolder, ActivitiesListHolder;
     private ViewAnimator viewAnimator;

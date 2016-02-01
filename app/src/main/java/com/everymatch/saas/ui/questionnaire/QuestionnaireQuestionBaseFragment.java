@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataQuestion;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BaseFragment;
+import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.view.EventHeader;
 import com.google.gson.Gson;
 
@@ -195,10 +195,12 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
             jsonObject.put("status", "active");
 
             switch (mQuestion.question_type) {
+                case QuestionType.NUMBER_RANGE:
+                    jsonObject.put("value", answer.replace("-", ","));
+                    break;
                 case QuestionType.NUMBER:
                 case QuestionType.GENDER:
                 case QuestionType.GENDER_RANGE:
-                case QuestionType.NUMBER_RANGE:
                 case QuestionType.SCALE:
                 case QuestionType.ABOUT_ME:
                 case QuestionType.IMAGE_UPLOAD:
@@ -232,7 +234,7 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
 
 
                 default:
-                    Log.e(getClass().getName(), "Question Type: " + mQuestion.questions_id + " was not found");
+                    EMLog.e(getClass().getName(), "Question Type: " + mQuestion.questions_id + " was not found");
                     break;
             }
         } catch (JSONException e) {
@@ -337,10 +339,13 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
             mActivity.mQuestionsAndAnswers.add(mQuestionAndAnswer);
 
             //update the not mandatory fragment
-            Fragment fragment = mActivity.getSupportFragmentManager().getFragments().get(mActivity.getSupportFragmentManager().getFragments().size() - 1);
-            if (fragment != null && fragment instanceof QuestionnaireNotMandatoryFragment) {
-                setTargetFragment(fragment, QuestionnaireNotMandatoryFragment.REQUEST_CODE_NOT_MANDATORY);
-                ((QuestionnaireNotMandatoryFragment) getTargetFragment()).onUpdate();
+            //Fragment fragment = .get(mActivity.getSupportFragmentManager().getFragments().size() - 1);
+            for (Fragment fragment : mActivity.getSupportFragmentManager().getFragments()) {
+                if (fragment != null && fragment instanceof QuestionnaireNotMandatoryFragment) {
+                    setTargetFragment(fragment, QuestionnaireNotMandatoryFragment.REQUEST_CODE_NOT_MANDATORY);
+                    ((QuestionnaireNotMandatoryFragment) getTargetFragment()).onUpdate();
+                    break;
+                }
             }
 
             getFragmentManager().popBackStackImmediate();

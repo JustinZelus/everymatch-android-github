@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseString;
+import com.everymatch.saas.util.EMLog;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -92,7 +93,6 @@ public class GsonRequest<T extends BaseResponse> extends JsonRequest<BaseRespons
                     jsonObject.put(HTTP_STATUS_KEY, response.statusCode);
                     baseResponse = gson.fromJson(jsonObject.toString(), clazz);
                 } else if (parseResponseAsJson) {
-
                     if (!parseJsonUsingCustomDeserializer && json.charAt(0) == '[') { // handle array
                         JSONObject jsonObject = new JSONObject();
                         JSONArray jsonArray = new JSONArray(json);
@@ -110,7 +110,7 @@ public class GsonRequest<T extends BaseResponse> extends JsonRequest<BaseRespons
 
             return Response.success(baseResponse, HttpHeaderParser.parseCacheHeaders(response));
         } catch (Exception e) {
-            e.printStackTrace();
+            EMLog.e(TAG, e.getMessage());
             return Response.error(new ParseError(e));
         }
     }
@@ -123,12 +123,11 @@ public class GsonRequest<T extends BaseResponse> extends JsonRequest<BaseRespons
             errorResponse.setStatusCode(volleyError.networkResponse.statusCode);
             String error = new String(volleyError.networkResponse.data);
             errorResponse.setServerRawResponse(error);
-            Log.i(TAG, "Server error response -> " + error);
-            Log.i(TAG, "Status code -> " + volleyError.networkResponse.statusCode);
+            EMLog.i(TAG, "Server error response -> " + error);
+            EMLog.i(TAG, "Status code -> " + volleyError.networkResponse.statusCode);
         } catch (Exception ignored) {
             // Nothing in here
         }
-
         return errorResponse;
     }
 
@@ -140,12 +139,10 @@ public class GsonRequest<T extends BaseResponse> extends JsonRequest<BaseRespons
 
     @Override
     public void deliverError(VolleyError error) {
-
         if (!(error instanceof ErrorResponse)) {
             errorListener.onErrorResponse(new ErrorResponse());
             return;
         }
-
         errorListener.onErrorResponse(error);
     }
 }

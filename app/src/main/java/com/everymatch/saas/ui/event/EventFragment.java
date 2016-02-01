@@ -322,7 +322,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         String mStatus = mEvent.dataPublicEvent.user_event_status.status;
 
         if (mStatus.equals("participating")) {
-            mPercent.setText(dm.getResourceText(R.string.Participants));
+            mPercent.setText(dm.getResourceText(R.string.Participating));
             mPercent.setTextColor(ds.getIntColor(EMColor.POSITIVE));
             mPercentIcon.setText(im.getIconString("StatusPositive"));
             mPercentIcon.setTextColor(ds.getIntColor(EMColor.POSITIVE));

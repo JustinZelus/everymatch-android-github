@@ -18,6 +18,14 @@ public class UserSettings implements Serializable {
     public String weight;
     public String default_culture;
 
+    public DataTimeZone getTime_zone() {
+        if (time_zone == null)
+            time_zone = new DataTimeZone();
+        return time_zone;
+    }
+
+    private DataTimeZone time_zone;
+
     /**
      * sets default data like unit's and weight
      */

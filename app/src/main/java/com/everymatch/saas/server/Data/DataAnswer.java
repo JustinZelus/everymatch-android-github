@@ -48,4 +48,3 @@ public class DataAnswer implements Serializable {
     }
 }
 
-//"value":{"coordinate":{"type":"point","value":[[32.120679,35.026998]]}

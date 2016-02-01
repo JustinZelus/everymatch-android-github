@@ -89,11 +89,11 @@ public class QuestionnaireQuestionSelectionFragment extends QuestionnaireQuestio
                 String[] rangeStr = mQuestionAndAnswer.question.range.split(",");
                 int min = Integer.parseInt(rangeStr[0]);
                 int max = Integer.parseInt(rangeStr[1]);
-                int step = mQuestionAndAnswer.question.step;
+                float step = mQuestionAndAnswer.question.step;
                 if (step == 0)
                     step = 1;
 
-                int size = ((max - min) / step) + 1;
+                int size = (int) (((max - min) / step) + 1);
                 answersStr = new String[size];
                 int value = min;
                 for (int i = 0; i < size; ++i) {
@@ -248,7 +248,7 @@ public class QuestionnaireQuestionSelectionFragment extends QuestionnaireQuestio
                         ;
                         dataLocation.country_code = locationJson.get("country_code").toString();
                         ;
-//                        dataLocation.country = locationJson.get("country").toString();;
+//                        dataLocation.country_name = locationJson.get("country_name").toString();;
                         dataLocation.city_code = locationJson.get("city_code").toString();
                         ;
                         dataLocation.text_address = new HashMap<>(); //JSONObject();

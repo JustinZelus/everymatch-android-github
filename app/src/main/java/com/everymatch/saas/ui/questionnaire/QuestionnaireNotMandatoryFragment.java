@@ -152,8 +152,10 @@ public class QuestionnaireNotMandatoryFragment extends BaseFragment
             }
 
             DataQuestion question = mNotMandatoryQuestions.get(position);
+
             ((TextView) convertView.findViewById(R.id.question_textview)).setText(question.text_title);
             ((TextView) convertView.findViewById(R.id.arrow_image)).setText(Consts.Icons.icon_Arrowright);
+
 
             String answerStr = "";
             if (question.answers != null && question.answers.length > 0) {

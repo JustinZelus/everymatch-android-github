@@ -84,7 +84,8 @@ public abstract class BaseFragment extends Fragment implements NoConnectionView.
                     break;
                 case NetworkErrorMessageDialog.ACTION_NETWORK_ERROR:
                     String message = intent.getStringExtra(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR_TITLE);
-                    new NetworkErrorMessageDialog(getActivity(), message).show();
+                    //NetworkErrorMessageDialog.show(getActivity(), message);
+                    NetworkErrorMessageDialog.start(getChildFragmentManager(),message);
                     break;
             }
         }

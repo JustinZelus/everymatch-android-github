@@ -23,10 +23,12 @@ import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.base.BaseEventListFragment;
 import com.everymatch.saas.ui.dialog.EventTypeSelectionDialog;
 import com.everymatch.saas.ui.dialog.menus.MenuCreateEvent;
+import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.util.Utils;
+import com.everymatch.saas.view.EventHeader;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -44,6 +46,7 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
     //Views
     private TextView mTextEventType;
     private EventTypeSelectionDialog mDialog;
+    private EventHeader mHeader;
 
     //Data
     boolean mOpenCreateEventMenu;
@@ -112,6 +115,8 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((DiscoverActivity) getActivity()).setSelectedMenuItem(DiscoverActivity.DISCOVER_MENU_ITEMS.EVENTS);
+
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         setTypeSelectionView(inflater);
         mAbsListView.setPadding(mAbsListView.getPaddingLeft(), 0, mAbsListView.getPaddingRight(), mAbsListView.getPaddingBottom());
@@ -133,7 +138,21 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
     protected void setHeader() {
         super.setHeader();
         mEventHeader.getIconThree().setVisibility(View.GONE);
-        initSearch();
+        mEventHeader.setVisibility(View.GONE);
+
+        //get header from discover activity
+        mHeader = ((DiscoverActivity) getActivity()).getmHeader();
+        mHeader.setListener(this);
+        mHeader.getBackButton().setVisibility(View.GONE);
+        mHeader.getIconOne().setText(Consts.Icons.icon_CreateEvent);
+        mHeader.getIconOne().setVisibility(View.VISIBLE);
+        mHeader.getIconTwo().setVisibility(View.GONE);
+        mHeader.getIconThree().setVisibility(View.GONE);
+        mHeader.setTitle(dm.getResourceText(R.string.Events));
+        mHeader.getTitle().setOnClickListener(null);
+        mHeader.setArrowDownVisibility(false);
+
+        //initSearch();
     }
 
     private void initSearch() {
@@ -231,14 +250,6 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
         MenuCreateEvent menuCreateEvent = MenuCreateEvent.getInstance(mEventHeader.getMeasuredHeight());
         menuCreateEvent.setTargetFragment(MyEventsFragment.this, MenuCreateEvent.REQUEST_CODE_CREATE_EVENT);
         menuCreateEvent.show(getChildFragmentManager(), "");
-        //createEvent();
-    }
-
-    private void createEvent() {
-        QuestionnaireActivity.create_mode = QuestionnaireActivity.CREATE_MODE.CREATE_EVENT;
-        final Intent intent = new Intent(getActivity(), QuestionnaireActivity.class);
-        //getActivity().finish();
-        getActivity().startActivity(intent);
     }
 
     @Override

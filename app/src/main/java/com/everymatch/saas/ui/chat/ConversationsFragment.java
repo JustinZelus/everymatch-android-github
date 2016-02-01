@@ -106,7 +106,7 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
     }
 
     private void updateHeaderTitle() {
-        mEventHeader.setTitle(dm.getResourceText(R.string.Inbox) + " (" + mCurrentConversationType + ") ▼");
+        mEventHeader.setTitle(dm.getResourceText(R.string.Inbox_title) + " (" + mCurrentConversationType + ") ▼");
     }
 
     @Override
@@ -168,7 +168,7 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
             isClicked = true;
         } else {
             mEventHeader.getTitle().setVisibility(View.VISIBLE);
-            mEventHeader.setTitle(dm.getResourceText(R.string.Inbox));
+            mEventHeader.setTitle(dm.getResourceText(R.string.Inbox_title));
             mEventHeader.getEditTitle().setVisibility(View.GONE);
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);

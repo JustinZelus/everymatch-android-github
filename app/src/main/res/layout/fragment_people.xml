@@ -9,6 +9,7 @@
 
     <com.everymatch.saas.view.EventHeader
         android:id="@+id/fragment_people_event_header"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

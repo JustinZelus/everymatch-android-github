@@ -20,7 +20,7 @@ public class DataHelper {
     public static List<PopupMenuItem> createDiscoverMenuItems() {
         List<PopupMenuItem> items = new ArrayList<>();
         int unread = DataStore.getInstance().getUser().getInbox().getUnread();
-        items.add(new PopupMenuItem(dm.getResourceText(R.string.Inbox), MENU_MESSAGES_ICON, unread <= 0 ? null : "" + unread));
+        items.add(new PopupMenuItem(dm.getResourceText(R.string.Inbox_title), MENU_MESSAGES_ICON, unread <= 0 ? null : "" + unread));
         items.add(new PopupMenuItem(dm.getResourceText(R.string.Me), MENU_PROFILE_ICON));
         return items;
     }

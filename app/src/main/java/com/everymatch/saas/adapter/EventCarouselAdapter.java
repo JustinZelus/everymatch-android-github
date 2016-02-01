@@ -54,6 +54,11 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_event, viewGroup, false);
+        if (getItemCount() <= 1) {
+            ViewGroup.LayoutParams params = v.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            v.setLayoutParams(params);
+        }
         imageWidth = v.getLayoutParams().width;
         imageHeight = v.getLayoutParams().height;
         EventViewHolder eventViewHolder = new EventViewHolder(v);

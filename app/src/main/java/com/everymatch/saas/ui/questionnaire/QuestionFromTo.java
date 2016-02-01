@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.everymatch.saas.R;
+import com.everymatch.saas.util.EMLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,13 @@ import java.util.List;
  * Created by PopApp_laptop on 04/01/2016.
  */
 public class QuestionFromTo extends QuestionnaireQuestionBaseFragment implements AdapterView.OnItemSelectedListener {
+    public final String TAG = getClass().getName();
+
     private Spinner spFrom, spTo;
+    float length;
 
 
-    private int from, to;
+    private float from, to;
     ArrayAdapter<String> adapterFrom, adapterTo;
     List<String> fromArr = new ArrayList<>();
     List<String> toArr = new ArrayList<>();
@@ -39,7 +43,7 @@ public class QuestionFromTo extends QuestionnaireQuestionBaseFragment implements
         super.onViewCreated(view, savedInstanceState);
 
         String[] rangeStr = mQuestionAndAnswer.question.range.split(",");
-        int step = mQuestionAndAnswer.question.step;
+        float step = mQuestionAndAnswer.question.step;
         try {
             from = Integer.parseInt(rangeStr[0]);
             to = Integer.parseInt(rangeStr[1]);
@@ -48,27 +52,18 @@ public class QuestionFromTo extends QuestionnaireQuestionBaseFragment implements
             to = 10;
         }
         // TODO - FIX
+        length = to - from + 1;
 
-
-        int length = to - from + 1;
-
-        for (int i = from; i < to; i += step) {
+        for (float i = from; i < to; i += step) {
             fromArr.add("" + i);
             toArr.add("" + i);
         }
 
-        //adapterFrom = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fromArr);
-        //adapterFrom.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        ArrayAdapter<String> adapterFrom = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, fromArr);
+        adapterFrom = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fromArr);
         adapterFrom.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        ArrayAdapter<String> adapterTo = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, toArr);
+        adapterTo = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, toArr);
         adapterTo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        //adapterTo = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, toArr);
-        //adapterTo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 
         spFrom = (Spinner) view.findViewById(R.id.spFrom);
         spTo = (Spinner) view.findViewById(R.id.spTo);
@@ -76,10 +71,10 @@ public class QuestionFromTo extends QuestionnaireQuestionBaseFragment implements
         spFrom.setAdapter(adapterFrom);
         spTo.setAdapter(adapterTo);
 
-
         spFrom.setOnItemSelectedListener(this);
         spTo.setOnItemSelectedListener(this);
 
+        recoverAnswerData();
     }
 
     @Override
@@ -88,18 +83,37 @@ public class QuestionFromTo extends QuestionnaireQuestionBaseFragment implements
     }
 
     private void recoverAnswerData() {
+        if (mQuestionAndAnswer.userAnswerData != null && mQuestionAndAnswer.userAnswerData.has("value")) {
+            try {
+                //get the textual values
+                from = Float.parseFloat(mQuestionAndAnswer.userAnswerData.getString("value").split(",")[0]);
+                to = Float.parseFloat(mQuestionAndAnswer.userAnswerData.getString("value").split(",")[1]);
 
+
+                int f = adapterFrom.getPosition("" + from);
+                int t = adapterFrom.getPosition("" + to);
+                spFrom.setSelection(f);
+                spTo.setSelection(t);
+
+            } catch (Exception ex) {
+                EMLog.e(TAG, ex.getMessage());
+            }
+        }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String ans = "";
-        if (view == spFrom) {
-            ans = fromArr.get(position) + " - " + toArr.get(spTo.getSelectedItemPosition());
-        } else {
-            ans = fromArr.get(spFrom.getSelectedItemPosition()) + " - " + toArr.get(position);
+        //make sure from is not bigger then to
+        if (spFrom.getSelectedItemPosition() >= spTo.getSelectedItemPosition()) {
+            if (spFrom.getSelectedItemPosition() + 2 < adapterTo.getCount()) {
+                spTo.setSelection(spFrom.getSelectedItemPosition() + 1);
+            } else {
+                spFrom.setSelection(adapterFrom.getCount() - 2);
+                spTo.setSelection(adapterTo.getCount() - 1);
+            }
         }
 
+        String ans = spFrom.getSelectedItem() + " - " + spTo.getSelectedItem();
         setAnswer(ans);
     }
 
