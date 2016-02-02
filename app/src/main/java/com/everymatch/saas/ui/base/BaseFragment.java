@@ -25,7 +25,6 @@ import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.server.ServerConnector;
 import com.everymatch.saas.singeltones.PusherManager;
-import com.everymatch.saas.ui.dialog.NetworkErrorMessageDialog;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.view.NoConnectionView;
@@ -82,11 +81,12 @@ public abstract class BaseFragment extends Fragment implements NoConnectionView.
                         handleBroadcast(data, eventName);
                     }
                     break;
-                case NetworkErrorMessageDialog.ACTION_NETWORK_ERROR:
-                    String message = intent.getStringExtra(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR_TITLE);
+
+               /* case NetworkErrorMessageDialog.ACTION_NETWORK_ERROR:
+                    String message = intent.getStringExtra(NetworkErrorMessageDialog.EXTRA_NETWORK_ERROR_TITLE);
                     //NetworkErrorMessageDialog.show(getActivity(), message);
-                    NetworkErrorMessageDialog.start(getChildFragmentManager(),message);
-                    break;
+                    NetworkErrorMessageDialog.start((BaseActivity) getActivity(), getChildFragmentManager(), message);
+                    break;*/
             }
         }
     };
@@ -278,7 +278,7 @@ public abstract class BaseFragment extends Fragment implements NoConnectionView.
         EMLog.i(TAG, "registerReceiver");
         intentFilter = new IntentFilter();
         intentFilter.addAction(PusherManager.ACTION_PUSHER_EVENT);
-        intentFilter.addAction(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
+        //intentFilter.addAction(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
     }
 

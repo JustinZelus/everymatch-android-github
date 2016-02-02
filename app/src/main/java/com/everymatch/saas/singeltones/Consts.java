@@ -86,7 +86,7 @@ public class Consts {
         public static final String icon_LinkedInCircle = String.valueOf((char) 0xe615);
         public static final String icon_PinterestCircle = String.valueOf((char) 0xe617);
         public static final String icon_FacebookCircle = String.valueOf((char) 0xe619);
-        public static final String icon_Favorite = String.valueOf((char) 0xe69d);
+        public static final String icon_Favorite = String.valueOf((char) 0xe6ab);
         public static final String icon_FatClose = String.valueOf((char) 0xe61b);
         public static final String icon_Lock = String.valueOf((char) 0xe61c);
         public static final String icon_SayBubble = String.valueOf((char) 0xe61d);

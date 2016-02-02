@@ -38,6 +38,7 @@ public class EverymatchApplication extends Application implements ActivityLifecy
 
     private static Context context;
     private static FragmentManager fragmentManager;
+    private static BaseActivity currentActivity;
 
     public static String getVersion() {
         try {
@@ -52,6 +53,10 @@ public class EverymatchApplication extends Application implements ActivityLifecy
 
     public static FragmentManager getFragmentManager() {
         return fragmentManager;
+    }
+
+    public static BaseActivity getCurrentActivity() {
+        return currentActivity;
     }
 
     @Override
@@ -101,6 +106,7 @@ public class EverymatchApplication extends Application implements ActivityLifecy
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         Log.i(TAG, "onActivityCreated " + activity.getLocalClassName());
         fragmentManager = ((BaseActivity) activity).getSupportFragmentManager();
+        currentActivity = ((BaseActivity) activity);
     }
 
     @Override

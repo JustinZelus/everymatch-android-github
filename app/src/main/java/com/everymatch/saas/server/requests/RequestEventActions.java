@@ -71,7 +71,11 @@ public class RequestEventActions extends BaseRequest {
         //+"&invitation_note=";
         */
         if (dataEventActions.action.equals("unsave")) {
-
+            return "api/" + dataEventActions.api_access + "?app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id)
+                    + "&hl=" + DataStore.getInstance().getCulture()
+                    + "&collection_name="+ dataEventActions.parameters.get("collection_name")
+                    + "&action="+ dataEventActions.parameters.get("action")
+                    + "&object_id="+ dataEventActions.parameters.get("object_id") ;
         }
         return "api/" + dataEventActions.api_access + "?app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id)
                 + "&hl=" + DataStore.getInstance().getCulture();
@@ -95,9 +99,9 @@ public class RequestEventActions extends BaseRequest {
             case "get":
                 return Request.Method.GET;
             case "delete":
-                if (dataEventActions.action.equals("unsave")) {
+                /*if (dataEventActions.action.equals("unsave")) {
                     return Request.Method.PUT;
-                }
+                }*/
                 return Request.Method.DELETE;
             case "post":
                 return Request.Method.POST;

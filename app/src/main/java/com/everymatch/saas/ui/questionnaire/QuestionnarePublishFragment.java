@@ -29,8 +29,8 @@ import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.service.UploadImageService;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.base.BaseFragment;
-import com.everymatch.saas.ui.dialog.NetworkErrorMessageDialog;
 import com.everymatch.saas.ui.event.InviteParticipantsFragment;
 import com.everymatch.saas.util.BitmapUtils;
 import com.everymatch.saas.util.EMLog;
@@ -330,11 +330,13 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
         }
 
         if (capturedImage.getWidth() <= 320) {
-            NetworkErrorMessageDialog.start(getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinWidth));
+            ((BaseActivity) getActivity()).showErrorDialog(dm.getResourceText(R.string.Blob_InvalidMinWidth));
+            // NetworkErrorMessageDialog.start((BaseActivity) getActivity(), getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinWidth));
             return;
         }
         if (capturedImage.getHeight() <= 320) {
-            NetworkErrorMessageDialog.start(getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinHeight));
+            ((BaseActivity) getActivity()).showErrorDialog(dm.getResourceText(R.string.Blob_InvalidMinHeight));
+            //NetworkErrorMessageDialog.start((BaseActivity) getActivity(), getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinHeight));
             return;
         }
 

@@ -1,5 +1,6 @@
 package com.everymatch.saas.ui.dialog;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -11,14 +12,16 @@ import android.widget.TextView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataManager;
+import com.everymatch.saas.util.EMLog;
 
 /**
  * Created by PopApp_laptop on 26/11/2015.
  */
 public class NetworkErrorMessageDialog extends DialogFragment {
+    public static final String TAG = "NetworkErrorMessageDialog";
 
     public static final String ACTION_NETWORK_ERROR = "action.network.error";
-    public static final String ACTION_NETWORK_ERROR_TITLE = "action.network.error.title";
+    public static final String EXTRA_NETWORK_ERROR_TITLE = "action.network.error.title";
     public static final String ARG_MESSAGE = "arg.message";
     public static final String ARG_TITLE = "arg.title";
 
@@ -31,7 +34,12 @@ public class NetworkErrorMessageDialog extends DialogFragment {
     TextView tvTitle, tvMessage, tvClose;
 
     public static void start(FragmentManager fragmentManager, String message) {
-        NetworkErrorMessageDialog.getInstance(message).show(fragmentManager, "");
+        try {
+            NetworkErrorMessageDialog networkErrorMessageDialog = NetworkErrorMessageDialog.getInstance(message);
+            networkErrorMessageDialog.show(fragmentManager, "");
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
     }
 
     public static NetworkErrorMessageDialog getInstance(String message) {
@@ -55,7 +63,7 @@ public class NetworkErrorMessageDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT)
+        isShowing = true;
         message = getArguments().getString(ARG_MESSAGE);
         title = getArguments().getString(ARG_TITLE);
     }
@@ -72,6 +80,12 @@ public class NetworkErrorMessageDialog extends DialogFragment {
         init(view);
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        isShowing = false;
+    }
+
     private void init(View v) {
         tvClose = (TextView) v.findViewById(R.id.tvClose);
         tvTitle = (TextView) v.findViewById(R.id.tvTitle);
@@ -83,7 +97,7 @@ public class NetworkErrorMessageDialog extends DialogFragment {
         tvClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isShowing = true;
+                isShowing = false;
                 dismiss();
             }
         });

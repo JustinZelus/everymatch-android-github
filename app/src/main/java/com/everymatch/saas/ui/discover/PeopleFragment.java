@@ -313,7 +313,7 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
 
         // Friendship
         mHeader.getIconThree().setVisibility(View.VISIBLE);
-        mHeader.getIconThree().setText(mUserFullObject.is_friend ? Consts.Icons.icon_Heart : Consts.Icons.icon_Favorite);
+        mHeader.getIconThree().setText(mUserFullObject.is_friend ? Consts.Icons.icon_Unfavorite : Consts.Icons.icon_Favorite);
     }
 
     /**

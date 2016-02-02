@@ -19,9 +19,9 @@ import com.everymatch.saas.server.request_manager.NotificationManager;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.ui.base.BaseListFragment;
-import com.everymatch.saas.ui.chat.ConversationsFragment;
 import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.ui.event.EventFragment;
+import com.everymatch.saas.ui.inbox.InboxActivity;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
@@ -93,9 +93,10 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
         edr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, new ConversationsFragment(),
+                InboxActivity.startInbox(getActivity());
+                        /*((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, new ConversationsFragment(),
                         ConversationsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
-                        R.anim.enter_from_left, R.anim.exit_to_right);
+                        R.anim.enter_from_left, R.anim.exit_to_right);*/
             }
         });
         mTopContainer.addView(edr);

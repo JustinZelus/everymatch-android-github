@@ -348,7 +348,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
             mPercentIcon.setTextColor(ds.getIntColor(EMColor.NEGATIVE));
         } else {
             /*here we need to set match percents*/
-
+            mPercent.setText("");
             if (mDataMatchResults != null && mDataMatchResults.getQuestions_results().size() > 0) {
                 try {
                     mPercent.setText("" + mDataMatchResults.match + "%");

@@ -27,7 +27,7 @@ import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.service.UploadImageService;
-import com.everymatch.saas.ui.dialog.NetworkErrorMessageDialog;
+import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.util.BitmapUtils;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.ImagePicker;
@@ -178,11 +178,13 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
         }
 
         if (capturedImage.getWidth() <= 320) {
-            NetworkErrorMessageDialog.start(getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinWidth));
+            ((BaseActivity) getActivity()).showErrorDialog(dm.getResourceText(R.string.Blob_InvalidMinWidth));
+            //NetworkErrorMessageDialog.start((BaseActivity) getActivity(),getChildFragmentManager(), );
             return;
         }
         if (capturedImage.getHeight() <= 320) {
-            NetworkErrorMessageDialog.start(getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinHeight));
+            ((BaseActivity) getActivity()).showErrorDialog(dm.getResourceText(R.string.Blob_InvalidMinHeight));
+            //NetworkErrorMessageDialog.start((BaseActivity) getActivity(), getChildFragmentManager(), dm.getResourceText(R.string.Blob_InvalidMinHeight));
             return;
         }
 

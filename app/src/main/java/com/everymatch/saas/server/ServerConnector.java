@@ -69,7 +69,7 @@ public class ServerConnector {
 
         if (!Utils.hasInternetConnection()) {
             Intent intent = new Intent(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
-            intent.putExtra(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR_TITLE, DataManager.getInstance().getResourceText(R.string.Connection_Lost));
+            intent.putExtra(NetworkErrorMessageDialog.EXTRA_NETWORK_ERROR_TITLE, DataManager.getInstance().getResourceText(R.string.Connection_Lost));
             LocalBroadcastManager.getInstance(EverymatchApplication.getContext()).sendBroadcast(intent);
             return;
         }
@@ -158,11 +158,11 @@ public class ServerConnector {
                     }
                 }
 
-                //Intent intent = new Intent(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
-                //intent.putExtra(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR_TITLE, errorStr);
-                //LocalBroadcastManager.getInstance(EverymatchApplication.getContext()).sendBroadcast(intent);
+                Intent intent = new Intent(NetworkErrorMessageDialog.ACTION_NETWORK_ERROR);
+                intent.putExtra(NetworkErrorMessageDialog.EXTRA_NETWORK_ERROR_TITLE, errorStr);
+                LocalBroadcastManager.getInstance(EverymatchApplication.getContext()).sendBroadcast(intent);
 
-                NetworkErrorMessageDialog.start(EverymatchApplication.getFragmentManager(), errorStr);
+                //NetworkErrorMessageDialog.start(EverymatchApplication.getCurrentActivity(), EverymatchApplication.getFragmentManager(), errorStr);
                 //NetworkErrorMessageDialog(EverymatchApplication.getContext(), errorStr).show();
 
             }
