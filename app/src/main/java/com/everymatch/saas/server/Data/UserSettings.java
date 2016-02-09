@@ -1,10 +1,6 @@
 package com.everymatch.saas.server.Data;
 
-import android.support.v4.app.Fragment;
-
 import com.everymatch.saas.client.data.DataStore;
-import com.everymatch.saas.ui.me.settings.DistanceSelectFragment;
-import com.everymatch.saas.ui.me.settings.UnitFragment;
 
 import java.io.Serializable;
 
@@ -14,17 +10,25 @@ public class UserSettings implements Serializable {
     public String last_activity_id;
     public String currency = "";
     public boolean is_user_uploaded_profile_image;
-    public String distance;
+    private String distance;
     public String weight;
     public String default_culture;
+    private DataTimeZone time_zone;
 
     public DataTimeZone getTime_zone() {
-        if (time_zone == null)
-            time_zone = new DataTimeZone();
+        if (time_zone == null) {
+            time_zone = DataStore.getInstance().getApplicationData().getSettings().default_timezone;
+            // time_zone = new DataTimeZone();
+        }
         return time_zone;
     }
 
-    private DataTimeZone time_zone;
+
+    public String getDistance() {
+        if (distance == null || distance.trim().length() == 0)
+            distance = DataStore.getInstance().getApplicationData().getSettings().getDefault_units().distance;
+        return distance.toLowerCase();
+    }
 
     /**
      * sets default data like unit's and weight
@@ -40,13 +44,11 @@ public class UserSettings implements Serializable {
         return distance + "," + weight;
     }
 
+    public void setDistance(String value) {
+        this.distance = value;
+    }
 
-    public Fragment getUnitFragmentByPosition(int position) {
-        if (position == 1)
-            return new UnitFragment();
-        if (position == 2)
-            return new DistanceSelectFragment();
-
-        return new UnitFragment();
+    public void setTime_zone(DataTimeZone dataTimeZone) {
+        time_zone = dataTimeZone;
     }
 }

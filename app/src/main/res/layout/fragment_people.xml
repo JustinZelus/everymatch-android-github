@@ -9,9 +9,9 @@
 
     <com.everymatch.saas.view.EventHeader
         android:id="@+id/fragment_people_event_header"
-        android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -104,6 +104,7 @@
                     android:id="@+id/fragment_people_data_row_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:bg_color="white_color"
                     app:is_detail_visible="false"
                     app:left_icon_visible="false"
@@ -153,11 +154,11 @@
                     app:font="lato_font" />
 
                 <FrameLayout
-                    android:visibility="gone"
                     android:id="@+id/fragment_people_events_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp" />
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/fragment_people_activities_container"
@@ -167,12 +168,12 @@
                     android:visibility="gone">
 
                     <com.everymatch.saas.view.BaseTextView
-                        android:paddingTop="25dp"
                         android:id="@+id/fragment_people_activity_profile_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="10dp"
+                        android:paddingTop="25dp"
                         android:textSize="16dp"
                         app:font="lato_font"
                         app:text_color="night_color"

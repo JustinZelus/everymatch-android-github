@@ -1,7 +1,6 @@
 package com.everymatch.saas.ui.sign;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -122,8 +120,9 @@ public class RegistrationFragment extends BaseSignFragment implements View.OnCli
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     mEditTextEmail.clearFocus();
-                    InputMethodManager imm =  (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    hideKeyboard();
+                    //InputMethodManager imm =  (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
                     mScrollView.postDelayed(new Runnable() {
                         @Override
@@ -131,6 +130,8 @@ public class RegistrationFragment extends BaseSignFragment implements View.OnCli
                             mScrollView.smoothScrollTo(0, mScrollView.getBottom());
                         }
                     }, 300);
+
+                    mButtonRegister.performClick();
 
                     return true;
                 }
@@ -145,7 +146,6 @@ public class RegistrationFragment extends BaseSignFragment implements View.OnCli
         header.setTitle(DataManager.getInstance().getResourceText(R.string.Em2_register_title));
         header.getIconThree().setText(DataManager.getInstance().getResourceText(R.string.Em2_login_title).toUpperCase());
     }
-
 
 
     @Override
@@ -167,18 +167,18 @@ public class RegistrationFragment extends BaseSignFragment implements View.OnCli
     private void register() {
 
         if (mEditTextFirstName.length() < MIN_NAME_LENGTH || mEditTextFirstName.getText().length() > MAX_NAME_LENGTH) {
-            ((GradientDrawable)mEditTextFirstName.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
+            ((GradientDrawable) mEditTextFirstName.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
             showError(R.string.Buy_Error_FNameLength);
             return;
         }
-        if (mEditTextLastName.length() < MIN_NAME_LENGTH || mEditTextLastName.getText().length() > MAX_NAME_LENGTH){
-            ((GradientDrawable)mEditTextLastName.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
+        if (mEditTextLastName.length() < MIN_NAME_LENGTH || mEditTextLastName.getText().length() > MAX_NAME_LENGTH) {
+            ((GradientDrawable) mEditTextLastName.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
             showError(R.string.Buy_Error_LNameLength);
             return;
         }
 
-        if (!Utils.isEmailValid(mEditTextEmail.getText())){
-            ((GradientDrawable)mEditTextEmail.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
+        if (!Utils.isEmailValid(mEditTextEmail.getText())) {
+            ((GradientDrawable) mEditTextEmail.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
             showError(R.string.EmailErrorMessages);
             return;
         }
@@ -232,8 +232,8 @@ public class RegistrationFragment extends BaseSignFragment implements View.OnCli
             mButtonRegister.setClickable(true);
         }
 
-        ((GradientDrawable)mEditTextFirstName.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
-        ((GradientDrawable)mEditTextLastName.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
-        ((GradientDrawable)mEditTextEmail.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
+        ((GradientDrawable) mEditTextFirstName.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
+        ((GradientDrawable) mEditTextLastName.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
+        ((GradientDrawable) mEditTextEmail.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
     }
 }

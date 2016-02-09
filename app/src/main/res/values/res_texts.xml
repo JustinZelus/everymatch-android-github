@@ -118,6 +118,7 @@
     <string name="Weight">Weight</string>
     <string name="Cancel">Cancel</string>
     <string name="Description">Description</string>
+    <string name="Add_Event_Description">Add_Event_Description</string>
     <string name="remove">remove</string>
     <string name="Setup_Participation">Setup_Participation</string>
     <string name="click_to_set">click_to_set</string>
@@ -152,5 +153,10 @@
     <string name="Cancel_Exit">Cancel_Exit</string>
     <string name="Participating">Participating</string>
     <string name="Age">Age</string>
+    <string name="Edit_your_profile">Edit_your_profile</string>
+    <string name="Select_Profile">Select_Profile</string>
+    <string name="Currency">Currency</string>
+    <string name="Culture_text">Culture_text</string>
+    <string name="Distance">Distance</string>
 
 </resources>

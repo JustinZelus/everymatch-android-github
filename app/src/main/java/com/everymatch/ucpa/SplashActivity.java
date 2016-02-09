@@ -21,6 +21,7 @@ import com.everymatch.saas.server.ServerConnector;
 import com.everymatch.saas.server.requests.RequestLoadProviders;
 import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
+import com.everymatch.saas.server.responses.ResponseApplication;
 import com.everymatch.saas.server.responses.ResponseLoadProviders;
 import com.everymatch.saas.singeltones.Preferences;
 import com.everymatch.saas.ui.base.BaseLoginActivity;
@@ -219,6 +220,15 @@ public class SplashActivity extends BaseLoginActivity {
     @Override
     protected void onGetUserFinished() {
         EMLog.i(TAG, "onGetUserFinished");
+
+        /*if (!Utils.isEmpty(ds.getUser().user_settings.default_culture) &&
+                (!ds.getUser().user_settings.default_culture.equals(ds.getCulture()))) {
+
+            //user has changed culture from another device
+            String userCulture = ds.getUser().user_settings.default_culture;
+            Preferences.getInstance().setLanguage(userCulture);
+        }*/
+
         performLoginOperation();
     }
 
@@ -226,8 +236,22 @@ public class SplashActivity extends BaseLoginActivity {
     public void onFetchApplicationFinished() {
         EMLog.i(TAG, "onFetchApplicationFinished");
         if (Preferences.getInstance().getTokenType() == null) {
-           /* here we gonna load walkthrough images so we dont get blank screen on next activity */
+           /* here we gonna load walkThrough images so we don't get blank screen on next activity */
             loadWalkTroughImages();
+            //save the culture we've got from server
+            String deviceCulture = ds.getCulture();
+            boolean saasContainsLan = false;
+            for (ResponseApplication.DataCulture culture : ds.getApplicationData().getCultures()) {
+                if (culture.culture_name.equals(deviceCulture)) {
+                    // saas supports device culture
+                    Preferences.getInstance().setLanguage(culture.culture_name);
+                    saasContainsLan = true;
+                }
+            }
+            if (!saasContainsLan) {
+                String saasDefCulture = ds.getApplicationData().getSettings().default_culture.culture_name;
+                Preferences.getInstance().setLanguage(saasDefCulture);
+            }
         }
         checkIfCanContinue();
     }

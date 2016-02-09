@@ -91,6 +91,28 @@ public class BaseActivity extends AppCompatActivity {
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**
+     * Quick fragment replace transaction
+     */
+    public void addFragment(int containerId, Fragment fragment, String tag, boolean addToBackStack, String backStackTag, int enter, int exit, int popEnter, int popExit) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        if (enter != -1 && exit != -1) {
+            if (popEnter != -1 && popExit != -1) {
+                fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
+            } else {
+                fragmentTransaction.setCustomAnimations(enter, exit);
+            }
+        }
+
+        fragmentTransaction.add(containerId, fragment, tag);
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(backStackTag);
+        }
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+
     public Fragment findFragment(String tag) {
         return getSupportFragmentManager().findFragmentByTag(tag);
     }

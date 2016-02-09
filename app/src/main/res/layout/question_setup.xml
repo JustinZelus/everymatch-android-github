@@ -33,12 +33,12 @@
 
         <com.everymatch.saas.view.BaseTextView
             android:id="@+id/tvEventSetupSpotsNumber"
-            tools:text="Unlimited"
+            tools:text="Click to set"
             android:layout_width="wrap_content"
             app:first_letter_capitalize="true"
             android:layout_height="wrap_content"
             style="@style/EmTextStyleNormal"
-            app:text_key="@string/Unlimited" />
+            app:text_key="@string/click_to_set" />
     </LinearLayout>
 
     <com.everymatch.saas.view.BaseView

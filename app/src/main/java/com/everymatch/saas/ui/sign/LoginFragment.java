@@ -35,11 +35,12 @@ import com.everymatch.saas.util.ShapeDrawableUtils;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseTextView;
 import com.everymatch.saas.view.EventHeader;
+import com.wang.avi.AVLoadingIndicatorView;
 
 /**
  * Created by Dacid on 16/06/2015.
  */
-public class LoginFragment extends BaseSignFragment implements View.OnClickListener{
+public class LoginFragment extends BaseSignFragment implements View.OnClickListener {
 
     public static final String TAG = LoginFragment.class.getSimpleName();
 
@@ -47,13 +48,17 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
     private static final String EXTRA_LOGIN_EMAIL = "extra.string.email";
     private static final String SHOW_RECOVER_PASSWORD_POPUP = "extra.show.recover.password.popup";
 
+    //Views
     private EditText mEditTextEmail;
     private EditText mEditTextPassword;
     private Button mButtonLogin;
     private String mLoginEmail;
-    private TextView mTextForgotPassword;
-    private View mButtonLoading;
+    private TextView mTextForgotPassword, tvLoading;
+    //private View mButtonLoading;
     private BaseTextView mTextTermsOfUse1;
+    private AVLoadingIndicatorView animLogin, animRegister;
+
+    //DAtA
     private boolean mShowRecoverPasswordPopup;
 
     public static Fragment newInstance() {
@@ -92,8 +97,11 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
         mEditTextPassword = (EditText) view.findViewById(R.id.fragment_login_edit_text_password);
         mButtonLogin = (Button) view.findViewById(R.id.fragment_login_button_login);
         mTextForgotPassword = (TextView) view.findViewById(R.id.fragment_login_text_forgot_password);
-        mButtonLoading = view.findViewById(R.id.fragment_login_button_loading);
+        //mButtonLoading = view.findViewById(R.id.fragment_login_button_loading);
         mTextTermsOfUse1 = (BaseTextView) view.findViewById(R.id.fragment_login_terms_of_use);
+        animLogin = (AVLoadingIndicatorView) view.findViewById(R.id.animLogin);
+        mTextTermsOfUse1 = (BaseTextView) view.findViewById(R.id.fragment_login_terms_of_use);
+        tvLoading = (BaseTextView) view.findViewById(R.id.tvLoading);
 
         mTextForgotPassword.setOnClickListener(this);
         mButtonLogin.setOnClickListener(this);
@@ -115,7 +123,7 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
         mButtonLogin.getBackground().setAlpha(50);
         mButtonLogin.setClickable(false);
 
-        if (!TextUtils.isEmpty(mLoginEmail)){
+        if (!TextUtils.isEmpty(mLoginEmail)) {
             mEditTextEmail.setText(mLoginEmail);
         }
 
@@ -139,21 +147,21 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
     public void seatHeader(EventHeader header) {
         super.seatHeader(header);
 
-        if (!TextUtils.isEmpty(mLoginEmail)){
+        if (!TextUtils.isEmpty(mLoginEmail)) {
 
             // Coming from recover password
-            if (mShowRecoverPasswordPopup){
+            if (mShowRecoverPasswordPopup) {
                 header.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         showRecoverPasswordPopup();
                     }
-                },250);
+                }, 250);
 
                 header.setTitle(DataManager.getInstance().getResourceText(R.string.Em2_login_title));
                 header.getIconThree().setText(DataManager.getInstance().getResourceText(R.string.Em2_register_title).toUpperCase());
 
-            } else{ // Coming from registration
+            } else { // Coming from registration
                 header.setTitle(DataManager.getInstance().getResourceText(R.string.Activate_Account));
                 header.getIconThree().setVisibility(View.GONE);
 
@@ -162,16 +170,16 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
                     public void run() {
                         showSuccessPopup();
                     }
-                },250);
+                }, 250);
             }
 
-        } else{
+        } else {
             header.setTitle(DataManager.getInstance().getResourceText(R.string.Em2_login_title));
             header.getIconThree().setText(DataManager.getInstance().getResourceText(R.string.Em2_register_title).toUpperCase());
         }
     }
 
-    private void showRecoverPasswordPopup(){
+    private void showRecoverPasswordPopup() {
         NotifierPopup.Builder builder = new NotifierPopup.Builder(getActivity());
         builder.setDuration(6000);
         builder.setMessage(R.string.Sent_new_password);
@@ -181,7 +189,7 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
         builder.show();
     }
 
-    private void showSuccessPopup(){
+    private void showSuccessPopup() {
         NotifierPopup.Builder builder = new NotifierPopup.Builder(getActivity());
         builder.setDuration(6000);
         builder.setMessage(R.string.AcountCreated);
@@ -206,30 +214,34 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
         }
     }
 
-    private void login(){
+    private void login() {
 
-        if (!Utils.isEmailValid(mEditTextEmail.getText())){
-            ((GradientDrawable)mEditTextEmail.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
+        if (!Utils.isEmailValid(mEditTextEmail.getText())) {
+            ((GradientDrawable) mEditTextEmail.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
             showError(R.string.EmailErrorMessages);
             return;
         }
 
-        if (mEditTextPassword.length() < 6){
-            ((GradientDrawable)mEditTextPassword.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
+        if (mEditTextPassword.length() < 6) {
+            ((GradientDrawable) mEditTextPassword.getBackground()).setStroke(Utils.dpToPx(2), ds.getIntColor(EMColor.ERROR));
             showError(R.string.PasswordErrorMessages);
             return;
         }
 
 
         final Dialog dialog = Utils.createBlockingEmptyDialog(getActivity());
-        mButtonLoading.setVisibility(View.VISIBLE);
+        //mButtonLoading.setVisibility(View.VISIBLE);
         mButtonLogin.setText("");
-
+        animLogin.setVisibility(View.VISIBLE);
+        tvLoading.setVisibility(View.VISIBLE);
         ServerConnector.getInstance().processRequest(new RequestSignInWithEmail(mEditTextEmail.getText().toString(),
                 mEditTextPassword.getText().toString()), new ServerConnector.OnResultListener() {
 
             @Override
             public void onSuccess(BaseResponse baseResponse) {
+                animLogin.setVisibility(View.INVISIBLE);
+                tvLoading.setVisibility(View.INVISIBLE);
+
                 Log.i(TAG, "RequestEmailLogin onSuccess");
 
                 dialog.dismiss();
@@ -249,9 +261,11 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
 
             @Override
             public void onFailure(ErrorResponse errorResponse) {
+                animLogin.setVisibility(View.INVISIBLE);
+                tvLoading.setVisibility(View.INVISIBLE);
                 Log.i(TAG, "RequestEmailLogin onFailure");
                 mButtonLogin.setText(dm.getResourceText(R.string.SignIn_Login));
-                mButtonLoading.setVisibility(View.GONE);
+                // mButtonLoading.setVisibility(View.GONE);
                 dialog.dismiss();
             }
         });
@@ -264,15 +278,15 @@ public class LoginFragment extends BaseSignFragment implements View.OnClickListe
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (TextUtils.isEmpty(mEditTextEmail.getText()) || TextUtils.isEmpty(mEditTextPassword.getText())){
+        if (TextUtils.isEmpty(mEditTextEmail.getText()) || TextUtils.isEmpty(mEditTextPassword.getText())) {
             mButtonLogin.getBackground().setAlpha(50);
             mButtonLogin.setClickable(false);
-        } else{
+        } else {
             mButtonLogin.getBackground().setAlpha(255);
             mButtonLogin.setClickable(true);
         }
 
-       // ((GradientDrawable)mEditTextPassword.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
-       // ((GradientDrawable)mEditTextEmail.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
+        // ((GradientDrawable)mEditTextPassword.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
+        // ((GradientDrawable)mEditTextEmail.getBackground()).setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
     }
 }

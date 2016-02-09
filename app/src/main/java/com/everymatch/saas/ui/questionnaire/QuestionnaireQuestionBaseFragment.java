@@ -87,7 +87,6 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
         getSubQuestionAndAnswerIfNeeded();
 
         mHeader = (EventHeader) view.findViewById(R.id.eventHeader);
-        setHeader();
 
         tvTitle = (TextView) view.findViewById(R.id.title_textview);
         tvTitle.setText(mQuestionAndAnswer.question.text_title);
@@ -123,6 +122,12 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
             setAnswer(mQuestionAndAnswer.question.default_value);
             recoverDefaultAnswer();
         }
+
+        setHeader();
+
+        //if we came from summery...disable save until changes has made
+        if (fromSummery)
+            setTitleEnabled(false);
     }
 
     private void setHeader() {
@@ -186,6 +191,8 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
 
         // the way the user see the answer
         mQuestionAndAnswer.userAnswerStr = answer;
+        if (mQuestionAndAnswer.question.question_type.equals(QuestionType.IMAGE_UPLOAD))
+            mQuestionAndAnswer.userAnswerStr = dm.getResourceText(R.string.Change_Picture);
 
         /* answer server form */
         JSONObject jsonObject = new JSONObject();
@@ -198,9 +205,11 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
                 case QuestionType.NUMBER_RANGE:
                     jsonObject.put("value", answer.replace("-", ","));
                     break;
-                case QuestionType.NUMBER:
                 case QuestionType.GENDER:
                 case QuestionType.GENDER_RANGE:
+                    jsonObject.put("value", createIdsList());
+                    break;
+                case QuestionType.NUMBER:
                 case QuestionType.SCALE:
                 case QuestionType.ABOUT_ME:
                 case QuestionType.IMAGE_UPLOAD:
@@ -229,7 +238,7 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
 
                 case QuestionType.PACE:
                 case QuestionType.TIME:
-                    jsonObject.put("value", getAnswerValue()/*ust number in this case*/);
+                    jsonObject.put("value", getAnswerValue()/*just number in this case*/);
                     break;
 
 
@@ -375,16 +384,15 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
     }
 
     protected void restorePreviewsData() {
-        QuestionAndAnswer qaa = new Gson().fromJson(originalDataJson, QuestionAndAnswer.class);
-        if (!isSubQuestion) {
-            mActivity.mQuestionsAndAnswers.set(mActivity.mCurrentQuestionIndex, qaa);
-        }
-        // mQuestionAndAnswer = qaa;
-        // mQuestionAndAnswer.subQuestionsMap = qaa.subQuestionsMap;
+        //if (!isSubQuestion) {
+        //mActivity.mQuestionsAndAnswers.set(mActivity.mCurrentQuestionIndex, qaa);
+        QuestionAndAnswer qaaTmp = new Gson().fromJson(originalDataJson, QuestionAndAnswer.class);
+        mQuestionAndAnswer.userAnswerData = qaaTmp.userAnswerData;
+        mQuestionAndAnswer.userAnswerStr = qaaTmp.userAnswerStr;
+
     }
 
     protected void setTitleEnabled(boolean enabled) {
-        //mHeader.getIconOne().setAlpha(enabled ? 1f : 0.5f);
         mHeader.getIconOne().setClickable(enabled);
         mHeader.getIconOne().setTextColor(ds.getIntColor(EMColor.WHITE));
         ObjectAnimator.ofFloat(mHeader.getIconOne(), View.ALPHA.getName(), enabled ? 1.0f : 0.5f).start();

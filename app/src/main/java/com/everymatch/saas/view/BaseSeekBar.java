@@ -49,23 +49,28 @@ public class BaseSeekBar extends SeekBar {
     }
 
     public void setThumbEnabled(boolean enable) {
-        int c = Color.parseColor(DataStore.getInstance().getColor(EMColor.PRIMARY));
+        int primary = Color.parseColor(DataStore.getInstance().getColor(EMColor.PRIMARY));
+        int moon = Color.parseColor(DataStore.getInstance().getColor(EMColor.MOON));
 
         ShapeDrawable shape = new ShapeDrawable(new OvalShape());
-        shape.getPaint().setColor(c);
+        shape.getPaint().setColor(enable ? primary : DataStore.getInstance().getIntColor(EMColor.FOG));
         shape.setIntrinsicHeight(Utils.dpToPx(25));
         shape.setIntrinsicWidth(Utils.dpToPx(25));
-        shape.getPaint().setStyle(Paint.Style.STROKE);
+        shape.getPaint().setStyle(Paint.Style.FILL);
         shape.getPaint().setStrokeWidth(Utils.dpToPx(1));
 
         setThumb(shape);
 
-        if (enable)
-            getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
-        else
-            getProgressDrawable().setColorFilter(Color.parseColor(DataStore.getInstance().getColor(EMColor.MOON)), PorterDuff.Mode.SRC_IN);
+        if (enable) {
+            //setProgressDrawable(mDrawable);
+            getIndeterminateDrawable().setColorFilter(primary, PorterDuff.Mode.SRC_IN);
+            getProgressDrawable().setColorFilter(primary, PorterDuff.Mode.SRC_IN);
+        } else {
+            getIndeterminateDrawable().setColorFilter(moon, PorterDuff.Mode.SRC_IN);
+            getProgressDrawable().setColorFilter(moon, PorterDuff.Mode.SRC_IN);
+        }
 
+        //getIndeterminateDrawable().setColorFilter(moon, android.graphics.PorterDuff.Mode.MULTIPLY);
 
-        //TODO set progress color gray when not enable
     }
 }

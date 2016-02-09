@@ -10,9 +10,12 @@ import android.widget.LinearLayout;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.IconType;
+import com.everymatch.saas.server.Data.DataIcon;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.util.Utils;
+import com.squareup.picasso.Picasso;
 
 
 /**
@@ -163,6 +166,21 @@ public class EventDataRow extends LinearLayout {
     public void setBackground(int bg) {
         wrapperLayout.setBackgroundColor(bg);
     }
+
+    public void setLeftIconOrImage(DataIcon icon) {
+        if (IconType.FONT.equals(icon.getType())) {
+            getLeftImage().setVisibility(INVISIBLE);
+            getLeftIcon().setVisibility(VISIBLE);
+            getLeftIcon().setText(IconManager.getInstance(getContext()).getIconString(icon.getValue()));
+        } else {
+            getLeftImage().setVisibility(VISIBLE);
+            getLeftIcon().setVisibility(INVISIBLE);
+            Picasso.with(getContext())
+                    .load(icon.getValue())
+                    .into(getLeftImage());
+        }
+    }
+
 
     /**
      * if text is empty, TEXT VIEW will be GONE else it will be VISIBLE

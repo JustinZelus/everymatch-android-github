@@ -100,6 +100,16 @@ public class QuestionUtils {
     }
 
     /**
+     * this method get's user answer data format and returns the title
+     */
+    public static String getAnsweredTitleFromUserAnswerData(DataQuestion question, String userAnswerData) {
+        DataAnswer dataAnswer = new DataAnswer();
+        dataAnswer.value = userAnswerData;
+        String ans = getAnsweredTitle(question, dataAnswer);
+        return ans;
+    }
+
+    /**
      * @param question
      * @param answer
      * @return the text to show on
@@ -113,9 +123,7 @@ public class QuestionUtils {
 
             try {
                 Gson gson;
-
                 switch (question.form_type) {
-
                     case FormType.LOCATION:
                         gson = new Gson();
                         // DataLocation location = gson.fromJson(gson.toJson(answer.value), DataLocation.class);
@@ -151,12 +159,20 @@ public class QuestionUtils {
 
                     case FormType.LIST:
                     case FormType.BUTTON_SELECTOR:
+                        if (question.question_type.equals(QuestionType.GENDER) || question.question_type.equals(QuestionType.GENDER_RANGE)) {
+                            //value = (String) answer.value;
+                            ArrayList<String> answered = new ArrayList<>();
+                            for (DataAnswer answers : question.answers) {
+                                if (((String) answer.value).contains(answers.value + "")) {
+                                    answered.add(answers.text_title);
+                                }
+                            }
 
-                        if (question.question_type.equals(QuestionType.GENDER)) {
-                            value = (String) answer.value;
+                            if (!Utils.isArrayListEmpty(answered)) {
+                                value = TextUtils.join(", ", answered);
+                            }
                         } else {
                             ArrayList<String> answered = new ArrayList<>();
-
                             for (DataAnswer answers : question.answers) {
                                 if (((String) answer.value).contains(answers.answer_id + "")) {
                                     answered.add(answers.text_title);
@@ -178,7 +194,6 @@ public class QuestionUtils {
                         value = answer.value.toString().replace(",", "-");
                         break;
 
-
                     default:
                         value = (String) answer.value;
                         break;
@@ -190,7 +205,6 @@ public class QuestionUtils {
 
         return TextUtils.isEmpty(value) ? dm.getResourceText(R.string.Unanswered) : value;
     }
-
 
     public static void updateValueItem(String questionType, DataAnswer answer, JSONObject userAnswerData) {
         try {
@@ -242,10 +256,8 @@ public class QuestionUtils {
                 case QuestionType.MY_LOCATION:
                 case QuestionType.EVENT_LOCATION:
                 case QuestionType.EVENT_LIST:
-
                     JSONObject valueObject = value.getJSONObject("value");
                     DataLocation dataLocation = DataLocation.fromJsonObject(valueObject);
-
                     value.put("city", dataLocation.city);
                     value.put("country_code", dataLocation.country_code);
                     value.put("country_name ", dataLocation.country_name);

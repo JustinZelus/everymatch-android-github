@@ -1,8 +1,6 @@
 package com.everymatch.saas.ui.questionnaire;
 
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +16,15 @@ import com.everymatch.saas.view.RangeSeekBar;
 public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBaseFragment {
     private static final String TAG = "QuestionRange";
 
+    //Views
     TextView mValueTextView;
     RangeSeekBar<Integer> mRangeBar;
 
+    //Data
     int mMin, mMax;
     float mStep;
+    boolean sendAnswerOnChange;
 
-    public QuestionnaireQuestionRangeFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,14 +39,6 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
 
         mValueTextView = (TextView) view.findViewById(R.id.value_textview);
         mRangeBar = (RangeSeekBar<Integer>) view.findViewById(R.id.seekbar);
-        RangeSeekBar.OnRangeSeekBarChangeListener<Integer> listener = new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar rangeSeekBar, Integer low, Integer high) {
-                Log.d(TAG, "low = " + low + " high = " + high);
-                mValueTextView.setText(low.toString() + " - " + high);
-                setAnswer(low.toString() + " - " + high);
-            }
-        };
 
         mRangeBar.setOnRangeSeekBarChangeListener(listener);
         mRangeBar.setNotifyWhileDragging(true);
@@ -61,20 +52,29 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
         mMax = Integer.parseInt(rangeStr[1]);
         mRangeBar.setRangeValues(mMin, mMax);
 
-//        StateListDrawable ld = (StateListDrawable) mRangeBar.getProgressDrawable();
-//        ClipDrawable d1 = (ClipDrawable) ld.findDrawableByLayerId(R.id.progress_circular);
-////        ClipDrawable d1 = (ClipDrawable) ld.findDrawableByLayerId(R.id.progress_horizontal_circular);
-//        d1.setColorFilter(getResources().getColor(R.color.primary), PorterDuff.Mode.SRC_IN);
-
         listener.onRangeSeekBarValuesChanged(mRangeBar, mMin, mMax);
 
-        if (!TextUtils.isEmpty(mQuestionAndAnswer.userAnswerStr))
-            recoverAnswer();
-        else {
-            if (mQuestionAndAnswer.question.default_value != null)
-                recoverDefaultAnswer();
-        }
+        recoverAnswer();
     }
+
+    RangeSeekBar.OnRangeSeekBarChangeListener<Integer> listener = new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+        @Override
+        public void onRangeSeekBarValuesChanged(RangeSeekBar rangeSeekBar, Integer low, Integer high) {
+            //input check
+            if (low == high) {
+                if (high < mMax)
+                    high++;
+                else {
+                    low--;
+                }
+            }
+            mValueTextView.setText(low.toString() + " - " + high);
+            if (sendAnswerOnChange)
+                setAnswer(mValueTextView.getText().toString());
+            sendAnswerOnChange = true;
+        }
+
+    };
 
     @Override
     public void recoverDefaultAnswer() {
@@ -89,16 +89,21 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
     }
 
     private void recoverAnswer() {
-        if (TextUtils.isEmpty(mQuestionAndAnswer.userAnswerStr)) {
-            mRangeBar.setSelectedMinValue(mMin);
-            mRangeBar.setSelectedMaxValue(mMax);
-            return;
+        try {
+            if (mQuestionAndAnswer.userAnswerData != null && mQuestionAndAnswer.userAnswerData.has("value")) {
+                String valuesStr[] = mQuestionAndAnswer.userAnswerData.getString("value").split(",");
+                int from = Integer.parseInt(valuesStr[0].trim());
+                int to = Integer.parseInt(valuesStr[1].trim());
+                mRangeBar.setSelectedMinValue(from);
+                mRangeBar.setSelectedMaxValue(to);
+
+                mValueTextView.setText("" + from + " - " + to);
+                setAnswer(mValueTextView.getText().toString());
+            }
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
         }
 
-        String valuesStr[] = mQuestionAndAnswer.userAnswerStr.split(",");
-        mRangeBar.setSelectedMinValue(Integer.parseInt(valuesStr[0]));
-        mRangeBar.setSelectedMaxValue(Integer.parseInt(valuesStr[1]));
-        setAnswer(mQuestionAndAnswer.userAnswerStr);
     }
 
     @Override

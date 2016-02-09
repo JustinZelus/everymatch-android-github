@@ -17,7 +17,6 @@
     <string name="login_screen_subtitle">Signin with your existing account</string>
     <string name="login_screen_register"></string>
     <string name="login_screen_bottom">Login using email</string>
-    <string name="type_your_email">Type your email</string>
     <string name="register_screen_title">Register</string>
     <string name="register_screen_subtitle">Signup to create account</string>
     <string name="register_screen_register">By submitting this form you agree to our\nPrivacy and Terms and Condition policies</string>
@@ -52,7 +51,6 @@
     <string name="next">NEXT</string>
     <string name="start">START</string>
     <string name="replace">REPLCAE</string>
-    <string name="save">SAVE</string>
 
     <string name="yes">Yes</string>
     <string name="no">No</string>

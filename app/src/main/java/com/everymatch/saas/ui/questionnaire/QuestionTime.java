@@ -25,6 +25,8 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
     //time -> don't need to convert unit
 
     private ArrayList<String> Seconds, Minutes, Hours;
+    //arrays for the last hour/minuet item
+    private ArrayList<String> SecondsLastArray, MinutesLastArray;
 
     //Views
     WheelView wheelSec, wheelMin, wheelHour;
@@ -36,13 +38,14 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
     private TIME_MODE time_mode;
     private boolean isUnitMile;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Seconds = new ArrayList<>();
         Minutes = new ArrayList<>();
         Hours = new ArrayList<>();
+        SecondsLastArray = new ArrayList<>();
+        MinutesLastArray = new ArrayList<>();
     }
 
     @Override
@@ -62,9 +65,9 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
         wheelSec.setOffset(1);
         wheelSec.setOnWheelViewListener(secListener);
         wheelMin.setOffset(1);
-        wheelMin.setOnWheelViewListener(secListener);
+        wheelMin.setOnWheelViewListener(minListener);
         wheelHour.setOffset(1);
-        wheelHour.setOnWheelViewListener(secListener);
+        wheelHour.setOnWheelViewListener(hourListener);
 
         //hide wheel if needed and prepare number list according to min/max/step
 
@@ -86,7 +89,7 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
 
         //need to change the unit according to user unit
         if (mQuestion.question_type.equals(QuestionType.PACE)) {
-            if (ds.getUser().user_settings.distance.equals(Types.UNIT_MILE)) {
+            if (ds.getUser().user_settings.getDistance().equals(Types.UNIT_MILE)) {
                 EMLog.d(TAG, "user in mile...");
                 isUnitMile = true;
                 mMin = (int) ((double) mMin * 1.61);
@@ -133,13 +136,18 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
 
         if (time_mode == TIME_MODE.TIME_MODE_MIN) {
             //prepare minutes
-            for (int i = mMin / 60; i < mMax / 60; i++) {
+            for (int i = mMin / 60; i <= mMax / 60; i++) {
                 Minutes.add(String.format("%02d", i));
             }
 
-            //prepare seconds
+            //prepare left seconds
             for (int i = 0; i < 60; i += mStep) {
                 Seconds.add(String.format("%02d", i));
+            }
+            //prepare SecondsLastArray
+            int leftSec = (mMax % 60);
+            for (int i = 0; i <= leftSec; i += mStep) {
+                SecondsLastArray.add(String.format("%02d", i));
             }
 
             //add hours dummy item
@@ -161,6 +169,7 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
             for (int i = 0; i < 60; i += mStep) {
                 Seconds.add(String.format("%02d", i));
             }
+
         }
     }
 
@@ -203,17 +212,53 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
         return "" + mValue;
     }
 
+    private void checkLogic() {
+        if (wheelHour.getSeletedIndex() == Hours.size() - 1 && time_mode == TIME_MODE.TIME_MODE_HOUR) {
+            // we are on the last minute check if we past the last ellawed second
+            if (wheelMin.getSeletedIndex() > MinutesLastArray.size()) {
+                //we past it!!!
+                wheelMin.setSeletion(MinutesLastArray.size() - 1);
+            }
+        }
+
+        if (wheelMin.getSeletedIndex() == Minutes.size() - 1 && time_mode == TIME_MODE.TIME_MODE_MIN) {
+            // we are on the last minute check if we past the last ellawed second
+            if (wheelSec.getSeletedIndex() > SecondsLastArray.size()) {
+                //we past it!!!
+                wheelSec.setSeletion(SecondsLastArray.size() - 1);
+            }
+        }
+    }
+
     WheelView.OnWheelViewListener secListener = new WheelView.OnWheelViewListener() {
         @Override
         public void onSelected(int selectedIndex, String item) {
+            checkLogic();
+            setAnswer();
+        }
+    };
+
+    WheelView.OnWheelViewListener minListener = new WheelView.OnWheelViewListener() {
+        @Override
+        public void onSelected(int selectedIndex, String item) {
+            checkLogic();
+            setAnswer();
+        }
+    };
+
+    WheelView.OnWheelViewListener hourListener = new WheelView.OnWheelViewListener() {
+        @Override
+        public void onSelected(int selectedIndex, String item) {
+            checkLogic();
             setAnswer();
         }
     };
 
     private void setAnswer() {
-        int sec = Integer.parseInt(wheelSec.getSeletedItem());
-        int min = Integer.parseInt(wheelMin.getSeletedItem());
-        int hour = Integer.parseInt(wheelHour.getSeletedItem());
+
+        int sec = Integer.parseInt(wheelSec.getSeletedItem().equals("") ? "0" : wheelSec.getSeletedItem());
+        int min = Integer.parseInt(wheelMin.getSeletedItem().equals("") ? "0" : wheelMin.getSeletedItem());
+        int hour = Integer.parseInt(wheelHour.getSeletedItem().equals("") ? "0" : wheelHour.getSeletedItem());
 
         //update value in seconds
         mValue = sec + min * 60 + hour * 60 * 60;

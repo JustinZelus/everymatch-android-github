@@ -1,11 +1,15 @@
 package com.everymatch.saas.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
@@ -24,9 +28,11 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
     private ArrayList<DataEvent> mEvents;
     private int imageWidth;
     private int imageHeight;
+    Context context;
 
-    public EventCarouselAdapter(ArrayList<DataEvent> events) {
+    public EventCarouselAdapter(Context context, ArrayList<DataEvent> events) {
         this.mEvents = events;
+        this.context = context;
     }
 
     /**
@@ -39,6 +45,7 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
         public TextView match;
         public ImageView image;
         public ImageView imagePlaceHolder;
+        public RelativeLayout rlHolder;
 
         public EventViewHolder(View v) {
             super(v);
@@ -48,19 +55,32 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
             match = (TextView) v.findViewById(R.id.view_event_text_match);
             image = (ImageView) v.findViewById(R.id.view_event_image);
             imagePlaceHolder = (ImageView) v.findViewById(R.id.view_event_image_placeholder);
+            rlHolder = (RelativeLayout) v.findViewById(R.id.rlEventHolder);
         }
     }
 
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_event, viewGroup, false);
-        if (getItemCount() <= 1) {
-            ViewGroup.LayoutParams params = v.getLayoutParams();
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            v.setLayoutParams(params);
+        if (getItemCount() == 1 ) {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            int width = display.getWidth();
+            View holder = v.findViewById(R.id.rlEventHolder);
+            holder.measure(0, 0);
+            width -= Utils.dpToPx(20);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.getLayoutParams();
+            params.width = width;
+            holder.setLayoutParams(params);
+            holder.requestLayout();
+
+            imageWidth = width;
+            imageHeight = v.getLayoutParams().height;
+
+        } else {
+            imageWidth = v.getLayoutParams().width;
+            imageHeight = v.getLayoutParams().height;
         }
-        imageWidth = v.getLayoutParams().width;
-        imageHeight = v.getLayoutParams().height;
         EventViewHolder eventViewHolder = new EventViewHolder(v);
         eventViewHolder.imagePlaceHolder.setBackgroundDrawable(DataManager.getInstance().getEventDrawable());
         return eventViewHolder;
@@ -80,11 +100,10 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
             if (event.dataPublicEvent.spots == -1) {
                 viewHolder.participants.setText(event.dataPublicEvent.user_count + " " + DataManager.getInstance().getResourceText(R.string.Participants));
             } else {
-                viewHolder.participants.setText(event.dataPublicEvent.user_count + "/" + event.dataPublicEvent.spots + " " +
-                        DataManager.getInstance().getResourceText(R.string.Participants));
+                viewHolder.participants.setText(event.dataPublicEvent.user_count + "/" + event.dataPublicEvent.spots + " " + DataManager.getInstance().getResourceText(R.string.Participants));
             }
 
-            viewHolder.match.setText(event.dataPublicEvent.match + "%");
+            //viewHolder.match.setText(event.dataPublicEvent.match + "%");
 
             if (!TextUtils.isEmpty(event.dataPublicEvent.image_url)) {
                 Picasso.with(viewHolder.image.getContext()).load(Utils.getImageUrl

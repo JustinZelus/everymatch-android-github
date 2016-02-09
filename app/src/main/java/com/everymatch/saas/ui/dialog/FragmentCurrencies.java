@@ -1,136 +1,52 @@
 package com.everymatch.saas.ui.dialog;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.ListView;
 
 import com.everymatch.saas.R;
-import com.everymatch.saas.adapter.AdapterCurrency;
-import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.EMColor;
+import com.everymatch.saas.server.responses.ResponseApplication;
 import com.everymatch.saas.singeltones.Consts;
-import com.everymatch.saas.ui.base.BaseFragment;
-import com.everymatch.saas.ui.me.settings.SettingsFragment;
-import com.everymatch.saas.util.ShapeDrawableUtils;
-import com.everymatch.saas.view.EventHeader;
+import com.everymatch.saas.ui.base.BaseAbstractFragment;
+import com.everymatch.saas.view.EventDataRow;
+import com.everymatch.saas.view.ViewSeperator;
 
 /**
  * Created by PopApp_laptop on 22/11/2015.
  */
-public class FragmentCurrencies extends BaseFragment implements View.OnClickListener, EventHeader.OnEventHeader {
-    ListView mListView;
-    AdapterCurrency mAdapter;
-    Button btnSelect;
-    private EventHeader mHeader;
-    private boolean isClicked = false;
+public class FragmentCurrencies extends BaseAbstractFragment {
+
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mAdapter = new AdapterCurrency(DataStore.getInstance().getApplicationData().getCurrencies(), getActivity());
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_time_zones, container, false);
+    protected void setHeader() {
+        super.setHeader();
+        mEventHeader.setTitle(dm.getResourceText(R.string.Currency));
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mHeader = (EventHeader) view.findViewById(R.id.eventHeader);
-        setHeader();
-
-        mListView = (ListView) view.findViewById(R.id.listViewTimeZone);
-        btnSelect = (Button) view.findViewById(R.id.btnSelect);
-
-        btnSelect.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton());
-        btnSelect.setOnClickListener(this);
-        mListView.setAdapter(mAdapter);
-    }
-
-    private void setHeader() {
-        mHeader.getBackButton().setText(Consts.Icons.icon_New_Close);
-
-        mHeader.setListener(this);
-        mHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
-        mHeader.getIconOne().setVisibility(View.GONE);
-        mHeader.getIconTwo().setText(Consts.Icons.icon_Search);
-        mHeader.getIconThree().setVisibility(View.GONE);
-        mHeader.setTitle("Currencies");
-
-        mHeader.getEditTitle().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mAdapter.getFilter().filter(s);
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View v) {
-        Intent result = new Intent();
-        result.putExtra(SettingsFragment.EXTRA_CURRENCY, mAdapter.getSelectedDataCurrency());
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
-        getActivity().onBackPressed();
-    }
-
-    @Override
-    public void onBackButtonClicked() {
-        getActivity().onBackPressed();
-    }
-
-    @Override
-    public void onOneIconClicked() {
-
-    }
-
-    @Override
-    public void onTwoIconClicked() {
-        if (!isClicked) {
-            mHeader.getTitle().setVisibility(View.GONE);
-            mHeader.getEditTitle().setVisibility(View.VISIBLE);
-            mHeader.getEditTitle().setFocusable(true);
-
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInputFromWindow(mHeader.getEditTitle().getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-
-            isClicked = true;
-        } else {
-            mHeader.getTitle().setVisibility(View.VISIBLE);
-            mHeader.setTitle("Events");
-            mHeader.getEditTitle().setVisibility(View.GONE);
-
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-
-            isClicked = false;
-
-            mAdapter.cancelSearch();
-            mHeader.getEditTitle().setText("");
+    protected void addRows() {
+        rowsContainer.removeAllViews();
+        for (ResponseApplication.DataCurrency currency : ds.getApplicationData().getCurrencies()) {
+            EventDataRow edrCurrency = new EventDataRow(getActivity());
+            edrCurrency.getLeftMediaContainer().setVisibility(View.GONE);
+            edrCurrency.setTitle(currency.code);
+            edrCurrency.setDetails(currency.symbol);
+            edrCurrency.setRightIconText(ds.getUser().user_settings.currency.equals(currency.code) ? Consts.Icons.icon_StatusPositive : "");
+            edrCurrency.getRightIcon().setTextColor(ds.getIntColor(EMColor.PRIMARY));
+            edrCurrency.setRightText(null);
+            edrCurrency.setTag(currency);
+            edrCurrency.setOnClickListener(clickListener);
+            rowsContainer.addView(edrCurrency);
+            rowsContainer.addView(new ViewSeperator(getActivity(), null));
         }
     }
 
-    @Override
-    public void onThreeIconClicked() {
-
-    }
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ResponseApplication.DataCurrency currency = (ResponseApplication.DataCurrency) v.getTag();
+            ds.getUser().user_settings.currency = currency.code;
+            addRows();
+            getActivity().onBackPressed();
+        }
+    };
 }

@@ -31,6 +31,7 @@ import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseDiscover;
 import com.everymatch.saas.server.responses.ResponseGetUser;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.Preferences;
 import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.NotificationFragment;
@@ -120,7 +121,7 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((DiscoverActivity)getActivity()).setSelectedMenuItem(DiscoverActivity.DISCOVER_MENU_ITEMS.DISCOVER);
+        ((DiscoverActivity) getActivity()).setSelectedMenuItem(DiscoverActivity.DISCOVER_MENU_ITEMS.DISCOVER);
         // Bind views
         mProgressBar.setVisibility(View.GONE);
         mFragmentContainer = (LinearLayout) view.findViewById(R.id.fragment_discover_container);
@@ -190,6 +191,12 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setVisibility(View.GONE);
         mHeader.setArrowDownVisibility(true);
+        mHeader.getTvArrowDown().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHeader.getTitle().performClick();
+            }
+        });
         mHeader.getTitle().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,7 +224,7 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
             } else {
                 setCurrentActivity(savedInstanceState.getString(ACTIVITY_ID));
             }
-            ((DiscoverActivity)(getActivity())).currentActivityId = mCurrentActivity.client_id;
+            ((DiscoverActivity) (getActivity())).currentActivityId = mCurrentActivity.client_id;
 
             fetchNotifications();
             fetchUnReadMessages();
@@ -565,10 +572,10 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     }
 
     private void setCurrentActivity(String activityId) {
-
         for (DataActivity activity : mActivities) {
             if (activity.client_id.equals(activityId)) {
                 mCurrentActivity = activity;
+                Preferences.getInstance().setLastActivityId(activityId);
             }
         }
     }
@@ -596,7 +603,7 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
 
         /*QuestionnaireActivity.create_mode = QuestionnaireActivity.CREATE_MODE.CREATE_EVENT;
         final Intent intent = new Intent(getActivity(), QuestionnaireActivity.class);
-        getActivity().startActivity(intent);*/
+        getActivity().start(intent);*/
     }
 
     public interface DiscoverCallbacks {
@@ -609,6 +616,10 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     }
 
     public void onActivitySelected(DataActivity activity) {
+        //save last activity id to prefs
+        Preferences.getInstance().setLastActivityId(activity.client_id);
+        //****************************************
+
         mCurrentActivity = activity;
         fetchActivityInfo(mCurrentActivity.client_id);
         fetchNotifications();

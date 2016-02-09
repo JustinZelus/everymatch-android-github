@@ -21,7 +21,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="0dp"
         android:choiceMode="singleChoice"
-        android:dividerHeight="4dp" />
+        android:dividerHeight="1dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -35,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:text_color="white_color"
+            android:visibility="gone"
             app:text_key="@string/Save"
             tools:text="Save" />
     </LinearLayout>

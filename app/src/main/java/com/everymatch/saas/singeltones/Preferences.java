@@ -29,6 +29,7 @@ public class Preferences {
     private final String RESOURCES = "resources";
     private final String TIMESTAMP = "timestamp";
     private final String LANGUAGE = "myLanguage";
+    private final String LastActivityId = "last activity id";
 
     private Preferences() {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(EverymatchApplication.getContext());
@@ -59,7 +60,6 @@ public class Preferences {
         return mPrefs.getString(LANGUAGE, null);
     }
 
-
     public String getUsername() {
         return mPrefs.getString(USERNAME, null);
     }
@@ -72,6 +72,14 @@ public class Preferences {
         }
 
         return new Gson().fromJson(resourcesJson, Resources.class);
+    }
+
+    public void setLastActivityId(String lastActivityId) {
+        mPrefs.edit().putString(LastActivityId, lastActivityId).commit();
+    }
+
+    public String getLastActivityId() {
+        return mPrefs.getString(LastActivityId, "");
     }
 
     public void setAccessToken(String accessToken) {
@@ -123,4 +131,6 @@ public class Preferences {
         }.getType());
         return answer;
     }
+
+
 }

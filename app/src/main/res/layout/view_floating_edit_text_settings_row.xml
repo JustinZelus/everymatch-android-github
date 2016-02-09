@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:orientation="vertical"
     app:bg_color="white_color">
@@ -13,42 +13,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="8dp"
-        >
+        android:paddingLeft="8dp">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center_vertical|left"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical|left"
+            android:orientation="vertical">
 
             <com.everymatch.saas.view.BaseTextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:singleLine="false"
-                tools:text="title"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="5dp"
+                android:textSize="17sp"
                 app:text_color="night_color"
-                android:textSize="17sp" />
+                tools:text="title" />
+
 
             <com.everymatch.saas.view.BaseEditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
                 android:minHeight="40dp"
                 android:minWidth="160dp"
-                android:ellipsize="end"
-                android:singleLine="true"
                 android:padding="0dp"
-                android:layout_marginBottom="8dp"
+                android:singleLine="true"
                 android:tag="etValue"
-                app:text_color="moon_color"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:text_color="moon_color" />
         </LinearLayout>
 
 
@@ -56,13 +56,13 @@
             android:id="@+id/iconLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:gravity="center"
             android:text="\@"
-            app:text_color="fog_color"
             android:textSize="24dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            app:text_color="fog_color" />
     </RelativeLayout>
 
 </LinearLayout>

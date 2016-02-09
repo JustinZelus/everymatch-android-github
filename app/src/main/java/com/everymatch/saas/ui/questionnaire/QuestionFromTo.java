@@ -54,7 +54,7 @@ public class QuestionFromTo extends QuestionnaireQuestionBaseFragment implements
         // TODO - FIX
         length = to - from + 1;
 
-        for (float i = from; i < to; i += step) {
+        for (float i = from; i <= to; i += step) {
             fromArr.add("" + i);
             toArr.add("" + i);
         }

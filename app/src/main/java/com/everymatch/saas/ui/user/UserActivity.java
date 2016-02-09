@@ -16,6 +16,7 @@ import com.everymatch.saas.ui.PeopleViewPagerFragment;
 import com.everymatch.saas.ui.chat.ChatFragment;
 import com.everymatch.saas.ui.discover.PeopleFragment;
 import com.everymatch.saas.ui.event.EventActivity;
+import com.everymatch.saas.ui.inbox.InboxActivity;
 import com.everymatch.saas.ui.me.MeFragment;
 import com.everymatch.saas.ui.me.MyProfileFragment;
 import com.everymatch.saas.ui.me.settings.SettingsFragment;
@@ -24,13 +25,13 @@ import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 /**
  * Created by dors on 10/26/15.
  */
-public class UserActivity extends BaseActivity implements EventListener,
-        PeopleFragment.Callbacks, MeFragment.MeCallback, MyProfileFragment.MyProfileCallbacks {
+public class UserActivity extends BaseActivity implements EventListener, PeopleFragment.Callbacks, MeFragment.MeCallback, MyProfileFragment.MyProfileCallbacks {
 
     private static final int REQUEST_ANSWER_QUESTION = 123;
     private static final String TAG = UserActivity.class.getSimpleName();
     private static final String EXTRA_USER_ID = "extra.user.id";
     private static final String EXTRA_SHOW_MY_PROFILE_FRAGMENT = "extra.show.my.profile.fragment";
+    private static final String EXTRA_SHOW_SETTINGS_FRAGMENT = "extra.show.settings.fragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,12 @@ public class UserActivity extends BaseActivity implements EventListener,
         activity.startActivity(intent);
     }
 
+    public static void openSettingsFragment(Activity activity) {
+        Intent intent = new Intent(activity, UserActivity.class);
+        intent.putExtra(EXTRA_SHOW_SETTINGS_FRAGMENT, true);
+        activity.startActivity(intent);
+    }
+
     private void showNextFragment() {
         Intent intent = getIntent();
 
@@ -64,7 +71,9 @@ public class UserActivity extends BaseActivity implements EventListener,
                             ((DataPeople) intent.getSerializableExtra(EXTRA_USER_ID)),
                     PeopleViewPagerFragment.TAG, false, null);
         } else {
-            if (intent.hasExtra(EXTRA_SHOW_MY_PROFILE_FRAGMENT)) {
+            if (intent.hasExtra(EXTRA_SHOW_SETTINGS_FRAGMENT)) {
+                replaceFragment(R.id.fragment_container, new SettingsFragment(), SettingsFragment.TAG, false, null);
+            } else if (intent.hasExtra(EXTRA_SHOW_MY_PROFILE_FRAGMENT)) {
                 showMyProfile(false);
             } else {
                 replaceFragment(R.id.fragment_container, new MeFragment(), MeFragment.TAG);
@@ -84,10 +93,8 @@ public class UserActivity extends BaseActivity implements EventListener,
 
     @Override
     public void onChatButtonClick(String userId) {
-        //DataConversation conversation = new DataConversation();
-        //conversation._id = userId;
-        replaceFragment(R.id.fragment_container, ChatFragment.getInstance(null, userId, ChatFragment.CHAT_TYPE_USER), ChatFragment.TAG, true, null);
-        //replaceFragment(R.id.fragment_container, ChatFragment.getInstance(userId, ChatFragment.CHAT_TYPE_USER), ChatFragment.TAG, true, null);
+        //replaceFragment(R.id.fragment_container, ChatFragment.getInstance(null, userId, ChatFragment.CHAT_TYPE_USER), ChatFragment.TAG, true, null);
+        InboxActivity.startChat(UserActivity.this, null, userId, ChatFragment.CHAT_TYPE_USER);
     }
 
     @Override

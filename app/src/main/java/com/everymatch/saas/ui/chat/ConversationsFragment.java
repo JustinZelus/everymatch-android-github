@@ -55,7 +55,6 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
         View emptyView = EmptyViewFactory.createEmptyView(EmptyViewFactory.TYPE_MESSAGES);
         ((ViewGroup) mAbsListView.getParent()).addView(emptyView);
         mAbsListView.setEmptyView(emptyView);
-        mTopContainer.setVisibility(View.VISIBLE);
         //mAbsListView.setAdapter(adapter);
         mAbsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,6 +64,9 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
                         R.anim.enter_from_left, R.anim.exit_to_right);
             }
         });
+
+        mAbsListView.setPadding(0, 0, 0, 0);
+        mAbsListView.setDividerHeight(0);
     }
 
     @Override
@@ -106,7 +108,8 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
     }
 
     private void updateHeaderTitle() {
-        mEventHeader.setTitle(dm.getResourceText(R.string.Inbox_title) + " (" + mCurrentConversationType + ") ▼");
+        //mEventHeader.setTitle(dm.getResourceText(R.string.Inbox_title) + " (" + mCurrentConversationType + ") ▼");
+        mEventHeader.setTitle( mCurrentConversationType + "▼");
     }
 
     @Override

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:bg_color="silver_color"
     android:orientation="vertical">
 
     <com.everymatch.saas.view.EventHeader
         android:id="@+id/fragment_me_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -34,6 +36,7 @@
                         android:id="@+id/rl"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:visibility="gone"
                         app:bg_color="white_color">
 
                         <com.pkmmte.view.CircularImageView
@@ -57,9 +60,9 @@
                             android:layout_below="@+id/imgMeImage"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="5dp"
-                            tools:text="New Text"
                             android:textSize="32sp"
-                            app:text_color="night_color" />
+                            app:text_color="night_color"
+                            tools:text="New Text" />
 
                         <com.everymatch.saas.view.BaseTextView
                             android:id="@+id/tvMeMemberSince"
@@ -68,8 +71,8 @@
                             android:layout_below="@+id/tvMeUserName"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="7dp"
-                            tools:text="New Text"
-                            app:text_color="morning_color" />
+                            app:text_color="morning_color"
+                            tools:text="New Text" />
 
                     </com.everymatch.saas.view.BaseRelativeLayout>
 
@@ -87,8 +90,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
                             app:bg_color="white_color"
-                            app:left_media_container_visible="false"
                             app:left_icon_visible="false"
+                            app:left_media_container_visible="false"
                             app:row_details="About,Status,Location,Personality,recommendations..."
                             app:row_title="Profile" />
 
@@ -96,13 +99,13 @@
                             android:id="@+id/event_row_me_settings"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:left_media_container_visible="false"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/event_row_me_profile"
                             android:layout_marginBottom="2dp"
                             app:bg_color="white_color"
                             app:left_icon_visible="false"
+                            app:left_media_container_visible="false"
                             app:row_details="Account,notifications,Units,Privacy"
                             app:row_title="Settings" />
                     </RelativeLayout>
@@ -114,20 +117,36 @@
                         android:layout_below="@+id/rl_Settings"
                         android:layout_marginBottom="10dp">
 
-                        <com.everymatch.saas.view.BaseTextView
-                            android:id="@+id/textView"
-                            android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:id="@+id/rlUp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="10dp"
-                            app:text_key="@string/Activity_Profile"
-                            tools:text="Activity Profiles" />
+                            android:padding="10dp">
+
+                            <com.everymatch.saas.view.BaseTextView
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:text_key="@string/Activity_Profile"
+                                app:text_color="night_color"
+                                tools:text="Activity Profiles" />
+
+                            <com.everymatch.saas.view.BaseTextView
+                                android:id="@+id/tvAddProfile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                app:text_color="night_color"
+                                android:text="Add Profile"
+                                app:text_key="@string/Add_Profile" />
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:id="@+id/llMeActivities"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/textView"
+                            android:layout_below="@+id/rlUp"
                             android:minHeight="20dp"
                             android:orientation="vertical">
 
@@ -140,7 +159,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
-                            android:layout_below="@+id/textView"
+                            android:layout_below="@+id/rlUp"
                             android:choiceMode="singleChoice"
                             android:orientation="vertical"
                             android:visibility="gone"
@@ -158,10 +177,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            tools:text="Add_Profile"
                             app:bg="rounded"
+                            android:visibility="gone"
+                            app:text_color="white_color"
                             app:text_key="@string/Add_Profile"
-                            app:text_color="white_color" />
+                            tools:text="Add_Profile" />
                     </LinearLayout>
 
 
@@ -171,5 +191,5 @@
             </com.everymatch.saas.view.BaseScrollView>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</com.everymatch.saas.view.BaseLinearLayout>
 

@@ -77,6 +77,10 @@ public class QuestionnaireQuestionNumberSilderFragment extends QuestionnaireQues
                 }
             }
         });
+
+        //add units
+        if (mQuestion.units != null && mQuestion.units.containsKey("value"))
+            tvTitle.append("(" + mQuestion.units.get("value").toString() + ")");
     }
 
     @Override

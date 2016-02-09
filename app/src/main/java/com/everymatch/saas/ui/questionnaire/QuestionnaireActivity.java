@@ -41,6 +41,7 @@ import com.everymatch.saas.singeltones.YesNoCallback;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.dialog.DialogYesNo;
+import com.everymatch.saas.ui.dialog.FragmentTimeZones;
 import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.QuestionUtils;
@@ -123,23 +124,11 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             case CREATE_ACTIVITY:
                 int activityId = getIntent().getIntExtra(EXTRA_ACTIVITY_ID, 0);
                 if (activityId != 0) {
-                    //we got an activity id go to that activity
-                    DataActivity[] allDataActivities = ds.getApplicationData().getActivities();
-                    DataActivity dataActivity;
-                    for (int i = 0; i < allDataActivities.length; ++i) {
-                        dataActivity = allDataActivities[i];
-                        if (dataActivity._id == activityId) {
-                            //prepare mQuestionsAndAnswers and mNotMandatoryUnansweredQuestions objects
-                            mDataActivity = dataActivity;
-                            prepareArrays(dataActivity.questions);
-                            goToWelcome();
-                            return;
-                        }
-                    }
-                    if (mDataActivity == null) {
-                        goToPickActivity();
-                        return;
-                    }
+                    mDataActivity = ds.getApplicationData().getActivityById(activityId);
+                    //prepare mQuestionsAndAnswers and mNotMandatoryUnansweredQuestions objects
+                    prepareArrays(mDataActivity.questions);
+                    goToWelcome();
+                    return;
                 }
 
                 // we have no activity id so...
@@ -149,6 +138,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             case CREATE_EVENT:
                 int activityIdd = getIntent().getIntExtra(EXTRA_ACTIVITY_ID, 0);
                 mDataActivity = ds.getApplicationData().getActivityById(activityIdd);
+                //TODO - load activity by event id
                 String eventId = getIntent().getStringExtra(EXTRA_SELECTED_EVENT_ID);
                 for (DataEvent_Activity dataEventActivity : mDataActivity.getEvents()) {
                     if (dataEventActivity.event_id.equals(eventId)) {
@@ -221,11 +211,12 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
             QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer(dataQuestion);
             JSONObject jsonObject = new JSONObject();
+            questionAndAnswer.userAnswerData = jsonObject;
             jsonObject.put("questions_id", dataQuestion.questions_id);
             jsonObject.put("status", "active");
-            jsonObject.put("value", QuestionUtils.getAnswerValue(dataQuestion.question_type, answer));
+            QuestionUtils.updateValueItem(dataQuestion.question_type, answer, questionAndAnswer.userAnswerData);
+            //jsonObject.put("value", QuestionUtils.getAnswerValue(dataQuestion.question_type, answer));
 
-            questionAndAnswer.userAnswerData = jsonObject;
             //questionAndAnswer.userAnswerData = QuestionUtils.getAnswerValue(dataQuestion.question_type, answer);
             questionAndAnswer.userAnswerStr = answerStr;
 
@@ -345,9 +336,11 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                                     if (answer.questions_id == question.questions_id) {
                                         questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTitle(question, answer);
                                         JSONObject jsonObject = new JSONObject();
+                                        questionAndAnswer.userAnswerData = jsonObject;
                                         jsonObject.put("questions_id", question.questions_id);
                                         jsonObject.put("status", "active");
-                                        jsonObject.put("value", QuestionUtils.getAnswerValue(question.question_type, answer));
+                                        // jsonObject.put("value", QuestionUtils.updateValueItem(question.question_type, answer););
+                                        QuestionUtils.updateValueItem(question.question_type, answer, questionAndAnswer.userAnswerData);
                                         //questionAndAnswer.userAnswerData = QuestionUtils.getAnswerValue(question.question_type, answer);
                                         break;
                                     }
@@ -439,10 +432,10 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
         }
         if (create_mode == CREATE_MODE.CREATE_EVENT) {
             QuestionAndAnswer setup = new QuestionAndAnswer(new DataQuestion());
-            setup.question.form_type = "setup";
+            setup.question.form_type = FormType.SETUP;
             setup.question.question_type = QuestionType.SETUP;
             setup.question.mandatory = true;
-            setup.question.text_title = dm.getResourceText(R.string.Setup_Participation);
+            setup.question.text_title = dm.getResourceText(R.string.Participants);
             mQuestionsAndAnswers.add(setup);
         }
     }
@@ -461,7 +454,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             ds.getUser().user_settings.user_activity_profile_id_list += "," + activityId;
         }
 
-        DiscoverActivity.startActivity(this, DiscoverActivity.EXTRA_ACTIVITY_ID, activityId);
+        DiscoverActivity.start(this, DiscoverActivity.EXTRA_ACTIVITY_ID, activityId);
     }
 
     public void goToWelcome() {
@@ -533,6 +526,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
                     R.anim.enter_from_left, R.anim.exit_to_right)
                     .addToBackStack("question" + index);
+
         } else {
             getSupportFragmentManager().popBackStackImmediate();
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
@@ -569,51 +563,42 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
     public BaseFragment getNextQuestionFragment(String questionForm, int questionIndex) {
         Log.i(TAG, "getNextQuestionFragment type " + questionForm);
 
-//        questionForm="image_upload";
-
-        if ("location".equals(questionForm)) {
-            return new QuestionnaireQuestionLocationFragment();
-        } else if ("button_selector".equals(questionForm)) {
-            return new QuestionnaireQuestionButtonSelectorFragment();
-        } else if ("date".equals(questionForm)) {
-            return new QuestionnaireQuestionDateFragment();
-        } else if ("number_slider".equals(questionForm)) {
-            return new QuestionnaireQuestionNumberSilderFragment();
-        } else if ("number_picker".equals(questionForm)) {
-            return new QuestionnaireQuestionNumberFragment();
-        } else if ("number_input".equals(questionForm)) {
-            return new QuestionnaireQuestionNumberFragment();
-        } else if ("number_range".equals(questionForm)) {
-            return new QuestionnaireQuestionRangeFragment();
-        } else if ("date_time".equals(questionForm)) {
-            return new QuestionnaireQuestionDateTimeFragment();
-        } else if ("list".equals(questionForm)) {
-            //return QuestionnaireQuestionSelectionFragment.newInstance(questionIndex);
-            return new QuestionnaireQuestionList();
-        } else if ("from_to".equals(questionForm)) {
-            return new QuestionFromTo();
-            //return new QuestionnaireQuestionRangeFragment();
-        } else if ("event_list".equals(questionForm)) {
-            //return QuestionnaireQuestionSelectionFragment.newInstance(questionIndex);
-            return new QuestionnaireQuestionList();
-        } else if ("image_upload".equals(questionForm)) {
-            return new QuestionnaireQuestionPickImageFragment();
+        switch (questionForm) {
+            case FormType.LOCATION:
+                return new QuestionnaireQuestionLocationFragment();
+            case FormType.BUTTON_SELECTOR:
+                return new QuestionnaireQuestionButtonSelectorFragment();
+            case FormType.DATE:
+                return new QuestionnaireQuestionDateFragment();
+            case FormType.NUMBER_SLIDER:
+                return new QuestionnaireQuestionNumberSilderFragment();
+            case FormType.NUMBER_PICKER:
+            case FormType.NUMBER_INPUT:
+                return new QuestionnaireQuestionNumberFragment();
+            case FormType.NUMBER_RANGE:
+                return new QuestionnaireQuestionRangeFragment();
+            case FormType.DATE_TIME:
+                return new QuestionnaireQuestionDateTimeFragment();
+            case FormType.LIST:
+                return new QuestionnaireQuestionList();
+            case FormType.FROM_TO:
+                return new QuestionnaireQuestionRangeFragment();
+            //return new QuestionFromTo();
+            case FormType.IMAGE_UPLOAD:
+                return new QuestionnaireQuestionPickImageFragment();
+            case FormType.TEXT_AREA:
+            case FormType.TEXT_INPUT:
+                return new QuestionnaireQuestionTextArea();
+            case FormType.SCHEDULE:
+                return new QuestionnareQuestionScheduleFragment();
+            case FormType.SETUP:
+                return new QuestionnareSetup();
+            case FormType.TIME:
+                return new QuestionTime();
+            default:
+                EMLog.e(TAG, "no fragment found that matches this form type! " + questionForm);
+                return new QuestionnaireQuestionButtonSelectorFragment();
         }
-        // added by idan
-        else if ("text_area".equals(questionForm)) {
-            return new QuestionnaireQuestionTextArea();
-        } else if ("text_input".equals(questionForm)) {
-            return new QuestionnaireQuestionTextArea();
-        } else if ("schedule".equals(questionForm)) {
-            return new QuestionnareQuestionScheduleFragment();
-        } else if ("setup".equals(questionForm)) {
-            return new QuestionnareSetup();
-        } else if ("time".equals(questionForm)) {
-            return new QuestionTime();
-        }
-
-        EMLog.e(TAG, "no fragment found that matches this form type! " + questionForm);
-        return new QuestionnaireQuestionButtonSelectorFragment(); //TODO: this is problem!!!
     }
 
     public void goToSummeryScreen(View v) {
@@ -887,7 +872,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                 DataStore.getInstance().getUser().addOrUpdateEventIntoMap(mGeneratedEvent, EventType.HOSTING);
                 *//*now we going to the event page*//*
 
-                DiscoverActivity.startActivity(QuestionnaireActivity.this, DiscoverActivity.EXTRA_EVENT_ID, mGeneratedEvent._id);
+                DiscoverActivity.start(QuestionnaireActivity.this, DiscoverActivity.EXTRA_EVENT_ID, mGeneratedEvent._id);
 
                 Toast.makeText(QuestionnaireActivity.this, "Event was successfully created!", Toast.LENGTH_SHORT).show();
             }
@@ -903,8 +888,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                 mGeneratedEvent = new Gson().fromJson(response, DataEvent.class);
                 DataStore.getInstance().getUser().addOrUpdateEventIntoMap(mGeneratedEvent, EventType.UPCOMING);
                 DataStore.getInstance().getUser().addOrUpdateEventIntoMap(mGeneratedEvent, EventType.HOSTING);
-                DiscoverActivity.startActivity(QuestionnaireActivity.this, DiscoverActivity.EXTRA_EVENT_ID, mGeneratedEvent._id);
-                //Toast.makeText(QuestionnaireActivity.this, "Event was successfully created!", Toast.LENGTH_SHORT).show();
+                DiscoverActivity.start(QuestionnaireActivity.this, DiscoverActivity.EXTRA_EVENT_ID, mGeneratedEvent._id);
             }
 
             @Override
@@ -964,6 +948,13 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
         mHasBackPressed = true;
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(QuestionnaireSummeryFragment.TAG);
 
+        Fragment timeZone = getSupportFragmentManager().findFragmentByTag(FragmentTimeZones.TAG);
+         /* check if timeZone screen is up */
+        if (timeZone != null && timeZone.isVisible()) {
+            getSupportFragmentManager().popBackStackImmediate();
+            return;
+        }
+
         /* check if summery screen is up */
         if (fragment != null && fragment.isVisible() && !fromSummery && create_mode != CREATE_MODE.EDIT_ACTIVITY) {
             mCurrentQuestionIndex = mQuestionIndex;
@@ -1015,6 +1006,10 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
     @Override
     public void onBackPressed() {
         performBackOperations(false);
+    }
+
+    public void forceBack() {
+        super.onBackPressed();
     }
 
     public void showConfirmExitDialog(String title, String message) {

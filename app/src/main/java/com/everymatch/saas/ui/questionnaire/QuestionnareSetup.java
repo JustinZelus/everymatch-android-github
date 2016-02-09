@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.everymatch.saas.R;
+import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.JoinType;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseTextView;
@@ -20,9 +21,12 @@ import org.json.JSONObject;
  */
 public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment implements Switch.OnCheckedChangeListener, View.OnClickListener {
 
+    //Data
+    String[] spots, privacy;
+
+    //Views
     BaseTextView tvEventSetupSpotsNumber, tvEventSetupPrivacy;
     com.rey.material.widget.Switch switchSetupEventJoinType, switchSetupIsParticipating;
-    String[] spots, privacy;
 
 
     @Override
@@ -44,6 +48,8 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
 
         tvEventSetupSpotsNumber = (BaseTextView) view.findViewById(R.id.tvEventSetupSpotsNumber);
         tvEventSetupPrivacy = (BaseTextView) view.findViewById(R.id.tvEventSetupPrivacy);
+        tvEventSetupPrivacy.setTextColor(ds.getIntColor(EMColor.PRIMARY));
+
         switchSetupIsParticipating = (Switch) view.findViewById(R.id.SwitchSetupIsParticipating);
         switchSetupEventJoinType = (Switch) view.findViewById(R.id.SwitchSetupEventJoinType);
 
@@ -73,14 +79,20 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
             recoverAnswer();
         } else {
             // Default setup values
-            switchSetupEventJoinType.setChecked(true);
+            switchSetupEventJoinType.setChecked(false);
         }
     }
 
     private void recoverAnswer() {
-        // spots
-        int numberOfSpots = mActivity.dataSetupQuestionsObject.numberOfSpots;
-        tvEventSetupSpotsNumber.setText(numberOfSpots == -1 ? spots[0] : numberOfSpots + "");
+        if (tvEventSetupSpotsNumber.getText().equals(dm.getResourceText(R.string.click_to_set))) {
+            tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.MOON));
+            setTitleEnabled(false);
+        } else {
+            // spots
+            int numberOfSpots = mActivity.dataSetupQuestionsObject.numberOfSpots;
+            tvEventSetupSpotsNumber.setText(numberOfSpots == -1 ? spots[0] : numberOfSpots + "");
+            tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.PRIMARY));
+        }
 
         // privacy
         tvEventSetupPrivacy.setText(Utils.setFirstLetterUpperCase(mActivity.dataSetupQuestionsObject.privacy));

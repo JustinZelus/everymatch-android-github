@@ -34,10 +34,10 @@ public class MenuChangeActivity extends BaseMenuDialogFragment implements View.O
 
         //Add title
         EventDataRow edrTitle = new EventDataRow(getActivity());
-        edrTitle.setTitle(DataManager.getInstance().getResourceText(R.string.Select_Activity));
+        edrTitle.setTitle(DataManager.getInstance().getResourceText(R.string.Select_Profile));
         edrTitle.getRightIcon().setVisibility(View.GONE);
         edrTitle.getLeftIcon().setText("");
-        edrTitle.setRightText(DataManager.getInstance().getResourceText(R.string.add_activity));
+        edrTitle.setRightText(DataManager.getInstance().getResourceText(R.string.Add_activity_profile));
         edrTitle.getRightText().setTextColor(white);
         edrTitle.getLeftMediaContainer().setVisibility(View.GONE);
         edrTitle.setDetails(null);
@@ -59,7 +59,7 @@ public class MenuChangeActivity extends BaseMenuDialogFragment implements View.O
             EventDataRow edr = new EventDataRow(getActivity());
             edr.setTag(activity);
             edr.setTitle(activity.text_title);
-            edr.getLeftIcon().setText(activity.icon.getValue());
+            edr.setLeftIconOrImage(activity.icon);
             edr.getLeftIcon().setTextColor(white);
             edr.setRightIconText(Consts.Icons.icon_Details);
             edr.getRightIcon().setTextColor(white);

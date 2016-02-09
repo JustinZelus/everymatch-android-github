@@ -75,24 +75,38 @@ public class DataStore {
         String country = Locale.getDefault().getCountry().toUpperCase();
         switch (country) {
             case "US":
-                return "en_US";
+                return "en-US";
             case "IL":
-                return "he_IL";
+                return "he-IL";
             case "FR":
-                return "fr_FR";
+                return "fr-FR";
             case "SA":
-                return "ar_SA";
+                return "ar-SA";
             case "BR":
-                return "pt_BR";
+                return "pt-BR";
             case "UK":
-                return "en_UK";
+                return "en-UK";
             default:
-                return "en_US";
+                return "en-US";
+        }
+    }
+
+    public String getCultureTest() {
+        try {
+            String local = getLocal();
+            String savedLocal = Preferences.getInstance().getLanguage();
+            if (Utils.isEmpty(savedLocal))
+                return local;
+            return savedLocal;
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+            return EverymatchApplication.getContext().getResources().getString(R.string.default_culture);
         }
     }
 
     public String getCulture() {
-
+        return getCultureTest();
+        /*
         String answer = "";
 
         String local = getLocal();
@@ -125,7 +139,7 @@ public class DataStore {
             answer = EverymatchApplication.getContext().getResources().getString(R.string.default_culture);
         }
 
-        return answer;
+        return answer;*/
     }
 
     public String getColor(int color) {

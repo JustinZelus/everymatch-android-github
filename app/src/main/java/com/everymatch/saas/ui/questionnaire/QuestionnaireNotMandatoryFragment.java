@@ -1,7 +1,6 @@
 package com.everymatch.saas.ui.questionnaire;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,9 @@ import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
-import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataQuestion;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BaseFragment;
-import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventHeader;
 
 import java.util.ArrayList;
@@ -87,7 +84,7 @@ public class QuestionnaireNotMandatoryFragment extends BaseFragment
     }
 
     private void showQuestionNumber() {
-        if  (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_EVENT) {
+        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_EVENT) {
             int mandatoryCount = 0;
             for (QuestionAndAnswer qaa : mActivity.mQuestionsAndAnswers) {
                 if (qaa.question.mandatory)
@@ -145,21 +142,30 @@ public class QuestionnaireNotMandatoryFragment extends BaseFragment
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            //TODO!
             if (convertView == null) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 convertView = inflater.inflate(R.layout.question_list_item, parent, false);
             }
 
-            DataQuestion question = mNotMandatoryQuestions.get(position);
-
-            ((TextView) convertView.findViewById(R.id.question_textview)).setText(question.text_title);
+            DataQuestion item = mNotMandatoryQuestions.get(position);
             ((TextView) convertView.findViewById(R.id.arrow_image)).setText(Consts.Icons.icon_Arrowright);
 
+            TextView tvTitle = (TextView) convertView.findViewById(R.id.question_textview);
+            tvTitle.setText(item.text_title);
 
+            TextView tvValue = (TextView) convertView.findViewById(R.id.answer_textview);
+            QuestionAndAnswer qaa = new QuestionAndAnswer(item);
+            String value = qaa.getSummeryValue();
+            tvValue.setText(value);
+            if (!value.equals(dm.getResourceText(R.string.Unanswered)))
+                tvValue.setTextColor(ds.getIntColor(EMColor.PRIMARY));
+
+            return convertView;
+
+            /*
             String answerStr = "";
-            if (question.answers != null && question.answers.length > 0) {
-                for (DataAnswer answer : question.answers) {
+            if (item.answers != null && item.answers.length > 0) {
+                for (DataAnswer answer : item.answers) {
                     if (answer.is_default) {
                         answerStr += answer.text_title + ", ";
                     }
@@ -167,7 +173,7 @@ public class QuestionnaireNotMandatoryFragment extends BaseFragment
             }
 
             if (TextUtils.isEmpty(answerStr)) {
-                answerStr = question.irrelevant_default_state;
+                answerStr = item.irrelevant_default_state;
             } else {
                 answerStr = answerStr.substring(0, answerStr.length() - 2); // Remove the ", "
                 ((TextView) convertView.findViewById(R.id.answer_textview)).setTextColor(ds.getIntColor(EMColor.PRIMARY));
@@ -178,8 +184,8 @@ public class QuestionnaireNotMandatoryFragment extends BaseFragment
             }
 
             ((TextView) convertView.findViewById(R.id.answer_textview)).setText(answerStr);
+*/
 
-            return convertView;
         }
     }
 }

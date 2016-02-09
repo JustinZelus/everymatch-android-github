@@ -1,9 +1,13 @@
 package com.everymatch.saas.ui.questionnaire;
 
+import com.everymatch.saas.R;
+import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.QuestionType;
 import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataQuestion;
 import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.QuestionUtils;
+import com.everymatch.saas.util.Utils;
 
 import org.json.JSONObject;
 
@@ -33,16 +37,24 @@ public class QuestionAndAnswer implements Serializable {
         // check if we have a default value
         if (question.default_value != null) {
             try {
-                this.userAnswerData = new JSONObject(question.default_value);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("questions_id", question.questions_id);
+                jsonObject.put("status", "active");
+                DataAnswer answer = new DataAnswer();
+                answer.value = question.default_value;
+                QuestionUtils.updateValueItem(question.question_type, answer, jsonObject);
+                this.userAnswerData = jsonObject;
             } catch (Exception ex) {
-                EMLog.e(TAG, ex.getMessage());
+                EMLog.e(TAG, "can't parse default value for question id " + question.questions_id + ex.getMessage());
             }
         }
         // check if we have a isDefault answers
         generateIsDefaultAnswers();
 
-        if (this.question.default_value != null)
-            setUserAnswerStrByDefaultValue();
+        if (this.question.default_value != null) {
+            //setUserAnswerStrByDefaultValue();
+            userAnswerStr = QuestionUtils.getAnsweredTitleFromUserAnswerData(question, question.default_value);
+        }
 
         subQuestionsMap = new HashMap<>();
         //originalSubQuestionsMap = new HashMap<>();
@@ -145,6 +157,17 @@ public class QuestionAndAnswer implements Serializable {
                     defaultList = defaultList.substring(0, defaultList.length() - 1).trim();
                 if (defaultList.length() > 0)
                     this.question.default_value = defaultList;
+            } else if (question.question_type.equals(QuestionType.GENDER_RANGE)) {
+                //collect the values and not id's
+                String defaultList = "";
+                for (DataAnswer a : question.answers) {
+                    if (a.is_default)
+                        defaultList += a.text_title + ",";
+                }
+                if (defaultList.endsWith(","))
+                    defaultList = defaultList.substring(0, defaultList.length() - 1).trim();
+                if (defaultList.length() > 0)
+                    this.question.default_value = defaultList;
             }
         }
     }
@@ -161,11 +184,40 @@ public class QuestionAndAnswer implements Serializable {
 
     // this method tell's if user selected all available answers he could
     public boolean isAllAnswersSelected() {
-        if (question.question_type.equals(QuestionType.IDS)) {
+        if (question.question_type.equals(QuestionType.IDS) || question.question_type.equals(QuestionType.GENDER_RANGE)) {
             int ansCount = userAnswerStr.split(",").length;
             if (ansCount == question.answers.length)
                 return true;
         }
         return false;
     }
+
+    public String getSummeryValue() {
+        DataManager dm = DataManager.getInstance();
+
+        //if no answer at all (not even default value)
+        if (userAnswerData == null || !userAnswerData.has("value")) {
+            return dm.getResourceText(R.string.Unanswered);
+        }
+        // if all answers selected
+        if (isAllAnswersSelected())
+            return dm.getResourceText(R.string.All);
+
+        // user answered on part of answers -> we must have userAnswerStr
+        if (Utils.isEmpty(userAnswerStr))
+            userAnswerStr = "";
+        return userAnswerStr;
+
+
+    }
+
+    // in order to know if answer is selected (in list question or button selector)
+    // we need to know what  to compare to (id or title)
+    public String getAnswerIdentifier(DataAnswer answer) {
+        if (question.question_type.equals(QuestionType.IDS))
+            return "" + answer.answer_id;
+
+        return answer.value.toString();
+    }
+
 }

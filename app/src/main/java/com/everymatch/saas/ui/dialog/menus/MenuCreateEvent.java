@@ -85,7 +85,7 @@ public class MenuCreateEvent extends BaseMenuDialogFragment {
         ActivitiesListHolder.removeAllViews();
         //Add title
         EventDataRow edrTitle = new EventDataRow(getActivity());
-        edrTitle.setTitle(DataManager.getInstance().getResourceText(R.string.Select_Activity));
+        edrTitle.setTitle(DataManager.getInstance().getResourceText(R.string.Select_Profile));
         edrTitle.getRightIcon().setVisibility(View.GONE);
         edrTitle.getLeftIcon().setText("");
         edrTitle.getLeftMediaContainer().setVisibility(View.GONE);
@@ -120,13 +120,13 @@ public class MenuCreateEvent extends BaseMenuDialogFragment {
 
         //Add Back Arrow
         EventDataRow edrBack = new EventDataRow(getActivity());
-        edrBack.setTitle(DataManager.getInstance().getResourceText(R.string.Back));
+        edrBack.setTitle(DataManager.getInstance().getResourceText(R.string.Select_Activity));
         edrBack.getRightIcon().setVisibility(View.GONE);
         edrBack.getLeftIcon().setText(Consts.Icons.icon_ArrowBack);
-        edrBack.getLeftIcon().setTextColor(ds.getIntColor(EMColor.PRIMARY));
+        edrBack.getLeftIcon().setTextColor(ds.getIntColor(EMColor.WHITE));
         edrBack.setDetails(null);
-        edrBack.getWrapperLayout().setBackgroundColor(ds.getIntColor(EMColor.WHITE));
-        edrBack.getTitleView().setTextColor(ds.getIntColor(EMColor.PRIMARY));
+        edrBack.getWrapperLayout().setBackgroundColor(ds.getIntColor(EMColor.PRIMARY));
+        edrBack.getTitleView().setTextColor(ds.getIntColor(EMColor.WHITE));
 
         edrBack.setOnClickListener(new View.OnClickListener() {
             @Override

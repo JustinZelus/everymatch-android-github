@@ -12,7 +12,7 @@ public class Constants {
     //public static  String API_SERVICE_URL = "http://192.168.1.101:4433/";
     //public static  String AUTH2_SERVICE_URL = "http://192.168.1.101:4431/";
 
-    public static final int ACTION_TEXT_SIZE_SP = 24;
+    public static final int ACTION_TEXT_SIZE_SP = 22;
 
     public static String API_SERVICE_URL = "https://api.everymatch.me/";
     public static String AUTH2_SERVICE_URL = "https://oauth2.everymatch.me/";

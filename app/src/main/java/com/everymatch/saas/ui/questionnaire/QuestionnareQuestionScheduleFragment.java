@@ -39,17 +39,21 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
     private static final int REQUEST_CODE_DIALOG_FRAGMENT = 2;
     public static final String TIME_FORMAT = "dd.MM.yyyy";
 
-
-    TextView edrTimeZone;
-    BaseTextView tvFromDate, tvFromTime, tvToDate, tvToTime;
+    //Data
+    private boolean wasToSet;
     DataDate dataDateFrom = new DataDate();
     DataDate dataDateTo = new DataDate();
-    BaseTextView tvTimeZoneValue;
     DataTimeZone mDataTimeZone;
 
+
+    //Views
+    TextView edrTimeZone;
+    BaseTextView tvFromDate, tvFromTime, tvToDate, tvToTime;
+    BaseTextView tvTimeZoneValue;
+    BaseTextView tvOptional;
     private View mToContainer;
     private View mQuestionToLine;
-    private boolean wasToSet;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         cFrom.set(Calendar.MINUTE, 0);
 
         dataDateFrom.year = cFrom.get(Calendar.YEAR);
-        dataDateFrom.month = cFrom.get(Calendar.MONTH)+1;
+        dataDateFrom.month = cFrom.get(Calendar.MONTH) + 1;
         dataDateFrom.day = cFrom.get(Calendar.DAY_OF_MONTH);
         dataDateFrom.hour = cFrom.get(Calendar.HOUR_OF_DAY);
         dataDateFrom.minute = cFrom.get(Calendar.MINUTE);
@@ -71,12 +75,11 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         cTo.set(Calendar.MINUTE, 0);
 
         dataDateTo.year = cTo.get(Calendar.YEAR);
-        dataDateTo.month = cTo.get(Calendar.MONTH)+1;
+        dataDateTo.month = cTo.get(Calendar.MONTH) + 1;
         dataDateTo.day = cTo.get(Calendar.DAY_OF_MONTH);
         dataDateTo.hour = cTo.get(Calendar.HOUR_OF_DAY);
         dataDateTo.minute = cTo.get(Calendar.MINUTE);
         dataDateTo.second = cTo.get(Calendar.SECOND);
-
     }
 
     @Override
@@ -100,6 +103,9 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         tvToDate.setOnClickListener(this);
         tvToTime = (BaseTextView) view.findViewById(R.id.tvScheduleToTime);
         tvToTime.setOnClickListener(this);
+        tvOptional = (BaseTextView) view.findViewById(R.id.tvScheduleOptional);
+        tvOptional.setText("(Optional)");
+        tvOptional.setOnClickListener(this);
 
         mQuestionToLine = view.findViewById(R.id.question_schedule_to_line);
         mQuestionToLine.setOnClickListener(this);
@@ -115,7 +121,7 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         if (mDataTimeZone != null) {
             setTimeZoneText();
         } else {
-            mDataTimeZone = ds.getApplicationData().getTime_zone().get(0);
+            mDataTimeZone = ds.getUser().user_settings.getTime_zone();
             setTimeZoneText();
         }
 
@@ -153,6 +159,7 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
     private void recoverAnswer() {
         if (TextUtils.isEmpty(mQuestionAndAnswer.userAnswerStr)) {
             setAnswer();
+            setTitleEnabled(false);
             mDataTimeZone = ds.getApplicationData().getTimeZoneBySystem();
             return;
         }
@@ -172,6 +179,10 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
             dataDateTo.hour = value.getJSONObject("to").getInt("hour");
             dataDateTo.minute = value.getJSONObject("to").getInt("minute");
             dataDateTo.second = value.getJSONObject("to").getInt("second");
+
+
+            //hide optional marl since user alreadt clicked it
+            tvOptional.performClick();
 
             if (mDataTimeZone != null) {
                 setTimeZoneText();
@@ -208,11 +219,25 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tvScheduleOptional:
+
+                //TODO hour after
+
+               /* dataDateTo.year = dataDateFrom.year;
+                dataDateTo.month = dataDateFrom.month;
+                dataDateTo.day = dataDateFrom.day;
+                dataDateTo.hour = dataDateFrom.;
+                dataDateTo.minute = 59;
+                dataDateTo.second = 59;*/
+
+                mToContainer.setVisibility(View.VISIBLE);
+                tvOptional.setVisibility(View.GONE);
+                break;
             case R.id.EdrTimeZone:
                 FragmentTimeZones dialogTimeZones = new FragmentTimeZones();
                 dialogTimeZones.setTargetFragment(this, REQUEST_CODE_DIALOG_FRAGMENT);
                 ((QuestionnaireActivity) getActivity()).replaceFragment(R.id.fragment_container_full, dialogTimeZones,
-                        TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                        FragmentTimeZones.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
                         R.anim.enter_from_left, R.anim.exit_to_right);
                 break;
             case R.id.tvScheduleFromDate:
@@ -229,7 +254,7 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
                             // Move the "to" date to one hour late in the same day
                             if (Utils.isAfterDate(dataDateFrom, dataDateTo)) {
                                 dataDateTo.day = dataDateFrom.day;
-                                dataDateTo.month = dataDateFrom.month+1;
+                                dataDateTo.month = dataDateFrom.month + 1;
                                 dataDateTo.year = dataDateFrom.year;
                                 dataDateTo.hour = dataDateFrom.hour + 1;
                                 dataDateTo.minute = dataDateFrom.minute;
@@ -247,7 +272,6 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
                 fromDialog.show();
                 break;
             case R.id.tvScheduleFromTime:
-
                 RangeTimePickerDialog fromHourDialog = new RangeTimePickerDialog(mActivity, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -256,7 +280,6 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
                         tvFromTime.setText(dataDateFrom.getHourString());
 
                         if (wasToSet) {
-
                             // Move the "to" date to one hour late
                             if (Utils.isAfterOrSameHour(dataDateFrom, dataDateTo)) {
                                 dataDateTo.hour = dataDateFrom.hour + 1;
@@ -301,7 +324,7 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
 
                         mToContainer.setVisibility(View.VISIBLE);
                         dataDateTo.year = year;
-                        dataDateTo.month = monthOfYear+1;
+                        dataDateTo.month = monthOfYear + 1;
                         dataDateTo.day = dayOfMonth;
                         tvToDate.setText(Utils.getDateStringFromDataDate(dataDateTo, TIME_FORMAT));
                         setAnswer();
@@ -351,6 +374,15 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
     @Override
     public JSONObject createJsonObject() {
         JSONObject from = createDateJsonObject(dataDateFrom);
+        if (tvOptional.getVisibility() == View.VISIBLE) {
+            //user has not set to date
+            dataDateTo.year = dataDateFrom.year;
+            dataDateTo.month = dataDateFrom.month;
+            dataDateTo.day = dataDateFrom.day;
+            dataDateTo.hour = 23;
+            dataDateTo.minute = 59;
+            dataDateTo.second = 59;
+        }
         JSONObject to = createDateJsonObject(dataDateTo);
         try {
             JSONObject out = new JSONObject();

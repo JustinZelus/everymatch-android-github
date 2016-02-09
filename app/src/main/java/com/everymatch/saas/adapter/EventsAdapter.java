@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
@@ -53,7 +54,10 @@ public class EventsAdapter extends EmBaseAdapter<DataEvent> {
 
         if (view == null) {
             view = inflater.inflate(R.layout.view_event, viewGroup, false);
-            view.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.rlEventHolder);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rl.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            rl.setLayoutParams(params);
 
             ImageView imagePlaceHolder = (ImageView) view.findViewById(R.id.view_event_image_placeholder);
             imagePlaceHolder.setBackgroundDrawable(DataManager.getInstance().getEventDrawable());

@@ -1,6 +1,7 @@
 package com.everymatch.saas.ui.event;
 
 
+import android.Manifest;
 import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.everymatch.saas.R;
+import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.view.BaseTextView;
 import com.everymatch.saas.view.EventHeader;
@@ -27,6 +30,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,18 +86,39 @@ public class EventLocationFragment extends Fragment implements GoogleMap.OnCamer
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mHeader = (EventHeader) view.findViewById(R.id.event_location_eventHeader);
         mHeader.setListener(this);
-
         mHeader.getBackButton().setText(IconManager.getInstance(getActivity()).getIconString("ArrowBack"));
         mHeader.getIconOne().setVisibility(View.GONE);
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setVisibility(View.GONE);
         mHeader.setTitle(mEventTitle);
 
+        Nammu.askForPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION, new PermissionCallback() {
+            @Override
+            public void permissionGranted() {
+                initMap(view, savedInstanceState);
+            }
+
+            @Override
+            public void permissionRefused() {
+                EMLog.d(TAG, " permissionRefused ACCESS_COARSE_LOCATION");
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    private void initMap(View view, Bundle savedInstanceState) {
         mMapView.onCreate(savedInstanceState);
 
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
@@ -110,8 +137,8 @@ public class EventLocationFragment extends Fragment implements GoogleMap.OnCamer
 
         addMeToMap();
 
-        mAddressText = (BaseTextView)view.findViewById(R.id.event_location_address);
-        mAddressDetailsText = (BaseTextView)view.findViewById(R.id.event_location_address_details);
+        mAddressText = (BaseTextView) view.findViewById(R.id.event_location_address);
+        mAddressDetailsText = (BaseTextView) view.findViewById(R.id.event_location_address_details);
         mAddressText.setText(mAddress);
         Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
         String address = null;
@@ -168,12 +195,12 @@ public class EventLocationFragment extends Fragment implements GoogleMap.OnCamer
     protected boolean addMeToMap() {
         if (mMyMarker == null && mMyLastLocation != null) {
             mMyMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(mMyLastLocation.getLatitude(), mMyLastLocation.getLongitude()))
-                    .title("ME")
+                            .title("ME")
                     /*.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_a_location))*/);
             return true;
         } else {
             mMyMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(mLat, mLon))
-                    .title("ME")
+                            .title("ME")
                     /*.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_a_location))*/);
             return true;
         }

@@ -1,82 +1,66 @@
 package com.everymatch.saas.ui.me.settings;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.AdapterView;
 
 import com.everymatch.saas.R;
-import com.everymatch.saas.adapter.AdapterDataUnit;
-import com.everymatch.saas.adapter.EmBaseAdapter;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.BaseActivity;
-import com.everymatch.saas.ui.base.BaseListFragment;
+import com.everymatch.saas.ui.base.BaseAbstractFragment;
+import com.everymatch.saas.view.EventDataRow;
+import com.everymatch.saas.view.ViewSeperator;
 
 /**
  * Created by PopApp_laptop on 15/12/2015.
  */
-public class UnitsMenuFragment extends BaseListFragment implements AdapterView.OnItemClickListener {
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
+public class UnitsMenuFragment extends BaseAbstractFragment {
+    //Data
 
-    @Override
-    protected void initAdapter() {
-        super.initAdapter();
-        //mAbsListView.setDividerHeight(Utils.dpToPx(1));
-        //mAbsListView.setPadding(0, 0, 0, 0);
-        mAbsListView.setAdapter(new AdapterDataUnit(getActivity()));
-        mAbsListView.setOnItemClickListener(this);
-    }
-
-    @Override
-    protected void setActionButtons() {
-        super.setActionButtons();
-        mActionButtonPrimary.setVisibility(View.VISIBLE);
-        mActionButtonPrimary.setText(dm.getResourceText(getString(R.string.Done)));
-
-        mActionButtonPrimary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-    }
+    //Views
+    EventDataRow edrDistance, edrWeight;
 
     @Override
     protected void setHeader() {
         super.setHeader();
-        mEventHeader.setListener(this);
         mEventHeader.setTitle(dm.getResourceText(getString(R.string.Units)));
-        mEventHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
-        mEventHeader.getIconOne().setVisibility(View.GONE);
-        mEventHeader.getIconTwo().setVisibility(View.GONE);
-        mEventHeader.getIconThree().setVisibility(View.GONE);
     }
 
     @Override
-    protected void fetchNextPage() {
+    protected void addRows() {
+        //add distance
+        edrDistance = new EventDataRow(getActivity());
+        edrDistance.getLeftMediaContainer().setVisibility(View.GONE);
+        edrDistance.setTitle(dm.getResourceText(R.string.Distance));
+        edrDistance.setRightIconText(Consts.Icons.icon_Arrowright);
+        edrDistance.setRightText(ds.getUser().user_settings.getDistance());
+        edrDistance.setDetails(null);
+        edrDistance.setTag(dm.getResourceText(R.string.Distance));
+        edrDistance.setOnClickListener(clickListener);
+        rowsContainer.addView(edrDistance);
+        rowsContainer.addView(new ViewSeperator(getActivity(), null));
 
+        //add weight
+        edrWeight = new EventDataRow(getActivity());
+        edrWeight.getLeftMediaContainer().setVisibility(View.GONE);
+        edrWeight.setTitle(dm.getResourceText(R.string.Weight));
+        edrWeight.setRightIconText(Consts.Icons.icon_Arrowright);
+        edrWeight.setOnClickListener(clickListener);
+        edrWeight.setRightText(ds.getUser().user_settings.weight);
+        edrWeight.setDetails(null);
+        edrWeight.setTag(dm.getResourceText(R.string.Weight));
+        rowsContainer.addView(edrWeight);
+        rowsContainer.addView(new ViewSeperator(getActivity(), null));
     }
 
-    @Override
-    public EmBaseAdapter getAdapter() {
-        return null;
-    }
 
-    @Override
-    public void onBackButtonClicked() {
-        getActivity().onBackPressed();
-    }
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String type = (String) v.getTag();
+            UnitFragment fragment = UnitFragment.getInstance(type);
+            ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, fragment,
+                    SettingsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                    R.anim.enter_from_left, R.anim.exit_to_right);
+        }
+    };
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Fragment fragment = ds.getUser().user_settings.getUnitFragmentByPosition(position);
-        UnitFragment fragment = UnitFragment.getInstance(position);
-        //fragment.setTargetFragment(this, SettingsFragment.REQUEST_CODE_DIALOG_WEIGHT);
-        ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, fragment,
-                SettingsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
-                R.anim.enter_from_left, R.anim.exit_to_right);
-    }
 }

@@ -28,7 +28,6 @@ import com.everymatch.saas.server.requests.RequestUpdateSettings;
 import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseApplication;
-import com.everymatch.saas.server.responses.ResponseGetUser;
 import com.everymatch.saas.server.responses.ResponseLoadProviders;
 import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.singeltones.Consts;
@@ -60,7 +59,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     public static final String EXTRA_CURRENCY = "extra.currency";
 
     private static final int REQUEST_CODE_GET_TOKEN = 1;
-    private static final int REQUEST_CODE_DIALOG_FRAGMENT = 2;
+    private static final int REQUEST_CODE_DIALOG_TIME_ZONE = 2;
     private static final int REQUEST_CODE_DIALOG_CURRENCY = 3;
     private static final int REQUEST_CODE_DIALOG_UNITS = 4;
     private static final int REQUEST_CODE_DIALOG_LANGUAGE = 5;
@@ -72,28 +71,33 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     ToggleButton toggleButton;
 
     //Data
+    public static ResponseApplication.DataCulture userSelectedCulture;
+    private boolean languageWasChanged = false;
     private boolean canSave = false;
-    private DataTimeZone mDataTimeZone = null;
-    private ResponseApplication.DataCurrency mDataCurrency = null;
-    private ResponseGetUser user;
     private int providerClickedPosition = -1;
     private boolean isClicked = false;
     private ResponseLoadProviders.Provider[] mProviders;
 
     /* first user data - for cancel click */
-    private String distance, weight, default_culture;
+    String userSettingsOriginalJson;
     //*************************************
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = DataStore.getInstance().getUser();
+        for (ResponseApplication.DataCulture culture : ds.getApplicationData().getCultures()) {
+            if (culture.culture_name.equals(ds.getCulture())) {
+                userSelectedCulture = culture;
+                break;
+            }
+        }
         getProviders();
         //set original values
+        userSettingsOriginalJson = new Gson().toJson(ds.getUser().user_settings);
 
-        distance = user.user_settings.distance;
-        weight = user.user_settings.weight;
-        default_culture = user.user_settings.default_culture;
+        //distance = user.user_settings.getDistance();
+        //weight = user.user_settings.weight;
+        //default_culture = user.user_settings.default_culture;
 
         //***************************************
     }
@@ -104,22 +108,33 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
 
         llProviders = (LinearLayout) v.findViewById(R.id.providers);
 
+        /** Time Zone *********************************************/
         edrTimeZone = (EventDataRow) v.findViewById(R.id.edrTimeZone);
         edrTimeZone.getRightIcon().setVisibility(View.VISIBLE);
-        edrTimeZone.getRightIcon().setText(Consts.Icons.icon_Arrowright);
+        edrTimeZone.setRightIconText(Consts.Icons.icon_Arrowright);
+        edrTimeZone.setTitle(dm.getResourceText(R.string.Time_Zone));
+        edrTimeZone.setOnClickListener(this);
+        edrTimeZone.setRightText(ds.getUser().user_settings.getTime_zone().title);
 
-        edrCurrencies = (EventDataRow) v.findViewById(R.id.edrCurrency);
-        edrCurrencies.getRightIcon().setVisibility(View.VISIBLE);
-        edrCurrencies.setOnClickListener(this);
-
+        /** Units *********************************************/
         edrUnits = (EventDataRow) v.findViewById(R.id.edrUnits);
-        edrUnits.getRightIcon().setVisibility(View.VISIBLE);
+        edrUnits.setRightIconText(Consts.Icons.icon_Arrowright);
         edrUnits.setRightText(ds.getUser().user_settings.getUnitsPromo());
+        edrUnits.setTitle(dm.getResourceText(R.string.Units));
         edrUnits.setOnClickListener(this);
 
+        /** Currency *********************************************/
+        edrCurrencies = (EventDataRow) v.findViewById(R.id.edrCurrency);
+        edrCurrencies.getRightIcon().setVisibility(View.VISIBLE);
+        edrCurrencies.setTitle(dm.getResourceText(R.string.Currency));
+        edrCurrencies.setRightText(ds.getUser().user_settings.currency);
+        edrCurrencies.setOnClickListener(this);
+
+        /** Language *********************************************/
         edrLanguage = (EventDataRow) v.findViewById(R.id.edrLanguage);
-        edrLanguage.getRightIcon().setVisibility(View.VISIBLE);
+        edrLanguage.setRightIconText(Consts.Icons.icon_Arrowright);
         edrLanguage.setRightText(ds.getCulture());
+        edrLanguage.setTitle(dm.getResourceText(R.string.Culture_text));
         edrLanguage.setOnClickListener(this);
 
         (v.findViewById(R.id.btnSettingsLogout)).setOnClickListener(this);
@@ -127,10 +142,6 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
         (v.findViewById(R.id.btnSettingsChangePassword)).setOnClickListener(this);
         (v.findViewById(R.id.btnSettingsChangePassword)).setBackgroundDrawable(ShapeDrawableUtils.getButtonStroked());
 
-        edrTimeZone.setOnClickListener(this);
-        if (mDataTimeZone != null) {
-            edrTimeZone.getRightText().setText(mDataTimeZone.title);
-        }
 
         toggleButton = (ToggleButton) v.findViewById(R.id.btnNetworkToggle);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -158,24 +169,25 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHeader(view);
-        if (mProviders != null)
-            addProviders();
+        if (mProviders != null) addProviders();
         updateUi();
 
         toggleButton.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
     }
 
     private void updateUi() {
-        edrCurrencies.getRightText().setText("" + user.user_settings.currency);
+        edrTimeZone.setRightText(ds.getUser().user_settings.getTime_zone().title);
         edrUnits.setRightText(ds.getUser().user_settings.getUnitsPromo());
-        //edrTimeZone.getRightText().setText("" + user.currency);
+        edrCurrencies.setRightText(ds.getUser().user_settings.currency);
+
+        edrLanguage.setRightText(userSelectedCulture.text_title);
     }
 
     private void setHeader(View view) {
         mHeader = (EventHeader) view.findViewById(R.id.fragment_settings_header);
         mHeader.setListener(this);
         mHeader.getBackButton().setText(canSave ? dm.getResourceText(R.string.Cancel) : Consts.Icons.icon_ArrowBack);
-        mHeader.getIconOne().setText(dm.getResourceText(getString(R.string.save).toUpperCase()));
+        mHeader.getIconOne().setText(dm.getResourceText(getString(R.string.Save).toUpperCase()));
         mHeader.getIconOne().setTextSize(TypedValue.COMPLEX_UNIT_SP, Constants.ACTION_TEXT_SIZE_SP);
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setVisibility(View.GONE);
@@ -187,9 +199,9 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     public void onBackButtonClicked() {
         if (canSave) {
             /*user clicked cancel - restore values*/
-            user.user_settings.weight = weight;
-            user.user_settings.distance = distance;
-            user.user_settings.default_culture = default_culture;
+            /*ds.getUser().user_settings.weight = weight;
+            ds.getUser().user_settings.setDistance(distance);
+            ds.getUser().user_settings.default_culture = default_culture;*/
         }
 
         getActivity().onBackPressed();
@@ -197,7 +209,8 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
 
     @Override
     public void onOneIconClicked() {
-        if (!default_culture.equals(ds.getUser().user_settings.default_culture)) {
+        if (!userSelectedCulture.culture_name.equals(ds.getCulture())) {
+            languageWasChanged = true;
             //user has change language-> show reload dialog
             new DialogYesNo(getActivity(), dm.getResourceText(R.string.Notice), dm.getResourceText(R.string.Change_Language_Alert_Subtitle), dm.getResourceText(R.string.No), dm.getResourceText(R.string.Yes), new YesNoCallback() {
                 @Override
@@ -209,8 +222,10 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                 public void onNo() {
                 }
             }).show();
-        } else
+        } else {
+            languageWasChanged = false;
             updateSettings();
+        }
 
     }
 
@@ -336,20 +351,17 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                     }
                 }
                 break;
-            case REQUEST_CODE_DIALOG_FRAGMENT:
+            case REQUEST_CODE_DIALOG_TIME_ZONE:
                 DataTimeZone dataTimeZone = (DataTimeZone) data.getSerializableExtra(EXTRA_TIME_ZONE);
                 if (dataTimeZone != null) {
-                    user.time_zone = dataTimeZone.getGmt();
-                    user.country_code = dataTimeZone.country_code;
-                    mDataTimeZone = dataTimeZone;
-                    edrTimeZone.getRightText().setText(dataTimeZone.title);
+                    ds.getUser().user_settings.setTime_zone(dataTimeZone);
+                    updateUi();
                 }
                 break;
             case REQUEST_CODE_DIALOG_CURRENCY:
                 ResponseApplication.DataCurrency dataCurrency = (ResponseApplication.DataCurrency) data.getSerializableExtra(EXTRA_CURRENCY);
                 if (dataCurrency != null) {
-                    mDataCurrency = dataCurrency;
-                    user.user_settings.currency = dataCurrency.code;
+                    ds.getUser().user_settings.currency = dataCurrency.code;
                     edrCurrencies.getRightText().setText("" + dataCurrency.code);
                 }
                 break;
@@ -380,7 +392,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                 break;
             case R.id.edrTimeZone:
                 FragmentTimeZones dialogTimeZones = new FragmentTimeZones();
-                dialogTimeZones.setTargetFragment(this, REQUEST_CODE_DIALOG_FRAGMENT);
+                dialogTimeZones.setTargetFragment(this, REQUEST_CODE_DIALOG_TIME_ZONE);
                 ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, dialogTimeZones,
                         SettingsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
                         R.anim.enter_from_left, R.anim.exit_to_right);
@@ -411,7 +423,9 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     }
 
     private void updateSettings() {
-        ServerConnector.getInstance().processRequest(new RequestUpdateSettings(user), new ServerConnector.OnResultListener() {
+        Preferences.getInstance().setLanguage(userSelectedCulture.culture_name);
+
+        ServerConnector.getInstance().processRequest(new RequestUpdateSettings(ds.getUser()), new ServerConnector.OnResultListener() {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
                 try {
@@ -427,7 +441,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                         Preferences.getInstance().setLanguage(ds.getCulture());
 
                         // make restart if needed (on language changed)
-                        if (!default_culture.equals(ds.getCulture())) {
+                        if (languageWasChanged) {
                             Intent intent = new Intent(getActivity(), SplashActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);

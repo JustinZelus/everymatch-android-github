@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -49,6 +50,7 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
     private View mImageContainer;
     private View mTextChangeImage;
     private FloatingEditTextLayout fetFirstName, fetLastName;
+    private EditText etFirstName, etLastName;
 
     // Data
     private ResponseGetUser mMyUser;
@@ -86,13 +88,23 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         mQuestionContainer = (LinearLayout) view.findViewById(R.id.fragment_my_profile_question_container);
         mHeader = (EventHeader) view.findViewById(R.id.fragment_my_profile_event_header);
         mTextChangeImage = view.findViewById(R.id.fragment_my_profile_change_image_text);
+
+        etFirstName = (EditText) view.findViewById(R.id.etFirstName);
+        etLastName = (EditText) view.findViewById(R.id.etLastName);
+
         mTextChangeImage.setOnClickListener(this);
+
 
         mScrollView.post(new Runnable() {
             @Override
             public void run() {
-                mImageContainer.getLayoutParams().height = mScrollView.getMeasuredHeight() / 2;
-                mImageContainer.requestLayout();
+                //mImageContainer.getLayoutParams().height = mScrollView.getMeasuredHeight() / 2;
+                //mImageContainer.getLayoutParams().height = mImageContainer.getLayoutParams().width;
+                // mImageContainer.requestLayout();
+
+                mUserImage.getLayoutParams().height = Utils.getScreenWidth(getActivity());
+                mUserImage.requestLayout();
+
                 refreshData();
                 setHeader();
             }
@@ -124,6 +136,10 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         fetFirstName.getEtValue().setText(mMyUser.first_name);
         fetLastName.getEtValue().setText(mMyUser.last_name);
 
+        etFirstName.setText(ds.getUser().first_name);
+        etLastName.setText(ds.getUser().last_name);
+        //***************************************
+
         mQuestionContainer.removeAllViews();
 
         mApplication = DataStore.getInstance().getApplicationData();
@@ -150,7 +166,17 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
 
                 if (!TextUtils.isEmpty(imageUrl)) {
                     int imageSize = Math.min(mImageContainer.getLayoutParams().height / 2, MAX_IMAGE_SIZE);
-                    Picasso.with(getActivity()).load(Utils.getImageUrl(imageUrl, imageSize, 0)).into(mUserImage);
+                    imageSize = mUserImage.getMeasuredWidth();
+                    imageSize = Utils.getScreenWidth(getActivity());
+                    /*Picasso.with(getActivity())
+                            .load(Utils.getImageUrl(imageUrl, imageSize, imageSize))
+                            .into(mUserImage);*/
+
+                    Picasso.with(getActivity())
+                            .load(Utils.getImageUrl(imageUrl, mImageContainer.getLayoutParams().height / 2,
+                                    0)).into(mUserImage);
+
+                    //Picasso.with(getActivity()).load(Utils.getImageUrl(imageUrl, imageSize, 0)).into(mUserImage);
                 }
 
                 break;
@@ -229,7 +255,9 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
 
     @Override
     protected void handleBroadcast(Serializable eventData, String eventName) {
-        if (PusherManager.PUSHER_EVENT_PROFILES.equals(eventName))
+        if (PusherManager.PUSHER_EVENT_PROFILES.equals(eventName)) {
+            mMyUser = ds.getUser();
             refreshData();
+        }
     }
 }

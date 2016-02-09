@@ -74,7 +74,7 @@ public class ImagePicker {
         File imageFile = getTempFile(context);
         if (resultCode == Activity.RESULT_OK) {
             Uri selectedImage;
-            boolean isCamera = imageReturnedIntent == null;
+            boolean isCamera = (imageReturnedIntent == null || imageReturnedIntent.getData()==null || imageReturnedIntent.toString().equals("Intent {  }"));
             if (isCamera) {     /** CAMERA **/
                 selectedImage = Uri.fromFile(imageFile);
             } else {            /** ALBUM **/

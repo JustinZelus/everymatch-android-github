@@ -15,6 +15,7 @@ import com.everymatch.saas.server.Data.DataMatchResults;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.QuestionUtils;
 import com.everymatch.saas.view.EventHeader;
 import com.squareup.picasso.Picasso;
 
@@ -92,10 +93,15 @@ public class MatchDetailsFragment extends BaseFragment implements EventHeader.On
             //set other user data
             friendQuestion.findViewById(R.id.rlAgoHolder).setVisibility(View.GONE);
             ((TextView) friendQuestion.findViewById(R.id.tv_view_conversation_username)).setText(matchActivity.mDataPeople.first_name + " answered");
+
+            boolean shouldAdd = true;
             //set answer value
             if (dataQuestionResult.other_match_question_answer.containsKey("value")) {
                 String value = dataQuestionResult.other_match_question_answer.get("value").toString();
-                ((TextView) friendQuestion.findViewById(R.id.tv_view_conversation_content)).setText(value);
+                String friendly = QuestionUtils.getAnsweredTitleFromUserAnswerData(dataQuestionResult.question, value);
+                ((TextView) friendQuestion.findViewById(R.id.tv_view_conversation_content)).setText(friendly);
+            } else {
+                shouldAdd = false;
             }
 
             //set other user image
@@ -111,7 +117,10 @@ public class MatchDetailsFragment extends BaseFragment implements EventHeader.On
             //set answer value
             if (dataQuestionResult.my_answer.containsKey("value")) {
                 String value = dataQuestionResult.my_answer.get("value").toString();
-                ((TextView) myQuestion.findViewById(R.id.tv_view_conversation_content)).setText(value);
+                String friendly = QuestionUtils.getAnsweredTitleFromUserAnswerData(dataQuestionResult.question, value);
+                ((TextView) myQuestion.findViewById(R.id.tv_view_conversation_content)).setText(friendly);
+            } else {
+                shouldAdd = false;
             }
 
             //set my image
@@ -122,8 +131,10 @@ public class MatchDetailsFragment extends BaseFragment implements EventHeader.On
 
 
             //add the rows
-            llRowsHolder.addView(myQuestion);
-            llRowsHolder.addView(friendQuestion);
+            if (shouldAdd) {
+                llRowsHolder.addView(myQuestion);
+                llRowsHolder.addView(friendQuestion);
+            }
         } catch (Exception ex) {
             EMLog.e(TAG, ex.getMessage());
         }

@@ -321,7 +321,7 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
 
     @Override
     public void onEmptyViewFirstButtonClick() {
-        getActivity().onBackPressed();
+        ((DiscoverActivity) getActivity()).dmiDiscover.performClick();
     }
 
     @Override

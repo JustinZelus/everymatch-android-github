@@ -91,7 +91,7 @@ public class Utils {
             //Date date = getDateDromDataDate(dataDate);
             //SimpleDateFormat fmt = new SimpleDateFormat(format);
             //return fmt.format(date);
-            return dataDate.month + "." + dataDate.day + "." + dataDate.year;
+            return dataDate.day + "." + dataDate.month + "." + dataDate.year;
         } catch (Exception ex) {
             return "";
         }
@@ -156,6 +156,13 @@ public class Utils {
         });
 
         realSmoothScrollAnimation.start();
+    }
+
+    public static int getScreenWidth(Context context) {
+        int screenHeight = context.getResources().getDisplayMetrics().heightPixels;
+        int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+
+        return screenWidth;
     }
 
     public static boolean isArrayEmpty(Object[] array) {
@@ -494,11 +501,11 @@ public class Utils {
 
             if (hours > 0)
                 timeString += String.format("%02d", hours);
-            if (minutes > 0) {
+            if (minutes >= 0) {
                 if (hours > 0) timeString += ":";
                 timeString += String.format("%02d", minutes);
             }
-            if (sec > 0) {
+            if (sec >= 0) {
                 if (minutes > 0) timeString += ":";
                 timeString += String.format("%02d", sec);
             }

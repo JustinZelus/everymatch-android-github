@@ -21,8 +21,8 @@ public class BaseRecyclerView extends RecyclerView {
 
     @Override
     public boolean fling(int velocityX, int velocityY) {
-        if(getAdapter().getItemCount()<=1){
-            EMLog.d(TAG,"has on event in recycler");
+        if(getAdapter().getItemCount()==1){
+            EMLog.d(TAG,"has one event in recycler");
             return super.fling(velocityX, velocityY);
         }
 

@@ -22,11 +22,13 @@ import com.everymatch.saas.server.Data.DataActivity;
 import com.everymatch.saas.server.responses.ResponseGetUser;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BaseFragment;
+import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.EventHeader;
+import com.everymatch.saas.view.ViewSeperator;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -48,6 +50,7 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
     CircularImageView imgUser;
     Button btnAddProfile;
     private MeCallback meCallback;
+    TextView tvAddProfile;
 
     @Override
     public void onAttach(Context context) {
@@ -63,14 +66,33 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = DataStore.getInstance().getUser();
+        user = ds.getUser();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_me, container, false);
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
+        //mHeader = (EventHeader) v.findViewById(R.id.fragment_me_header);
+        mHeader = ((DiscoverActivity) getActivity()).getmHeader();
+        ((DiscoverActivity) getActivity()).setSelectedMenuItem(DiscoverActivity.DISCOVER_MENU_ITEMS.MORE);
 
         imgUser = (CircularImageView) v.findViewById(R.id.imgMeImage);
+        tvAddProfile = (TextView) v.findViewById(R.id.tvAddProfile);
+        updateUI(v);
+
+        btnAddProfile.setOnClickListener(this);
+        tvAddProfile.setOnClickListener(this);
+        setHeader();
+        addActivities(v);
+    }
+
+    private void updateUI(View v) {
         imgUser.post(new Runnable() {
             @Override
             public void run() {
@@ -78,10 +100,13 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
                 params.height = params.width;
                 imgUser.setLayoutParams(params);
                 imgUser.requestLayout();
+
+                String imageUrl = Utils.getImageUrl(ds.getUser().image_url, imgUser.getLayoutParams().width, imgUser.getLayoutParams().width);
+                Picasso.with(getContext()).load(imageUrl).into(imgUser);
             }
         });
-        ((TextView) v.findViewById(R.id.tvMeUserName)).setText(user.getName());
-        ((TextView) v.findViewById(R.id.tvMeMemberSince)).setText(Utils.getDateStringFromDataDate(user.created_date, "MMM,yyyy"));
+        ((TextView) v.findViewById(R.id.tvMeUserName)).setText(ds.getUser().getName());
+        ((TextView) v.findViewById(R.id.tvMeMemberSince)).setText(Utils.getDateStringFromDataDate(ds.getUser().created_date, "MMM,yyyy"));
 
         EventDataRow eventDataRowSettings = (EventDataRow) v.findViewById(R.id.event_row_me_settings);
         eventDataRowSettings.setOnClickListener(this);
@@ -91,11 +116,17 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
         ((EventDataRow) v.findViewById(R.id.event_row_me_profile)).setTitle(dm.getResourceText(R.string.Profile_Label));
 
         btnAddProfile = (Button) v.findViewById(R.id.btnMeAddProfile);
-        btnAddProfile.setOnClickListener(this);
+    }
 
-        //v.findViewById(R.id.btnMeAddProfile).setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton());
-        addActivities(v);
-        return v;
+    private void setHeader() {
+        mHeader.setListener(this);
+        mHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
+        mHeader.getIconOne().setVisibility(View.GONE);
+        mHeader.getIconTwo().setVisibility(View.GONE);
+        mHeader.getIconThree().setVisibility(View.GONE);
+        mHeader.setTitle(dm.getResourceText(R.string.More));
+        mHeader.getTitle().setOnClickListener(null);
+        mHeader.setArrowDownVisibility(false);
     }
 
     private void addActivities(View v) {
@@ -114,8 +145,11 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
                 row.getRightIcon().setVisibility(View.GONE);
                 row.getDetailsView().setVisibility(View.GONE);
                 row.getLeftIcon().setText(IconManager.getInstance(getActivity()).getIconString(activity.icon.getValue()));
+                row.getLeftIcon().setTextColor(ds.getIntColor(EMColor.NIGHT));
+                row.getRightText().setTextColor(ds.getIntColor(EMColor.NIGHT));
                 row.setBackgroundColor(DataStore.getInstance().getIntColor(EMColor.WHITE));
                 linearLayout.addView(row);
+                linearLayout.addView(new ViewSeperator(getActivity(), null));
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -125,22 +159,6 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
             }
         }
 
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mHeader = (EventHeader) view.findViewById(R.id.fragment_me_header);
-        mHeader.setListener(this);
-        mHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
-        mHeader.getIconOne().setVisibility(View.GONE);
-        mHeader.getIconTwo().setVisibility(View.GONE);
-        mHeader.getIconThree().setVisibility(View.GONE);
-        mHeader.setTitle(dm.getResourceText(R.string.Me));
-
-        String imageUrl = Utils.getImageUrl(user.image_url, imgUser.getLayoutParams().width, imgUser.getLayoutParams().width);
-        Picasso.with(getContext()).load(imageUrl).into(imgUser);
     }
 
     @Override
@@ -207,6 +225,13 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
                 }
                 meCallback.onAddProfileClick();
                 break;
+            case R.id.tvAddProfile:
+                if (ds.getUser().profiles.activity_profiles.length == ds.getApplicationData().getActivities().length) {
+                    Toast.makeText(getActivity(), "You already filled all profiles!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                meCallback.onAddProfileClick();
+                break;
             case R.id.event_row_me_profile:
                 meCallback.onProfileClick();
                 break;
@@ -224,6 +249,7 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
     @Override
     protected void handleBroadcast(Serializable eventData, String eventName) {
         //  EMLog.i(TAG, "eventName " + eventName + "\neventData = " + eventData);
+        updateUI(getView());
     }
 
     @Override
@@ -233,7 +259,7 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
         // Tell caller activity that a profile activity has been edited
         if (requestCode == REQUEST_CODE_EDIT_ACTIVITY && resultCode == Activity.RESULT_OK) {
             getActivity().setResult(Activity.RESULT_OK);
-            getActivity().finish();
+            //getActivity().finish();
         }
     }
 }

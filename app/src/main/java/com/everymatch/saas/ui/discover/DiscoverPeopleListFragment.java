@@ -20,6 +20,7 @@ import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BasePeopleListFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.Utils;
+import com.everymatch.saas.view.EventHeader;
 
 import java.text.MessageFormat;
 
@@ -69,7 +70,7 @@ public class DiscoverPeopleListFragment extends BasePeopleListFragment {
         setListHeader();
     }
 
-    private void setListHeader(){
+    private void setListHeader() {
         mAbsListView.setPadding(mAbsListView.getPaddingLeft(), 0, mAbsListView.getPaddingRight(), mAbsListView.getPaddingBottom());
         LayoutInflater.from(getActivity()).inflate(R.layout.view_list_header_text, mTopContainer, true);
         TextView topText = (TextView) mTopContainer.findViewById(R.id.view_list_header_text);
@@ -83,12 +84,17 @@ public class DiscoverPeopleListFragment extends BasePeopleListFragment {
 
     @Override
     protected void setHeader() {
-        mEventHeader.setListener(this);
-        mEventHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
-        mEventHeader.getIconOne().setVisibility(View.GONE);
-        mEventHeader.getIconTwo().setVisibility(View.GONE);
-        mEventHeader.getIconThree().setVisibility(View.GONE);
-        mEventHeader.setTitle(Utils.makeTextCamelCase(dm.getResourceText(R.string.People_Matches)));
+        mEventHeader.setVisibility(View.GONE);
+        EventHeader eventHeader = ((DiscoverActivity) getActivity()).getmHeader();
+        eventHeader.setListener(this);
+        eventHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
+        eventHeader.getBackButton().setVisibility(View.VISIBLE);
+        eventHeader.getIconOne().setVisibility(View.GONE);
+        eventHeader.getIconTwo().setVisibility(View.GONE);
+        eventHeader.getIconThree().setVisibility(View.GONE);
+        eventHeader.setTitle(Utils.makeTextCamelCase(dm.getResourceText(R.string.People_Matches)));
+        eventHeader.setArrowDownVisibility(false);
+        eventHeader.getTitle().setOnClickListener(null);
     }
 
     @Override
@@ -98,7 +104,7 @@ public class DiscoverPeopleListFragment extends BasePeopleListFragment {
 
     @Override
     public PeopleUsersAdapter createAdapter() {
-        return  new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), mMode);
+        return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), mMode);
     }
 
     @Override
@@ -110,9 +116,9 @@ public class DiscoverPeopleListFragment extends BasePeopleListFragment {
                 EMLog.i(TAG, "onSuccess");
                 ResponseDiscover responseDiscover = (ResponseDiscover) baseResponse;
 
-                if (responseDiscover == null){
+                if (responseDiscover == null) {
                     setNoMoreResults();
-                } else{
+                } else {
                     DiscoverPeopleListFragment.super.addUsersToAdapter(responseDiscover.getPeopleHolder().getUsers());
                 }
 
@@ -124,6 +130,11 @@ public class DiscoverPeopleListFragment extends BasePeopleListFragment {
                 EMLog.i(TAG, "onFailure");
             }
         }, TAG + RequestDiscover.class.getSimpleName());
+    }
+
+    @Override
+    public void onBackButtonClicked() {
+        super.onBackButtonClicked();
     }
 
     @Override

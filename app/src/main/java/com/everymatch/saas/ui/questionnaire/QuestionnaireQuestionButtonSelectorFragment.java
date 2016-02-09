@@ -33,7 +33,7 @@ public class QuestionnaireQuestionButtonSelectorFragment extends BaseIdsQuestion
         btnHolder = (LinearLayout) view.findViewById(R.id.btnHolder);
 
         recoverAnswerData();
-        addAnswersRows();
+        this.addAnswersRows();
     }
 
     public void addAnswersRows() {
@@ -47,7 +47,13 @@ public class QuestionnaireQuestionButtonSelectorFragment extends BaseIdsQuestion
             v.getTvText().setText(answer.text_title);
             v.getTvIcon().setText(IconManager.getInstance(getActivity()).getIconString(answer.icon.getValue()));
 
-            v.setSelected(selectedAnswers.contains("" + answer.answer_id));
+            v.setSelected(selectedAnswers.contains("" + mQuestionAndAnswer.getAnswerIdentifier(answer)));
+
+           /* if (mQuestion.question_type.equals(QuestionType.IDS))
+                v.setSelected(selectedAnswers.contains("" + answer.answer_id));
+            else
+                v.setSelected(selectedAnswers.contains("" + answer.text_title));*/
+
             v.setOnClickListener(this);
             btnHolder.addView(v);
         }

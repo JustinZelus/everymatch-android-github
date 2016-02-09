@@ -72,6 +72,10 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
         mTitle.setText(getResources().getString(resId));
     }
 
+    public BaseIconTextView getTvArrowDown() {
+        return tvArrowDown;
+    }
+
     public void setArrowDownVisibility(boolean visibility) {
         tvArrowDown.setVisibility(visibility ? VISIBLE : GONE);
     }

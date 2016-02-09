@@ -56,12 +56,11 @@ public class RequestUpdateSettings extends BaseRequest {
         m.put("PhoneNumber", user.phone);
         m.put("UserName", user.email);
         m.put("YearOfBirth", "1970");
-        m.put("CountryCode", user.country_code);
-        m.put("Time Zone", user.time_zone);
+        m.put("CountryCode", user.user_settings.getTime_zone().country_code);
+        m.put("Time Zone", user.user_settings.getTime_zone().utc);
         m.put("Currency", user.user_settings.currency);
-        m.put("Distance", user.user_settings.distance);
-        //m.put("default_culture", DataStore.getInstance().getCulture());
-        m.put("default_culture", DataStore.getInstance().getUser().user_settings.default_culture);
+        m.put("Distance", user.user_settings.getDistance());
+        m.put("default_culture", DataStore.getInstance().getCulture());
         m.put("Weight", user.user_settings.weight);
         //m.put("Image eUrl", "");
         //m.put("Password", "");

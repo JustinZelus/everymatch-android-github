@@ -133,7 +133,7 @@ public class EventCarouselFragment extends Fragment {
 
         mRootView.setVisibility(View.VISIBLE);
 
-        EventCarouselAdapter eventsAdapter = new EventCarouselAdapter(mEventHolder.getEvents());
+        EventCarouselAdapter eventsAdapter = new EventCarouselAdapter(getActivity(),mEventHolder.getEvents());
         mEventRecycler.setAdapter(eventsAdapter);
         eventsAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override

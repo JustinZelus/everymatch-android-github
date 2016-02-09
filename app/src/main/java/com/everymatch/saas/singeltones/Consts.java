@@ -18,7 +18,7 @@ public class Consts {
         public static final String icon_ArrowBack = String.valueOf((char) 0xe6a8);
         public static final String icon_Unfavorite = String.valueOf((char) 0xe69d);
         public static final String icon_ShareEvent = String.valueOf((char) 0xe69e);
-        public static final String icon_StatusPositive = String.valueOf((char) 0xe601);
+        public static final String icon_StatusPositive = String.valueOf((char) 0xe907);
         public static final String icon_StatusNegative = String.valueOf((char) 0xe602);
         public static final String icon_StatusMaybe = String.valueOf((char) 0xe604);
         public static final String icon_StatusLater = String.valueOf((char) 0xe616);

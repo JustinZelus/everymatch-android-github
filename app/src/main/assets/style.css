@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'icomoon';
-    src:    url('fonts/icomoon.eot?j6rndc');
-    src:    url('fonts/icomoon.eot?j6rndc#iefix') format('embedded-opentype'),
-        url('fonts/icomoon.woff2?j6rndc') format('woff2'),
-        url('fonts/icomoon.ttf?j6rndc') format('truetype'),
-        url('fonts/icomoon.woff?j6rndc') format('woff'),
-        url('fonts/icomoon.svg?j6rndc#icomoon') format('svg');
+    src:    url('fonts/icomoon.eot?yf9f2h');
+    src:    url('fonts/icomoon.eot?yf9f2h#iefix') format('embedded-opentype'),
+        url('fonts/icomoon.woff2?yf9f2h') format('woff2'),
+        url('fonts/icomoon.ttf?yf9f2h') format('truetype'),
+        url('fonts/icomoon.woff?yf9f2h') format('woff'),
+        url('fonts/icomoon.svg?yf9f2h#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -25,6 +25,78 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-Fans:before {
+    content: "\e928";
+}
+.icon-Match:before {
+    content: "\e924";
+}
+.icon-Gym:before {
+    content: "\e925";
+}
+.icon-GolfVecation:before {
+    content: "\e926";
+}
+.icon-GolfLesson:before {
+    content: "\e927";
+}
+.icon-Unarchive:before {
+    content: "\e917";
+}
+.icon-Inbox:before {
+    content: "\e918";
+}
+.icon-ActivoCycling:before {
+    content: "\e919";
+}
+.icon-ActivoEvent:before {
+    content: "\e91a";
+}
+.icon-ActivoFitness:before {
+    content: "\e91b";
+}
+.icon-ActivoGroup:before {
+    content: "\e91c";
+}
+.icon-ActivoLogo:before {
+    content: "\e91d";
+}
+.icon-ActivoMountain:before {
+    content: "\e91e";
+}
+.icon-ActivoRunning:before {
+    content: "\e91f";
+}
+.icon-ActivoSoon:before {
+    content: "\e920";
+}
+.icon-ActivoSwimming:before {
+    content: "\e921";
+}
+.icon-ActivoTri:before {
+    content: "\e922";
+}
+.icon-NightLifeLight:before {
+    content: "\e914";
+}
+.icon-Ski:before {
+    content: "\e915";
+}
+.icon-SkiVacation:before {
+    content: "\e916";
+}
+.icon-IconEdit2:before {
+    content: "\e913";
+}
+.icon-StatusPositive2:before {
+    content: "\e908";
+}
+.icon-StatusPositive:before {
+    content: "\e907";
+}
+.icon-Discover2:before {
+    content: "\e912";
+}
 .icon-Location2:before {
     content: "\e909";
 }
@@ -52,15 +124,6 @@
 .icon-MenuMore2:before {
     content: "\e911";
 }
-.icon-StatusPositive2 .path1:before {
-    content: "\e907";
-    color: rgb(0, 0, 0);
-}
-.icon-StatusPositive2 .path2:before {
-    content: "\e908";
-    margin-left: -1em;
-    color: rgb(255, 255, 255);
-}
 .icon-More_menu:before {
     content: "\e906";
 }
@@ -75,6 +138,9 @@
 }
 .icon-NotificationOn:before {
     content: "\e902";
+}
+.icon-Delete:before {
+    content: "\e923";
 }
 .icon-IconEdit:before {
     content: "\e800";
@@ -115,9 +181,6 @@
 .icon-InviteUser:before {
     content: "\e900";
 }
-.icon-StatusPositive:before {
-    content: "\e601";
-}
 .icon-StatusNegative:before {
     content: "\e602";
 }
@@ -156,9 +219,6 @@
 }
 .icon-MoreV:before {
     content: "\e6a2";
-}
-.icon-Match:before {
-    content: "\e6a4";
 }
 .icon-Camera:before {
     content: "\e6a5";
@@ -364,10 +424,10 @@
 .icon-PersonalInfo:before {
     content: "\e620";
 }
-.icon-ArrowRight:before {
+.icon-ArrowRight2:before {
     content: "\e621";
 }
-.icon-ArrowLeft:before {
+.icon-ArrowLeft2:before {
     content: "\e622";
 }
 .icon-Approve:before {
@@ -561,9 +621,6 @@
 }
 .icon-JeepTours:before {
     content: "\e667";
-}
-.icon-Gym:before {
-    content: "\e668";
 }
 .icon-Frisbee:before {
     content: "\e669";

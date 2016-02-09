@@ -2,6 +2,7 @@ package com.everymatch.saas.ui.questionnaire.base;
 
 import android.view.View;
 
+import com.everymatch.saas.client.data.QuestionType;
 import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
@@ -23,7 +24,8 @@ public class BaseIdsQuestion extends QuestionnaireQuestionBaseFragment {
     protected void addAnswersRows() {
     }
 
-    protected String getSelectedIds() {
+    //this method returns selected values (identifiers) comma seperated
+    protected String getConcatedList() {
         String ans = "";
         for (String s : selectedAnswers) {
             ans += (ans.trim().equals("") ? "" : ",") + s.trim();
@@ -35,7 +37,7 @@ public class BaseIdsQuestion extends QuestionnaireQuestionBaseFragment {
 
     @Override
     protected String createIdsList() {
-        return getSelectedIds();
+        return getConcatedList();
     }
 
     @Override
@@ -66,31 +68,44 @@ public class BaseIdsQuestion extends QuestionnaireQuestionBaseFragment {
         if (ans == null)
             return;
 
-        if (selectedAnswers.contains("" + ans.answer_id)) {
+        String questionIdentifier = mQuestionAndAnswer.getAnswerIdentifier(ans);
+        if (selectedAnswers.contains(questionIdentifier)) {
             if (selectedAnswers.size() == 1) {
                 /* don't delete the last mark */
                 return;
             }
-            selectedAnswers.remove("" + ans.answer_id);
+            selectedAnswers.remove(questionIdentifier);
         } else {
             if (mQuestion.multiple) {
-                selectedAnswers.add("" + ans.answer_id);
+                selectedAnswers.add(questionIdentifier);
             } else {
                 if (selectedAnswers.size() == 0)
-                    selectedAnswers.add("" + ans.answer_id);
+                    selectedAnswers.add(questionIdentifier);
                 else {
                     selectedAnswers.clear();
-                    selectedAnswers.add("" + ans.answer_id);
+                    selectedAnswers.add(questionIdentifier);
                 }
             }
         }
 
-        /** in id's question type we set user answer str to the values itself and
-         * overriding  createIdsList will bring the user answer data value*/
-        String answers = mQuestion.getAnswerValuesByAnswerIds(getSelectedIds());
-        setAnswer(answers);
+        setAnswer(null);
         addAnswersRows();
         setTitleEnabled(selectedAnswers.size() > 0);
     }
 
+    @Override
+    public void setAnswer(String notMatter) {
+
+        /** in id's question type we set user answer str to the values itself and
+         * overriding  createIdsList will bring the user answer data value*/
+        String answers;
+        if (mQuestion.question_type.equals(QuestionType.IDS))
+            answers = mQuestion.getAnswerValuesByAnswerIds(getConcatedList());
+        else {
+            //answers = getConcatedList();
+            answers = mQuestion.getAnswerValuesByAnswerValues(getConcatedList());
+        }
+
+        super.setAnswer(answers);
+    }
 }

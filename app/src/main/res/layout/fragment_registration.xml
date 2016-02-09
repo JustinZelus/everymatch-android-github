@@ -172,25 +172,35 @@
                 app:text_color="night_color"
                 app:text_key="@string/RegisterTnc" />
 
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_marginBottom="@dimen/margin_s"
                 android:layout_marginTop="@dimen/margin_xs">
 
-                <com.everymatch.saas.view.BaseButton
-                    android:id="@+id/fragment_registration_button_register"
-                    style="@style/EmTextStyleButton"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:gravity="center"
-                    app:text_color="white_color"
-                    app:text_key="@string/Em2_register_title" />
+                    android:layout_height="match_parent">
 
-                <include
-                    android:id="@+id/fragment_registration_button_loading"
-                    layout="@layout/view_button_loading" />
-            </FrameLayout>
+                    <com.everymatch.saas.view.BaseButton
+                        android:id="@+id/fragment_registration_button_register"
+                        style="@style/EmTextStyleButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center"
+                        app:text_color="white_color"
+                        app:text_key="@string/Em2_register_title" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <include
+                        android:id="@+id/fragment_registration_button_loading"
+                        layout="@layout/view_button_loading" />
+                </RelativeLayout>
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -41,8 +41,8 @@ public class ResponseGetUser extends BaseResponse {
     public String email;
     public String phone;
     public String registered_app_id;
-    public int time_zone;
-    public String country_code;
+    //public int time_zone;
+    //public String country_code;
 
     private ArrayList<DataChannelName> channels;
 
@@ -194,6 +194,14 @@ public class ResponseGetUser extends BaseResponse {
         return dataEventHolder;
     }
 
+    public boolean hasActivity(String clientId) {
+        for (DataActivity dataActivity : getUserActivities()) {
+            if (dataActivity.client_id.equals(clientId))
+                return true;
+        }
+        return false;
+    }
+
     /* this method get and */
     public void addOrUpdateEventIntoMap(DataEvent newDataEvent, String intoKey) {
         DataEventHolder dataEventHolder = my_events.get(intoKey);
@@ -238,24 +246,24 @@ public class ResponseGetUser extends BaseResponse {
 
 
     /*this method return's only user answered activities*/
-        public ArrayList<DataActivity> getUserActivities () {
-            ArrayList<DataActivity> answer = new ArrayList<>();
+    public ArrayList<DataActivity> getUserActivities() {
+        ArrayList<DataActivity> answer = new ArrayList<>();
 
-            // Get activities from local store
-            DataActivity[] activities = DataStore.getInstance().getApplicationData().getActivities();
+        // Get activities from local store
+        DataActivity[] activities = DataStore.getInstance().getApplicationData().getActivities();
 
-            // Filter only the ones that the user attached to
-            String[] activityIds = DataStore.getInstance().getUser().getAnswerActivityProfile();
+        // Filter only the ones that the user attached to
+        String[] activityIds = DataStore.getInstance().getUser().getAnswerActivityProfile();
 
-            for (DataActivity dataActivity : activities) {
-                for (String activityId : activityIds) {
-                    if (activityId.equals(dataActivity.client_id)) {
-                        answer.add(dataActivity);
-                    }
+        for (DataActivity dataActivity : activities) {
+            for (String activityId : activityIds) {
+                if (activityId.equals(dataActivity.client_id)) {
+                    answer.add(dataActivity);
                 }
             }
-
-            return answer;
         }
 
+        return answer;
     }
+
+}

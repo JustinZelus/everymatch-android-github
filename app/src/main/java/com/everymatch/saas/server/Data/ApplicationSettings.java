@@ -1,8 +1,7 @@
 package com.everymatch.saas.server.Data;
 
 import com.everymatch.saas.client.data.DataStore;
-import com.everymatch.saas.server.Data.units.DataDistance;
-import com.everymatch.saas.server.Data.units.DataWeight;
+import com.everymatch.saas.server.Data.units.DataUnit;
 import com.everymatch.saas.server.responses.ResponseApplication;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,6 +22,7 @@ public class ApplicationSettings implements Serializable {
     private UnitsHolder units;
     private DataDefaultUnits default_units;
     public ResponseApplication.DataCulture default_culture;
+    public DataTimeZone default_timezone;
 
 
     public DataDefaultUnits getDefault_units() {
@@ -38,8 +38,8 @@ public class ApplicationSettings implements Serializable {
     }
 
     public class UnitsHolder {
-        private ArrayList<DataDistance> distance;
-        private ArrayList<DataWeight> weight;
+        private ArrayList<DataUnit> distance;
+        private ArrayList<DataUnit> weight;
 
         public String getUnitListNameByPosition(int pos) {
             if (pos == 0)
@@ -63,13 +63,13 @@ public class ApplicationSettings implements Serializable {
             return 2;
         }
 
-        public ArrayList<DataDistance> getDistance() {
+        public ArrayList<DataUnit> getDistance() {
             if (distance == null)
                 distance = new ArrayList<>();
             return distance;
         }
 
-        public ArrayList<DataWeight> getWeight() {
+        public ArrayList<DataUnit> getWeight() {
             if (weight == null)
                 weight = new ArrayList<>();
             return weight;
@@ -87,7 +87,7 @@ public class ApplicationSettings implements Serializable {
 
         public String getUserUnitByPosition(int pos) {
             if (pos == 0)
-                return DataStore.getInstance().getUser().user_settings.distance;
+                return DataStore.getInstance().getUser().user_settings.getDistance();
             if (pos == 1) {
                 return DataStore.getInstance().getUser().user_settings.weight;
             }
@@ -97,18 +97,18 @@ public class ApplicationSettings implements Serializable {
 
         public void updateUserUnitByPositionAndValue(int unitListPosition, String value) {
             if (unitListPosition == 0)
-                DataStore.getInstance().getUser().user_settings.distance = value;
+                DataStore.getInstance().getUser().user_settings.setDistance(value);
             if (unitListPosition == 1) {
                 DataStore.getInstance().getUser().user_settings.weight = value;
             }
         }
 
-        /*this method returns the currnet selected position of unit to display in the units list*/
+        /*this method returns the curnet selected position of unit to display in the units list*/
         public int getCurrentSelectedPositionByUserSettings(int unitPosition) {
             if (unitPosition == 0) {
                 /*distance list*/
                 for (int i = 0; i < getDistance().size(); ++i)
-                    if (getDistance().get(i).name.equals(DataStore.getInstance().getUser().user_settings.distance))
+                    if (getDistance().get(i).name.equals(DataStore.getInstance().getUser().user_settings.getDistance()))
                         return i;
             }
             if (unitPosition == 1) {

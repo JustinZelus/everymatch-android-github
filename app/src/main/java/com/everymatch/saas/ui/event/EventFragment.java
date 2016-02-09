@@ -44,6 +44,7 @@ import com.everymatch.saas.ui.PeopleViewPagerFragment;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.chat.ChatFragment;
 import com.everymatch.saas.ui.common.PeopleCarouselFragment;
+import com.everymatch.saas.ui.inbox.InboxActivity;
 import com.everymatch.saas.ui.match.MatchActivity;
 import com.everymatch.saas.ui.user.UserActivity;
 import com.everymatch.saas.util.IconManager;
@@ -351,7 +352,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
             mPercent.setText("");
             if (mDataMatchResults != null && mDataMatchResults.getQuestions_results().size() > 0) {
                 try {
-                    mPercent.setText("" + mDataMatchResults.match + "%");
+                    //mPercent.setText("" + mDataMatchResults.match + "%");
                     mPercent.setTextColor(ds.getIntColor(EMColor.WHITE));
                     mPercent.setOnClickListener(this);
                 } catch (Exception ex) {
@@ -421,7 +422,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                 mToolbar3Text.setText(eventActions.get(2).text);
                 mToolbar3Button.setText(IconManager.getInstance(getActivity()).getIconString(eventActions.get(2).icon));
             } else {
-                mToolbar3Text.setText("More");
+                mToolbar3Text.setText(dm.getResourceText(R.string.More));
                 mToolbar3Button.setText(Consts.Icons.icon_MenuMore);
             }
 
@@ -618,15 +619,23 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         }
 
         if (action.equals("message_host")) { // chat with host
-            transaction.addToBackStack("myFragment")
-                    .replace(R.id.event_layout, ChatFragment.getInstance(null, mEvent.getEvent_actions().get(position).parameters.get("other_user_id"), ChatFragment.CHAT_TYPE_USER))
-                    .commit();
+            /*transaction.addToBackStack("myFragment")
+                    .replace(R.id.event_layout, ChatFragment.getInstance(null, id, ChatFragment.CHAT_TYPE_USER))
+                    .commit();*/
+            String id = mEvent.getEvent_actions().get(position).parameters.get("other_user_id");
+            InboxActivity.startChat(getActivity(), null, id, ChatFragment.CHAT_TYPE_USER);
             return;
         }
-        if (action.equals("chat")) { // event chat
-            transaction.addToBackStack("myFragment")
+        if (action.equals("chat")) {
+            // event chat
+
+           /* transaction.addToBackStack("myFragment")
                     .replace(R.id.event_layout, ChatFragment.getInstance(null, mEvent.getEvent_actions().get(position).parameters.get("other_user_id"), ChatFragment.CHAT_TYPE_GROUP))
-                    .commit();
+                    .commit();*/
+
+            String id = mEvent.getEvent_actions().get(position).parameters.get("other_user_id");
+            InboxActivity.startChat(getActivity(), null, id, ChatFragment.CHAT_TYPE_GROUP);
+
             return;
         }
         if (action.equals("share")) {

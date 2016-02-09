@@ -20,6 +20,7 @@ public class AdapterTimeZone extends EmBaseAdapter<DataTimeZone> {
     // ArrayList<DataTimeZone> data;
     Context con;
     LayoutInflater inflater;
+    private TimeZoneCallback callback;
 
     public DataTimeZone getSelectedTimeZone() {
         return selectedTimeZone;
@@ -27,11 +28,12 @@ public class AdapterTimeZone extends EmBaseAdapter<DataTimeZone> {
 
     private DataTimeZone selectedTimeZone = null;
 
-    public AdapterTimeZone(ArrayList<DataTimeZone> data, Context con) {
+    public AdapterTimeZone(ArrayList<DataTimeZone> data, Context con, TimeZoneCallback callback) {
         this.mData = data;
         this.con = con;
         inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         selectedTimeZone = mData.get(0);
+        this.callback = callback;
     }
 
 
@@ -63,6 +65,8 @@ public class AdapterTimeZone extends EmBaseAdapter<DataTimeZone> {
             public void onClick(View v) {
                 selectedTimeZone = item;
                 notifyDataSetChanged();
+                if (callback != null)
+                    callback.onSelectedTimeZone(item);
             }
         });
         return v;
@@ -71,5 +75,9 @@ public class AdapterTimeZone extends EmBaseAdapter<DataTimeZone> {
     @Override
     public boolean filterObject(DataTimeZone dataTimeZone, String constraint) {
         return dataTimeZone.title.toLowerCase().startsWith(constraint.toLowerCase());
+    }
+
+    public interface TimeZoneCallback {
+        void onSelectedTimeZone(DataTimeZone dataTimeZone);
     }
 }

@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:paddingTop="@dimen/margin_m">
 
     <RelativeLayout
-        android:paddingLeft="@dimen/margin_xs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_xs">
 
         <com.everymatch.saas.view.BaseTextView
-            android:layout_centerVertical="true"
-            android:paddingTop="@dimen/margin_xs"
-            android:paddingBottom="@dimen/margin_xs"
+            style="@style/EmTextStyleNormal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingBottom="@dimen/margin_xs"
+            android:paddingTop="@dimen/margin_xs"
             app:first_letter_capitalize="true"
-            style="@style/EmTextStyleNormal"
             app:text_color="night_color"
-            app:text_key="@string/From"
-             />
+            app:text_key="@string/From" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -34,21 +33,21 @@
 
             <com.everymatch.saas.view.BaseTextView
                 android:id="@+id/tvScheduleFromDate"
+                style="@style/EmTextStyleNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingRight="@dimen/margin_xs"
                 app:text_color="primary_color"
-                style="@style/EmTextStyleNormal"
                 tools:text="01/01/2015" />
 
             <com.everymatch.saas.view.BaseTextView
                 android:id="@+id/tvScheduleFromTime"
+                style="@style/EmTextStyleNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/margin_s"
                 app:text_color="primary_color"
-                style="@style/EmTextStyleNormal"
                 tools:text="00:00" />
         </LinearLayout>
     </RelativeLayout>
@@ -59,61 +58,73 @@
         app:bg_color="fog_color" />
 
     <RelativeLayout
-        android:paddingLeft="@dimen/margin_xs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_xs">
 
         <com.everymatch.saas.view.BaseTextView
+            style="@style/EmTextStyleNormal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_xs"
             android:paddingBottom="@dimen/margin_xs"
+            android:paddingTop="@dimen/margin_xs"
             app:first_letter_capitalize="true"
-            style="@style/EmTextStyleNormal"
             app:text_color="night_color"
-            app:text_key="@string/To"
-            />
+            app:text_key="@string/To" />
 
         <com.everymatch.saas.view.BaseView
             android:id="@+id/question_schedule_to_line"
             android:layout_width="140dp"
-            android:layout_marginRight="@dimen/margin_s"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            app:bg_color="white_color"
-            android:layout_height="40dp"/>
+            android:layout_marginRight="@dimen/margin_s"
+            android:visibility="gone"
+            app:bg_color="white_color" />
 
         <com.everymatch.saas.view.BaseLinearLayout
-            android:visibility="visible"
             android:id="@+id/question_schedule_to_container"
-            app:bg_color="white_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            app:bg_color="white_color">
 
             <com.everymatch.saas.view.BaseTextView
                 android:id="@+id/tvScheduleToDate"
+                style="@style/EmTextStyleNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingRight="@dimen/margin_xs"
                 app:text_color="primary_color"
-                style="@style/EmTextStyleNormal"
                 tools:text="01/01/2015" />
 
             <com.everymatch.saas.view.BaseTextView
                 android:id="@+id/tvScheduleToTime"
+                style="@style/EmTextStyleNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/margin_s"
                 app:text_color="primary_color"
-                style="@style/EmTextStyleNormal"
                 tools:text="00:00" />
         </com.everymatch.saas.view.BaseLinearLayout>
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvScheduleOptional"
+            text="(optional)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="@dimen/margin_s"
+            app:text_color="moon_color"
+            tools:text="(optional)" />
     </RelativeLayout>
 
     <com.everymatch.saas.view.BaseView
@@ -122,44 +133,43 @@
         app:bg_color="fog_color" />
 
     <RelativeLayout
-        android:paddingLeft="@dimen/margin_xs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_xs">
 
         <com.everymatch.saas.view.BaseTextView
-            android:paddingTop="@dimen/margin_xs"
-            android:paddingBottom="@dimen/margin_xs"
-            app:first_letter_capitalize="true"
             android:id="@+id/EdrTimeZone"
+            style="@style/EmTextStyleNormal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/EmTextStyleNormal"
+            android:paddingBottom="@dimen/margin_xs"
+            android:paddingTop="@dimen/margin_xs"
+            app:first_letter_capitalize="true"
             app:text_color="night_color"
-            app:text_key="@string/Time_Zone"
-            />
+            app:text_key="@string/Time_Zone" />
 
         <com.everymatch.saas.view.BaseTextView
             android:id="@+id/tvSettingsTimeZoneValue"
+            style="@style/EmTextStyleNormal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/icon"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/icon"
             android:paddingRight="@dimen/margin_xs"
             android:text=""
-            style="@style/EmTextStyleNormal"
             app:text_color="primary_color" />
 
         <com.everymatch.saas.view.BaseIconTextView
             android:id="@id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            app:iconText="Arrowright"
             android:paddingRight="@dimen/margin_xs"
             android:text=""
+            android:textSize="24dp"
+            app:iconText="Arrowright"
             app:text_color="fog_color" />
     </RelativeLayout>
 

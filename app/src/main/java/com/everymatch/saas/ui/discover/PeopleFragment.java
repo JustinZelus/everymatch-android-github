@@ -187,8 +187,9 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
 
         // User image
         if (!TextUtils.isEmpty(mUserFullObject.image_url)) {
-            Picasso.with(getActivity()).load(Utils.getImageUrl(mUserFullObject.image_url, mImageContainer.getLayoutParams().height / 2,
-                    0)).into(mUserImage);
+            Picasso.with(getActivity())
+                    .load(Utils.getImageUrl(mUserFullObject.image_url, mImageContainer.getLayoutParams().height / 2,
+                            0)).into(mUserImage);
         }
 
         // How you match text
@@ -297,6 +298,10 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
                 eventDataRow.getRightText().setTextColor(ds.getIntColor(EMColor.PRIMARY));
                 eventDataRow.getRightText().setTypeface(TypeFaceProvider.getTypeFace(TypeFaceProvider.FONT_LATO));
 
+                //if i didn't fill this activity there is no reason to show match
+                if (!ds.getUser().hasActivity(dataActivity.client_id)) {
+                    eventDataRow.getRightText().setVisibility(View.INVISIBLE);
+                }
 
                 mActivitiesContainer.addView(eventDataRow);
 
@@ -322,7 +327,6 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
     private void addOrCancelFriendship() {
 
         if (mUserFullObject.is_friend) {
-
             mHeader.getIconThree().setText(Consts.Icons.icon_Favorite);
             mUserFullObject.is_friend = false;
 
@@ -335,13 +339,13 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
                 @Override
                 public void onFailure(ErrorResponse errorResponse) {
                     EMLog.i(TAG, "addOrCancelFriendship::RequestDeleteFriend - onFailure");
-                    mHeader.getIconThree().setText(Consts.Icons.icon_Heart);
+                    mHeader.getIconThree().setText(Consts.Icons.icon_Unfavorite);
                     mUserFullObject.is_friend = true;
                 }
             }, TAG + RequestDeleteFriend.class.getName());
         } else {
 
-            mHeader.getIconThree().setText(Consts.Icons.icon_Heart);
+            mHeader.getIconThree().setText(Consts.Icons.icon_Unfavorite);
             mUserFullObject.is_friend = true;
 
             ServerConnector.getInstance().processRequest(new RequestAddFriend(mUserFullObject.users_id), new ServerConnector.OnResultListener() {

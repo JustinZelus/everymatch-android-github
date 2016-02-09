@@ -80,8 +80,10 @@ public class MatchFragment extends BaseFragment implements EventHeader.OnEventHe
 
             edr.setOnClickListener(onRowClick);
 
-            llResultContainer.addView(edr);
-            llResultContainer.addView(new ViewSeperator(getActivity(), null));
+            if (dataQuestionResult.my_answer != null && dataQuestionResult.other_match_question_answer != null) {
+                llResultContainer.addView(edr);
+                llResultContainer.addView(new ViewSeperator(getActivity(), null));
+            }
         }
     }
 
@@ -148,7 +150,7 @@ public class MatchFragment extends BaseFragment implements EventHeader.OnEventHe
         @Override
         public void onClick(View v) {
             DataMatchResults.DataQuestionResult dataQuestionResult = (DataMatchResults.DataQuestionResult) v.getTag();
-            ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, MatchDetailsFragment.getInstance(dataQuestionResult), "", true, "", R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+            ((BaseActivity) getActivity()).addFragment(R.id.fragment_container, MatchDetailsFragment.getInstance(dataQuestionResult), "", true, "", R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
         }
     };
 

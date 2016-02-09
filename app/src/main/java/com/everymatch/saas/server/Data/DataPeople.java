@@ -22,4 +22,12 @@ public class DataPeople implements Serializable {
     public String invitation_note;
     public String username;
     public int match;
+
+    public String getGender() {
+        if (gender == null)
+            gender = "";
+        return gender;
+    }
+
+    private String gender;
 }

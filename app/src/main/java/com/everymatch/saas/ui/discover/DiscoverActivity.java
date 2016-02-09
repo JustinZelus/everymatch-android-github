@@ -17,12 +17,15 @@ import com.everymatch.saas.server.Data.DataPeopleHolder;
 import com.everymatch.saas.server.ServerConnector;
 import com.everymatch.saas.singeltones.EventListener;
 import com.everymatch.saas.singeltones.PeopleListener;
+import com.everymatch.saas.singeltones.Preferences;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.NotificationFragment;
 import com.everymatch.saas.ui.PeopleViewPagerFragment;
 import com.everymatch.saas.ui.event.EventActivity;
 import com.everymatch.saas.ui.event.EventFragment;
 import com.everymatch.saas.ui.event.MyEventsFragment;
+import com.everymatch.saas.ui.me.MeFragment;
+import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.ui.user.UserActivity;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.view.DiscoverMenuItem;
@@ -33,23 +36,43 @@ import com.google.gson.Gson;
 /**
  * Created by dors on 7/20/15.
  */
-public class DiscoverActivity extends BaseActivity implements EventListener, PeopleListener, DiscoverFragment.DiscoverCallbacks {
+public class DiscoverActivity extends BaseActivity implements EventListener, PeopleListener, DiscoverFragment.DiscoverCallbacks, MeFragment.MeCallback {
 
     private static final String TAG = DiscoverActivity.class.getSimpleName();
-    public static final String EXTRA_ACTIVITY_ID = TAG + ".extra.activity.id";
+    public static final String EXTRA_ACTIVITY_ID = "extra.activity.id";
     public static final String EXTRA_EVENT_ID = TAG + ".extra.event.id";
     private static final int REQUEST_CODE_ME = 13;
     private Intent mCurrentIntent;
     public DataActivity currentActivity;
     public String currentActivityId;
 
+    @Override
+    public void onProfileClick() {
+        UserActivity.openMyProfileFragment(DiscoverActivity.this);
+    }
+
+    @Override
+    public void onSettingsClick() {
+        UserActivity.openSettingsFragment(DiscoverActivity.this);
+    }
+
+    @Override
+    public void onAddProfileClick() {
+        // set the question flag to activity creation
+        QuestionnaireActivity.create_mode = QuestionnaireActivity.CREATE_MODE.CREATE_ACTIVITY;
+        final Intent intent = new Intent(this, QuestionnaireActivity.class);
+        intent.putExtra(QuestionnaireActivity.EXTRA_ACTIVITY_ID, 0);
+        //getActivity().finish();
+        startActivity(intent);
+    }
+
     public enum DISCOVER_MENU_ITEMS {DISCOVER, EVENTS, PEOPLE, NOTIFICATIONS, MORE}
 
     //Views
-    DiscoverMenuItem dmiDiscover, dmiEvents, dmiPeople, dmiNotifications, dmiMore;
+    public DiscoverMenuItem dmiDiscover, dmiEvents, dmiPeople, dmiNotifications, dmiMore;
     EventHeader mHeader;
 
-    public static void startActivity(Activity activity, String extra, String id) {
+    public static void start(Activity activity, String extra, String id) {
         Intent intent = new Intent(activity, DiscoverActivity.class);
         intent.putExtra(extra, id);
         activity.startActivity(intent);
@@ -140,7 +163,6 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
     private void goToWantedFragment() {
         String id;
         if (mCurrentIntent != null) {
-
             id = mCurrentIntent.getStringExtra(EXTRA_ACTIVITY_ID);
             if (id != null) {
                 replaceFragment(R.id.fragment_container, DiscoverFragment.newInstance(id), DiscoverFragment.TAG);
@@ -211,8 +233,9 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.dmiDiscover:
-                    replaceFragment(R.id.fragment_container, DiscoverFragment.newInstance(currentActivityId),
-                            NotificationFragment.TAG, false, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                    String id = Preferences.getInstance().getLastActivityId();
+                    replaceFragment(R.id.fragment_container, DiscoverFragment.newInstance(id),
+                            DiscoverFragment.TAG, false, null, R.anim.enter_from_right, R.anim.exit_to_left,
                             R.anim.enter_from_left, R.anim.exit_to_right);
                     break;
                 case R.id.dmiEvents:
@@ -231,7 +254,10 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
                             R.anim.enter_from_left, R.anim.exit_to_right);
                     break;
                 case R.id.dmiMore:
-                    UserActivity.openMeFragment(DiscoverActivity.this, 9);
+                    replaceFragment(R.id.fragment_container, new MeFragment(),
+                            NotificationFragment.TAG, false, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                            R.anim.enter_from_left, R.anim.exit_to_right);
+                    // UserActivity.openMeFragment(DiscoverActivity.this, 9);
                     break;
             }
         }

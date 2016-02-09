@@ -11,25 +11,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.adapter.AdapterTimeZone;
 import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.server.Data.DataTimeZone;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.me.settings.SettingsFragment;
-import com.everymatch.saas.util.ShapeDrawableUtils;
 import com.everymatch.saas.view.EventHeader;
 
 /**
  * Created by PopApp_laptop on 22/11/2015.
  */
-public class FragmentTimeZones extends BaseFragment implements View.OnClickListener, EventHeader.OnEventHeader {
+public class FragmentTimeZones extends BaseFragment implements View.OnClickListener, EventHeader.OnEventHeader, AdapterTimeZone.TimeZoneCallback {
+    public static final String TAG = "FragmentTimeZones";
+
     ListView mListView;
     AdapterTimeZone mAdapter;
-    Button btnSelect;
+    //Button btnSelect;
     private EventHeader mHeader;
     private boolean isClicked = false;
 
@@ -37,7 +38,7 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new AdapterTimeZone(DataStore.getInstance().getApplicationData().getTime_zone(), getActivity());
+        mAdapter = new AdapterTimeZone(DataStore.getInstance().getApplicationData().getTime_zone(), getActivity(), this);
 
     }
 
@@ -58,10 +59,9 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
         setHeader();
 
         mListView = (ListView) view.findViewById(R.id.listViewTimeZone);
-        btnSelect = (Button) view.findViewById(R.id.btnSelect);
-
+       /* btnSelect = (Button) view.findViewById(R.id.btnSelect);
         btnSelect.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton());
-        btnSelect.setOnClickListener(this);
+        btnSelect.setOnClickListener(this);*/
         mListView.setAdapter(mAdapter);
 
         //simulate search click and insert text
@@ -145,5 +145,13 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
     @Override
     public void onThreeIconClicked() {
 
+    }
+
+    @Override
+    public void onSelectedTimeZone(DataTimeZone dataTimeZone) {
+        Intent result = new Intent();
+        result.putExtra(SettingsFragment.EXTRA_TIME_ZONE, dataTimeZone);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 }

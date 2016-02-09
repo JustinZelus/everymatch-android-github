@@ -234,6 +234,10 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
 
     @Override
     public void onEmptyViewFirstButtonClick() {
+        if (getActivity() instanceof DiscoverActivity) {
+            ((DiscoverActivity) getActivity()).dmiDiscover.performClick();
+            return;
+        }
         getActivity().onBackPressed();
     }
 

@@ -73,14 +73,16 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
         }
 
         setTitleEnabled(selectedAnswers.size() > 0);
-        String answers = mQuestion.getAnswerValuesByAnswerIds(getSelectedIds());
-        setAnswer(answers);
+
+        setAnswer(null);
     }
 
     private void setRegularRow(DataAnswer answer, EventDataRow edr) {
         edr.setOnClickListener(onRegularClick);
-        // check if we have answer or not
-        if (selectedAnswers.contains("" + answer.answer_id)) {
+        // decide if answer is selected by
+        boolean isSelected = selectedAnswers.contains("" + mQuestionAndAnswer.getAnswerIdentifier(answer));
+
+        if (isSelected) {
             edr.setRightIconText(Consts.Icons.icon_Done);
             edr.getRightIcon().setTextColor(ds.getIntColor(EMColor.PRIMARY));
         } else {
@@ -105,7 +107,7 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
             // add as answered question if not already exists
             if (!selectedAnswers.contains("" + answer.answer_id)) {
                 selectedAnswers.add("" + answer.answer_id);
-                setAnswer(getSelectedIds());
+                setAnswer(getConcatedList());
             }
         } else {
 
@@ -118,7 +120,7 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
         /* get all sub question and answers for that answer */
         ArrayList<QuestionAndAnswer> subQuestions = mQuestionAndAnswer.subQuestionsMap.get(answer.answer_id);
         for (QuestionAndAnswer qaa : subQuestions) {
-            if (qaa.question.mandatory && Utils.isEmpty(qaa.userAnswerStr))
+            if (qaa.question.mandatory && Utils.isEmpty(qaa.userAnswerStr) && qaa.isAnsweredConfirmedByClickingNext)
                 return false;
         }
         return true;
@@ -165,7 +167,7 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
                         qaa.restoreDefaultValues();
                     }
                     addAnswersRows();
-                    setAnswer(mQuestionAndAnswer.question.getAnswerValuesByAnswerIds(getSelectedIds()));
+                    setAnswer(mQuestionAndAnswer.question.getAnswerValuesByAnswerIds(getConcatedList()));
                 }
 
                 @Override

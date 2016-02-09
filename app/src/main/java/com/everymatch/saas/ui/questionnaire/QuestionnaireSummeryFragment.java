@@ -1,5 +1,6 @@
 package com.everymatch.saas.ui.questionnaire;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
@@ -30,8 +31,8 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
     public static final int REQUEST_CODE_SUMMERY = 121;
     //Data
     QuestionnaireActivity mActivity;
-    public static boolean isShown = false;
     public DataManager dm = DataManager.getInstance();
+    public boolean wasChanges = false;
 
     //Views
     private EventHeader mHeader;
@@ -77,6 +78,8 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
             }
         } else if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
         }
+
+        updateSaveButton();
     }
 
     private void setHeader(View view) {
@@ -91,6 +94,8 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
         if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY) {
             mHeader.setTitle(dm.getResourceText(R.string.Edit_Activity));
             mHeader.getIconOne().setText(dm.getResourceText(R.string.Save));
+            mHeader.getIconOne().setAlpha(wasChanges ? 1.0f : 0.5f);
+
 
         } else if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
             mHeader.setTitle(dm.getResourceText(R.string.Edit_Event_settings));
@@ -106,32 +111,34 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //getActivity().getSupportFragmentManager().popBackStackImmediate();
         mActivity.goToQuestion(position, true);
-    }
-
-    public void close() {
-
     }
 
     @Override
     public void onBackButtonClicked() {
         mActivity.mCurrentQuestionIndex = mActivity.mQuestionIndex;
-
-        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY ||
-                mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
-            mActivity.showConfirmExitDialog(dm.getResourceText(R.string.CancelCreateWarningTitle), dm.getResourceText(R.string.CancelCreateActivitySubtitle));
+        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
+            if (wasChanges)
+                mActivity.showConfirmExitDialog(dm.getResourceText(R.string.CancelCreateWarningTitle), dm.getResourceText(R.string.CancelCreateActivitySubtitle));
+            else
+                ((QuestionnaireActivity) getActivity()).forceBack();
             return;
         }
 
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
+    public void updateSaveButton() {
+        if ((mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT)) {
+            mHeader.getIconOne().setClickable(wasChanges);
+            ObjectAnimator.ofFloat(mHeader.getIconOne(), View.ALPHA.getName(), wasChanges ? 1.0f : 0.5f).start();
+        }
+    }
+
     @Override
     public void onOneIconClicked() {
-        /* cancel click */
-        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY ||
-                mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
+        /* Save click */
+        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
             mActivity.sendAnswersToServer();
             return;
         }
@@ -150,7 +157,9 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
     }
 
     public void onUpdate() {
+        wasChanges = true;
         setListAdapter(new SummeryAdapter());
+        updateSaveButton();
     }
 
     private class SummeryAdapter extends BaseAdapter {
@@ -176,27 +185,29 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 convertView = inflater.inflate(R.layout.question_list_item, null);
             }
-
             DataQuestion question = mQuestionsAndAnswers.get(position).question;
-            ((TextView) convertView.findViewById(R.id.question_textview)).setText(question.text_title);
-            setSummary((TextView) convertView.findViewById(R.id.answer_textview), mQuestionsAndAnswers.get(position).userAnswerStr, mQuestionsAndAnswers.get(position));
+
             ((TextView) convertView.findViewById(R.id.arrow_image)).setText(Consts.Icons.icon_Arrowright);
+
+            TextView tvTitle = (TextView) convertView.findViewById(R.id.question_textview);
+            tvTitle.setText(question.text_title);
+
+            TextView tvValue = (TextView) convertView.findViewById(R.id.answer_textview);
+            setSummary(tvValue, mQuestionsAndAnswers.get(position).userAnswerStr, mQuestionsAndAnswers.get(position));
 
             return convertView;
         }
     }
 
-    private void setSummary(TextView itemTextView, String text, QuestionAndAnswer qaa) {
-        if ((QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY == mActivity.create_mode ||
-                QuestionnaireActivity.CREATE_MODE.EDIT_EVENT == mActivity.create_mode) && TextUtils.isEmpty(text)) {
-            itemTextView.setText(dm.getResourceText(R.string.Unanswered));
-            itemTextView.setTextColor(DataStore.getInstance().getIntColor(EMColor.MOON));
+    private void setSummary(TextView tvValue, String text, QuestionAndAnswer qaa) {
+        if ((QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY == mActivity.create_mode || QuestionnaireActivity.CREATE_MODE.EDIT_EVENT == mActivity.create_mode) && TextUtils.isEmpty(text)) {
+            tvValue.setText(dm.getResourceText(R.string.Unanswered));
+            tvValue.setTextColor(DataStore.getInstance().getIntColor(EMColor.MOON));
         } else {
-            itemTextView.setText(text);
-            itemTextView.setTextColor(DataStore.getInstance().getIntColor(EMColor.PRIMARY));
+            tvValue.setText(text);
+            tvValue.setTextColor(DataStore.getInstance().getIntColor(EMColor.PRIMARY));
             if (qaa.isAllAnswersSelected())
-                itemTextView.setText(dm.getResourceText(R.string.All));
-
+                tvValue.setText(dm.getResourceText(R.string.All));
         }
     }
 }

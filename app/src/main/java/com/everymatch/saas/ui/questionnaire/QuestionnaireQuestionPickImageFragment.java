@@ -1,11 +1,11 @@
 package com.everymatch.saas.ui.questionnaire;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -41,6 +41,8 @@ import java.io.File;
 
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -95,13 +97,33 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
         super.onViewCreated(view, savedInstanceState);
         registerReceiverPrivate();
         mCameraButtonInPhoto = (BaseIconTextView) view.findViewById(R.id.camera_image2);
+        Nammu.askForPermission(getActivity(), Manifest.permission.CAMERA, new PermissionCallback() {
+            @Override
+            public void permissionGranted() {
+                EMLog.d(TAG, "got WRITE_EXTERNAL_STORAGE permission");
+                mCameraButtonInPhoto.setOnClickListener(QuestionnaireQuestionPickImageFragment.this);
+            }
 
-        /* do not show camera button if its  independent process*/
-        //mCameraButtonInPhoto.setVisibility(mIsIndependentProcess ? View.GONE : View.VISIBLE);
-        // if (mIsIndependentProcess) EasyImage.openChooser(QuestionnaireQuestionPickImageFragment.this, "Pick Image", true);
+            @Override
+            public void permissionRefused() {
+                EMLog.d(TAG, "not got permission");
+            }
+        });
 
-        mCameraButtonInPhoto.setOnClickListener(this);
+        Nammu.askForPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionCallback() {
+            @Override
+            public void permissionGranted() {
+                EMLog.d(TAG, "got camera permission");
+                mCameraButtonInPhoto.setOnClickListener(QuestionnaireQuestionPickImageFragment.this);
+            }
+
+            @Override
+            public void permissionRefused() {
+                EMLog.d(TAG, "not got permission");
+            }
+        });
     }
+
 
     @Override
     public void recoverDefaultAnswer() {
@@ -111,11 +133,7 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
-            //resume tasks needing this permission
-            showPickerDialog();
-        }
+        Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void showPickerDialog() {
@@ -225,7 +243,8 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
                     tmpUrl = intent.getStringExtra(UploadImageService.EXTRA_UPLOAD_ID);
                     tmpUrl = intent.getStringExtra(UploadImageService.EXTRA_UPLOAD_IMAGE_URL);
                     if (tmpUrl != null) {
-                        Crop.of(savedUri, savedUri).asSquare().withMaxSize(1920, 1280).start(context, QuestionnaireQuestionPickImageFragment.this);
+                        //Crop.of(savedUri, savedUri).asSquare().withMaxSize(1920, 1280).start(context, QuestionnaireQuestionPickImageFragment.this);
+                        Crop.of(savedUri, savedUri).asSquare().withMaxSize(1280, 1280).start(context, QuestionnaireQuestionPickImageFragment.this);
                     }
                     break;
 

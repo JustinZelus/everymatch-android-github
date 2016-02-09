@@ -120,12 +120,14 @@ public abstract class BaseLoginActivity extends BaseActivity {
     }
 
     protected void goToDiscover(String last_activity_id) {
-        finish();
 
+        finish();
         if (TextUtils.isEmpty(last_activity_id))
             BaseLoginActivity.this.startActivity(new Intent(BaseLoginActivity.this, DiscoverActivity.class));
-        else
-            DiscoverActivity.startActivity(BaseLoginActivity.this, DiscoverActivity.EXTRA_ACTIVITY_ID, last_activity_id);
+        else {
+            DiscoverActivity.start(BaseLoginActivity.this, DiscoverActivity.EXTRA_ACTIVITY_ID, last_activity_id);
+        }
+
     }
 
     private void registerToPusher() {

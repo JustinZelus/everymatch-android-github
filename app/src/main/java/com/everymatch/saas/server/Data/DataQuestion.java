@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by Dacid on 29/06/2015.
@@ -40,6 +41,7 @@ public class DataQuestion implements Serializable {
     public String form_type;
     public int score;
     public boolean is_important;
+    public HashMap<String, Object> units;
 
 
     public DataQuestion() {
@@ -88,18 +90,29 @@ public class DataQuestion implements Serializable {
         if (answers == null) {
             return "";
         }
-
         ArrayList ids = new ArrayList<>(Arrays.asList(answerIds.trim().split("[\\s]*,[\\s]*")));
-
         for (DataAnswer answer : answers) {
             if (ids.contains(("" + answer.answer_id).trim()))
                 ans += (answer.text_title) + ",";
         }
-
         if (ans.endsWith(","))
             ans = ans.substring(0, ans.length() - 1);
-
-
         return ans;
     }
+
+    public String getAnswerValuesByAnswerValues(String answerValues) {
+        String ans = "";
+        if (answers == null) {
+            return "";
+        }
+        ArrayList ids = new ArrayList<>(Arrays.asList(answerValues.trim().split("[\\s]*,[\\s]*")));
+        for (DataAnswer answer : answers) {
+            if (ids.contains(("" + answer.value).trim()))
+                ans += (answer.text_title) + ",";
+        }
+        if (ans.endsWith(","))
+            ans = ans.substring(0, ans.length() - 1);
+        return ans;
+    }
+
 }

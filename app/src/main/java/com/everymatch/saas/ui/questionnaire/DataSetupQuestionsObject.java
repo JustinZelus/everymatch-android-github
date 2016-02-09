@@ -14,7 +14,7 @@ import org.json.JSONObject;
  */
 
 public class DataSetupQuestionsObject {
-    public int numberOfSpots;
+    public int numberOfSpots = -1;
     public String joinType;
     public String privacy;
     public boolean isParticipating;

@@ -76,6 +76,12 @@ public class AdapterConversations extends BaseAdapter {
         if (view == null)
             v = inflater.inflate(R.layout.view_conversation_item, null);
 
+        setView(v, item);
+
+        return v;
+    }
+
+    private void setView(View v, final DataConversation item) {
         ImageView imgUserImage = (ImageView) v.findViewById(R.id.img_view_conversation_image);
         BaseTextView tvUser = (BaseTextView) v.findViewById(R.id.tv_view_conversation_username);
         BaseTextView tvContent = (BaseTextView) v.findViewById(R.id.tv_view_conversation_content);
@@ -142,19 +148,27 @@ public class AdapterConversations extends BaseAdapter {
 
             //set userImage
             final String urlString = "https://cdn2.everymatch.com/remote/emprod.everymatchintern.netdna-cdn.com/memberprofilepictures/" + userId + "/Current/L." + userId + ".jpg?width=200&height=200&format=jpg";
-            Picasso.with(con)
-                    .load(urlString)
-                            //.placeholder(R.drawable.ic_placeholder) // optional
-                            //.error(R.drawable.ic_error_fallback)         // optional
-                    .into(imgUserImage);
+            try {
+                Picasso.with(con)
+                        .load(item.getLast_message().image_url)
+                                //.placeholder(R.drawable.ic_placeholder) // optional
+                                //.error(R.drawable.ic_error_fallback)         // optional
+                        .into(imgUserImage);
+            } catch (Exception ex) {
+            }
+
         } else {
+            try {
+                Picasso.with(con)
+                        .load(item.getLast_message().image_url)
+                                //.placeholder(R.drawable.ic_placeholder) // optional
+                                //.error(R.drawable.ic_error_fallback)         // optional
+                        .into(imgUserImage);
+            } catch (Exception ex) {
+            }
             // the last message is not me!
             final String urlString = "https://cdn2.everymatch.com/remote/emprod.everymatchintern.netdna-cdn.com/memberprofilepictures/" + item.getLast_message().sender + "/Current/L." + item.getLast_message().sender + ".jpg?width=200&height=200&format=jpg";
-            Picasso.with(con)
-                    .load(urlString)
-                            //.placeholder(R.drawable.ic_placeholder) // optional
-                            //.error(R.drawable.ic_error_fallback)         // optional
-                    .into(imgUserImage);
+
             //item.last_message.
         }
 
@@ -171,12 +185,11 @@ public class AdapterConversations extends BaseAdapter {
             }
         } catch (Exception ex) {
         }
-        RelativeLayout rlHolder = (RelativeLayout) v.findViewById(R.id.relativeLayout2);
+        RelativeLayout rlHolder = (RelativeLayout) v.findViewById(R.id.rlConversationHolder);
         rlHolder.setBackgroundColor(isRead ? Color.WHITE : ColorUtils.setAlphaComponent(ds.getIntColor(EMColor.PRIMARY), (int) (255 * 0.3)));
 
         String t = (p.format(Utils.getDateDromDataDate(item.getLast_message().getUpdated_date())));
         tvAgo.setText(t);
-        return v;
     }
 
     public void add(DataConversation dataConversation) {

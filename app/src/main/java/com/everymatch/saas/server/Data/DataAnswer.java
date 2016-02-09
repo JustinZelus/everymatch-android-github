@@ -22,6 +22,9 @@ public class DataAnswer implements Serializable {
     public int questions_id;
     public String text_label;
 
+    public DataAnswer() {
+    }
+
     public DataAnswer(DataAnswer other) {
         if (other.questions != null) {
             this.questions = new DataQuestion[other.questions.length];
