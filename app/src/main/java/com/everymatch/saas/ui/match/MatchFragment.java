@@ -18,7 +18,6 @@ import com.everymatch.saas.server.requests.RequestMatch;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.base.BaseFragment;
-import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.EventHeader;
 import com.everymatch.saas.view.ViewSeperator;
@@ -72,7 +71,7 @@ public class MatchFragment extends BaseFragment implements EventHeader.OnEventHe
             EventDataRow edr = new EventDataRow(getActivity());
             edr.setTag(dataQuestionResult);
             edr.getLeftMediaContainer().setVisibility(View.GONE);
-            edr.setRightIconText(IconManager.getInstance(getActivity()).getIconString("icon-Match"));
+            edr.setRightIconText(Math.round(dataQuestionResult.match) + "%");
             edr.getRightIcon().setTextColor(ds.getIntColor(EMColor.PRIMARY));
             edr.setRightText(null);
             edr.setDetails(null);

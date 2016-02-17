@@ -189,6 +189,7 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
         etEventName = (EditText) v.findViewById(R.id.etEventtName);
         etEventDesc = (EditText) v.findViewById(R.id.etEventDesc);
         etEventDesc.setHint(dm.getResourceText(R.string.Add_Event_Description));
+        etEventName.setHint(dm.getResourceText(R.string.Event_Name));
 
         mTextTitle = (TextView) v.findViewById(R.id.event_data_row_details);
         mImageHolder = v.findViewById(R.id.fragment_questionaire_publish_image_holder);
@@ -234,12 +235,22 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
 
         mHeader = (EventHeader) view.findViewById(R.id.eventHeader);
         setHeader();
+    }
+
+    private void setHeader() {
+        mHeader.setListener(this);
+        mHeader.getBackButton().setText(Consts.Icons.icon_Details);
+        mHeader.getIconOne().setText(dm.getResourceText(R.string.Cancel_Exit));
+        mHeader.getIconTwo().setVisibility(View.GONE);
+        mHeader.getIconThree().setVisibility(View.GONE);
+
+        mHeader.setTitle("");
 
         if (mMode == MODE_EDIT_EVENT) {
+            mHeader.setSaveCancelMode(dm.getResourceText(R.string.Edit_Event_Settings));
             mTextTitle.setVisibility(View.GONE);
             mButtonHolder.setVisibility(View.GONE);
-            mHeader.setTitle(dm.getResourceText(R.string.Edit_Event_settings));
-            mHeader.getBackButton().setText(Consts.Icons.icon_ArrowBack);
+            mHeader.setTitle(dm.getResourceText(R.string.Edit_Event_Settings));
             mTextImage.setText(dm.getResourceText(R.string.Change_Picture));
             mImageHolder.getLayoutParams().height = Utils.dpToPx(180);
             mImageHolder.requestLayout();
@@ -247,21 +258,6 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
             if (!TextUtils.isEmpty(mActivity.mGeneratedEvent.dataPublicEvent.event_title)) {
                 etEventName.setText(mActivity.mGeneratedEvent.dataPublicEvent.event_title);
             }
-        }
-    }
-
-    private void setHeader() {
-        mHeader.setListener(this);
-        mHeader.getBackButton().setText(Consts.Icons.icon_Event);
-        mHeader.getIconOne().setVisibility(View.GONE);
-        mHeader.getIconTwo().setVisibility(View.GONE);
-
-        mHeader.getIconThree().setVisibility(View.GONE);
-
-        mHeader.setTitle("");
-
-        if (mMode == MODE_EDIT_EVENT) {
-            mHeader.getIconThree().setText(dm.getResourceText(R.string.Save).toUpperCase());
         } else {
             mHeader.getIconThree().setText(dm.getResourceText(R.string.Publish).toUpperCase());
         }
@@ -269,14 +265,25 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
 
     @Override
     public void onBackButtonClicked() {
-        if (mMode == MODE_EDIT_EVENT) {
-            getActivity().onBackPressed();
+        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
+            //getActivity().getSupportFragmentManager().popBackStackImmediate();
+            //getActivity().onBackPressed();
+            ((QuestionnaireActivity) getActivity()).forceBack();
+            return;
         }
+
+        mActivity.goToSummeryScreen(null);
     }
 
     @Override
     public void onOneIconClicked() {
-
+        if (mActivity.isInEditMode()) {
+            publishEvent();
+            return;
+        }
+        // just quit events creation
+        mActivity.showConfirmExitDialog(dm.getResourceText(R.string.CancelCreateWarningTitle), dm.getResourceText(R.string.CancelCreateActivitySubtitle));
+        //getActivity().finish();
     }
 
     @Override
@@ -291,8 +298,8 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
     }
 
     private void publishEvent() {
-        mActivity.mGeneratedEvent.dataPublicEvent.event_description = etEventName.getText().toString().trim();
-        mActivity.mGeneratedEvent.dataPublicEvent.event_title = etEventDesc.getText().toString().trim();
+        mActivity.mGeneratedEvent.dataPublicEvent.event_title = etEventName.getText().toString().trim();
+        mActivity.mGeneratedEvent.dataPublicEvent.event_description = etEventDesc.getText().toString().trim();
 
         mActivity.sendAnswersToServer();
     }

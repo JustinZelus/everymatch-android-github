@@ -25,6 +25,7 @@ import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.server.ServerConnector;
 import com.everymatch.saas.singeltones.PusherManager;
+import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.view.NoConnectionView;
@@ -62,6 +63,14 @@ public abstract class BaseFragment extends Fragment implements NoConnectionView.
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         im = IconManager.getInstance(activity);
+    }
+
+    public void showDialog(String title) {
+        ((BaseActivity) getActivity()).showDialog(title);
+    }
+
+    public void stopDialog() {
+        ((BaseActivity) getActivity()).stopDialog();
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {

@@ -17,6 +17,9 @@ public class ApplicationSettings implements Serializable {
     @SerializedName("default_design")
     public HashMap<String, String> defaultDesign;
     public String application_name;
+    public boolean is_parent;
+    public String text_service_title;
+    public String text_service_subtitle;
     public String version;
     public String default_currency;
     private UnitsHolder units;

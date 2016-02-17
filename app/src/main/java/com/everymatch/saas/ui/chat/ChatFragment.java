@@ -106,7 +106,6 @@ public class ChatFragment extends BaseFragment implements EventHeader.OnEventHea
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setHeader(view);
         lvMessages = (ListView) view.findViewById(R.id.listViewChat);
         tvSend = (BaseIconTextView) view.findViewById(R.id.tv_view_chat_send);
@@ -290,7 +289,7 @@ public class ChatFragment extends BaseFragment implements EventHeader.OnEventHea
         //  we get string response not Json
         //String id = getPrefix() + (mChatType.equals(CHAT_TYPE_USER) ? mConversationId : mDataConversation._id);
         String id = getChannelName();
-        if(mDataConversation._id != null){
+        if (mDataConversation._id != null) {
             id = mDataConversation._id;
         }
         ServerConnector.getInstance().processRequest(new RequestChatMessageSend(id, msg, mDataConversation._id == null), new ServerConnector.OnResultListener() {
@@ -334,6 +333,7 @@ public class ChatFragment extends BaseFragment implements EventHeader.OnEventHea
             public void onSuccess(BaseResponse baseResponse) {
                 try {
                     mDataConversation = (DataConversation) baseResponse;
+                    mHeader.setTitle(mDataConversation.getConversation_title());
                     mProgressBar.setVisibility(View.GONE);
                     if (mDataConversation.getMessages().size() > 0) {
                         setAdapter();

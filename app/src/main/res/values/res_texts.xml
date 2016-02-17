@@ -18,6 +18,7 @@
     <string name="Create_Event">Create_Event</string>
     <string name="Edit_Setting_Description">Edit_Setting_Description</string>
     <string name="Settings">Settings</string>
+    <string name="Loading">em2_loading_title</string>
     <string name="EventEdit">EventEdit</string>
     <string name="Event_Name">Event_Name</string>
     <string name="Event_Profile">Event_Profile</string>
@@ -27,7 +28,6 @@
     <string name="Unlimited">Unlimited</string>
     <string name="Event_open_spots">event_open_spots</string>
     <string name="Pre_approve_participation">Pre-approve participation</string>
-    <string name="Edit_Event_settings">Edit_Event_settings</string>
     <string name="ProfileEdit">ProfileEdit</string>
     <string name="Done">Done</string>
     <string name="Em2_register_subtitle">em2_register_subtitle</string>
@@ -158,5 +158,21 @@
     <string name="Currency">Currency</string>
     <string name="Culture_text">Culture_text</string>
     <string name="Distance">Distance</string>
+    <string name="Gender">Gender</string>
+    <string name="Question_Match">Question_Match</string>
+    <string name="Seconds_Short">Seconds_Short</string>
+    <string name="Minutes_Short">Minutes_Short</string>
+    <string name="Hours_Short">Hours_Short</string>
+    <string name="No_Answer">No_Answer</string>
+    <string name="I_Do_Not_Care">I_Do_Not_Care</string>
+    <string name="None">None</string>
+    <string name="Remove">Remove</string>
+    <string name="Confirm_Remove">Confirm_Remove</string>
+    <string name="Set_End_Time">Set_End_Time</string>
+    <string name="Edit_Event_Settings">Edit_Event_Settings</string>
+    <string name="Edit_Event_Profile">Edit_Event_Profile</string>
+    <string name="Edit_Event_Location">Edit_Event_Location</string>
+    <string name="Edit_Event_Schedule">Edit_Event_Schedule</string>
+    <string name="Edit_Event_Participants">Edit_Event_Participants</string>
 
 </resources>

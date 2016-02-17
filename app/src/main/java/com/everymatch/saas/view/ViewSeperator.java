@@ -13,6 +13,5 @@ public class ViewSeperator extends BaseLinearLayout {
     public ViewSeperator(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_seperator, this);
-
     }
 }

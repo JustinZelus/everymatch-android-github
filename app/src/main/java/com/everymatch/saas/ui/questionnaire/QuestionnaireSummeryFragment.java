@@ -18,6 +18,7 @@ import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.Data.DataQuestion;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventHeader;
 
 import java.util.ArrayList;
@@ -98,8 +99,9 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
 
 
         } else if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
-            mHeader.setTitle(dm.getResourceText(R.string.Edit_Event_settings));
-            mHeader.getIconOne().setText(dm.getResourceText(R.string.Save));
+            mHeader.setSaveCancelMode(dm.getResourceText(R.string.Edit_Event_Profile));
+            // mHeader.setTitle(dm.getResourceText(R.string.Edit_Event_Profile));
+            // mHeader.getIconOne().setText(dm.getResourceText(R.string.Save));
         }
 
     }
@@ -117,11 +119,11 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
     @Override
     public void onBackButtonClicked() {
         mActivity.mCurrentQuestionIndex = mActivity.mQuestionIndex;
-        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
-            if (wasChanges)
-                mActivity.showConfirmExitDialog(dm.getResourceText(R.string.CancelCreateWarningTitle), dm.getResourceText(R.string.CancelCreateActivitySubtitle));
-            else
-                ((QuestionnaireActivity) getActivity()).forceBack();
+        if (mActivity.isInEditMode()) {
+            // if (wasChanges)
+            //    mActivity.showConfirmExitDialog(dm.getResourceText(R.string.CancelCreateWarningTitle), dm.getResourceText(R.string.CancelCreateActivitySubtitle));
+            //else
+            ((QuestionnaireActivity) getActivity()).forceBack();
             return;
         }
 
@@ -138,7 +140,7 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
     @Override
     public void onOneIconClicked() {
         /* Save click */
-        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
+        if (mActivity.isInEditMode()) {
             mActivity.sendAnswersToServer();
             return;
         }
@@ -193,7 +195,13 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
             tvTitle.setText(question.text_title);
 
             TextView tvValue = (TextView) convertView.findViewById(R.id.answer_textview);
-            setSummary(tvValue, mQuestionsAndAnswers.get(position).userAnswerStr, mQuestionsAndAnswers.get(position));
+
+            //check if userAnswerStr contains units and add it if not
+            String answerStr = mQuestionsAndAnswers.get(position).userAnswerStr;
+            if (!Utils.isEmpty(answerStr) && !answerStr.endsWith(question.getUnits())) {
+                answerStr += " " + question.getUnits();
+            }
+            setSummary(tvValue, answerStr, mQuestionsAndAnswers.get(position));
 
             return convertView;
         }

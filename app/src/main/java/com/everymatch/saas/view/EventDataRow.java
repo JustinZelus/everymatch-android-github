@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
  */
 public class EventDataRow extends LinearLayout {
 
+    public static int PADDING_TOP_BOTTOM_DP = 14;
     private Context mContext;
 
     private LinearLayout wrapperLayout;
@@ -181,6 +182,11 @@ public class EventDataRow extends LinearLayout {
         }
     }
 
+    public void setLargePaddingTopBottom() {
+        int value = Utils.dpToPx(PADDING_TOP_BOTTOM_DP);
+        wrapperLayout.setPadding(wrapperLayout.getPaddingLeft(), value, wrapperLayout.getPaddingRight(), value);
+        wrapperLayout.requestLayout();
+    }
 
     /**
      * if text is empty, TEXT VIEW will be GONE else it will be VISIBLE

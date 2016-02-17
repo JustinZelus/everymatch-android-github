@@ -46,6 +46,12 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="editTextStyle" parent="@android:style/Widget.EditText">
+        <item name="android:background">@null</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="peopleListActionButton">
         <item name="android:visibility">gone</item>
         <item name="android:layout_height">match_parent</item>
@@ -92,6 +98,10 @@
         <item name="android:textSize">@dimen/text_size_button</item>
         <item name="font">lato_font</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="PaddingView">
+        <item name="android:padding">10dp</item>
     </style>
 
     <style name="DialogTheme" parent="@android:style/Theme.Dialog">

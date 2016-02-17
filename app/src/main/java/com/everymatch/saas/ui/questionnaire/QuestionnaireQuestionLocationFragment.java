@@ -85,6 +85,7 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
     boolean flagUserSetRadius = false;
     private boolean isFromLocationClick;
     DataLocation mDataLocation;
+    private boolean isEventMode = false;
 
     //MapData
     GoogleApiClient mGoogleApiClient;
@@ -105,6 +106,9 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
 
         mAdapter = new PlaceAutocompleteAdapter(mActivity, R.layout.view_place_auto_complete, mGoogleApiClient, BOUNDS_GREATER_SYDNEY, null);
         mDataLocation = new DataLocation();
+
+        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_EVENT || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT)
+            isEventMode = true;
 
         Nammu.askForPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION, new PermissionCallback() {
             @Override
@@ -128,6 +132,16 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+
+        setHeader();
+    }
+
+    @Override
+    protected void setHeader() {
+        super.setHeader();
+
+        if (mActivity.isInEditMode())
+            mHeader.setSaveCancelMode(dm.getResourceText(R.string.Edit_Event_Location));
     }
 
     @Override
@@ -169,11 +183,10 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
         viewAnimator.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right));
 
 
-        if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_EVENT) {
+        if (isEventMode) {
             tvSetSpecificArea.setVisibility(View.GONE);
+            viewAnimator.setDisplayedChild(0);
         }
-        if (flagUserSetRadius && mActivity.create_mode != QuestionnaireActivity.CREATE_MODE.CREATE_EVENT)
-            tvSetSpecificArea.setVisibility(View.VISIBLE);
 
         //set input field settings
         etAddressInput.setHint(dm.getResourceText(getString(R.string.Type_Name_Or_Location)));
@@ -266,15 +279,22 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
             case R.id.btnMyLocation:
                 isFromLocationClick = true;
                 /*show set specific area if needed*/
-                if (mActivity.create_mode != QuestionnaireActivity.CREATE_MODE.CREATE_EVENT)
+                if (!isEventMode)
                     tvSetSpecificArea.setVisibility(View.VISIBLE);
-
+                else {
+                    viewAnimator.setDisplayedChild(0);
+                    tvSetSpecificArea.setVisibility(View.GONE);
+                }
                 if (btnMyLocation.getText().equals(Consts.Icons.icon_GPS))
                     setCurrentLocationSelected();
-                else clearAnswer();
+                else {
+                    clearAnswer();
+                }
                 break;
 
             case R.id.tvSetRadiusStageOne:
+                if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT || mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.CREATE_EVENT)
+                    return;
                 viewAnimator.showNext();
                 mRadiusEditText.setText(mRadiusEditText.getText());
                 break;
@@ -285,15 +305,19 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
         super.clearAnswer();
         etAddressInput.setText("");
         etAddressInput.clearListSelection();
-
         clearMarksOnMap();
+        tvSetSpecificArea.setVisibility(View.GONE);
+        viewAnimator.setDisplayedChild(0);
+
     }
+
 
     private void setCurrentLocationSelected() {
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (lastLocation != null) {
             onLocationSelected(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
             getLocationAddress(lastLocation.getLatitude(), lastLocation.getLongitude(), true);
+            hideKeyboard();
         }
     }
 
@@ -315,7 +339,7 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
     private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            hideKeyboard();
             isFromLocationClick = false;
 
             /*
@@ -472,6 +496,9 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if (!isEventMode)
+            tvSetSpecificArea.setVisibility(View.VISIBLE);
 
         // Handle case where no address was found.
         if (addresses == null || addresses.size() == 0) {

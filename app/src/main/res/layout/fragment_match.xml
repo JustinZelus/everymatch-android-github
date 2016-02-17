@@ -12,77 +12,84 @@
         android:layout_height="wrap_content"
         android:visibility="visible" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
-
-        <com.pkmmte.view.CircularImageView
-            android:id="@+id/imgLeftImage"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:alpha="0"
-            android:scaleType="fitCenter"
-            android:src="@drawable/macabi_logo"
-            app:border="false"
-            app:border_color="#dc0f0f0f"
-            app:border_width="7dp"
-            app:shadow="true" />
-
-        <com.pkmmte.view.CircularImageView
-            android:id="@+id/imgRightImage"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:alpha="0"
-            android:scaleType="fitCenter"
-            android:src="@drawable/macabi_logo"
-            app:border="false"
-            app:border_color="#dc0f0f0f"
-            app:border_width="7dp"
-            app:shadow="true" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <com.everymatch.saas.view.BaseTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            app:text_color="primary_color"
-            app:text_key="@string/You_Match"
-            tools:text="YouMatch" />
-
-        <com.everymatch.saas.view.BaseTextView
-            android:id="@+id/tvMatchValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textSize="35sp"
-            app:text_color="primary_color"
-            tools:text="80%" />
-
-    </LinearLayout>
-
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/llResultContainer"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp">
+
+                <com.pkmmte.view.CircularImageView
+                    android:id="@+id/imgLeftImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:alpha="0"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/macabi_logo"
+                    app:border="false"
+                    app:border_color="#dc0f0f0f"
+                    app:border_width="7dp"
+                    app:shadow="true" />
+
+                <com.pkmmte.view.CircularImageView
+                    android:id="@+id/imgRightImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:alpha="0"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/macabi_logo"
+                    app:border="false"
+                    app:border_color="#dc0f0f0f"
+                    app:border_width="7dp"
+                    app:shadow="true" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.everymatch.saas.view.BaseTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    app:text_color="primary_color"
+                    app:text_key="@string/You_Match"
+                    tools:text="YouMatch" />
+
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/tvMatchValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="35sp"
+                    app:text_color="primary_color"
+                    tools:text="80%" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llResultContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
+
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

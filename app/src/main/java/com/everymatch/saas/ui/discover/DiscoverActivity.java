@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.everymatch.saas.R;
@@ -18,6 +19,7 @@ import com.everymatch.saas.server.ServerConnector;
 import com.everymatch.saas.singeltones.EventListener;
 import com.everymatch.saas.singeltones.PeopleListener;
 import com.everymatch.saas.singeltones.Preferences;
+import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.NotificationFragment;
 import com.everymatch.saas.ui.PeopleViewPagerFragment;
@@ -32,6 +34,8 @@ import com.everymatch.saas.view.DiscoverMenuItem;
 import com.everymatch.saas.view.EventHeader;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
+
 
 /**
  * Created by dors on 7/20/15.
@@ -45,6 +49,12 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
     private Intent mCurrentIntent;
     public DataActivity currentActivity;
     public String currentActivityId;
+
+    //Views
+    public DiscoverMenuItem dmiDiscover, dmiEvents, dmiPeople, dmiNotifications, dmiMore;
+    EventHeader mHeader;
+    private TextView tvBadge;
+
 
     @Override
     public void onProfileClick() {
@@ -68,9 +78,6 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
 
     public enum DISCOVER_MENU_ITEMS {DISCOVER, EVENTS, PEOPLE, NOTIFICATIONS, MORE}
 
-    //Views
-    public DiscoverMenuItem dmiDiscover, dmiEvents, dmiPeople, dmiNotifications, dmiMore;
-    EventHeader mHeader;
 
     public static void start(Activity activity, String extra, String id) {
         Intent intent = new Intent(activity, DiscoverActivity.class);
@@ -105,6 +112,21 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
         dmiPeople.setOnClickListener(onDmiClickListener);
         dmiNotifications.setOnClickListener(onDmiClickListener);
         dmiMore.setOnClickListener(onDmiClickListener);
+
+        tvBadge = (TextView) findViewById(R.id.tvBadge);
+        updateBadge();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateBadge();
+    }
+
+    private void updateBadge() {
+        int x = ds.getUser().getUnread();
+        tvBadge.setVisibility(x == 0 ? View.INVISIBLE : View.VISIBLE);
+        tvBadge.setText("" + x);
     }
 
     public EventHeader getmHeader() {
@@ -262,4 +284,18 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
             }
         }
     };
+
+    @Override
+    protected void handleBroadcast(Serializable data, String eventName) {
+        super.handleBroadcast(data, eventName);
+        switch (eventName) {
+            case PusherManager.PUSHER_EVENT_EVENT_INBOX_UNREAD:
+                updateBadge();
+                break;
+
+            case PusherManager.PUSHER_EVENT_EVENT_NEW_MESSAGE:
+                updateBadge();
+                break;
+        }
+    }
 }

@@ -77,7 +77,7 @@ public class MatchDetailsFragment extends BaseFragment implements EventHeader.On
         mHeader.getIconOne().setVisibility(View.GONE);
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setVisibility(View.GONE);
-        mHeader.setTitle("Match Details");
+        mHeader.setTitle(dm.getResourceText(R.string.Question_Match) + ": " + Math.round(dataQuestionResult.match));
     }
 
 
@@ -98,8 +98,17 @@ public class MatchDetailsFragment extends BaseFragment implements EventHeader.On
             //set answer value
             if (dataQuestionResult.other_match_question_answer.containsKey("value")) {
                 String value = dataQuestionResult.other_match_question_answer.get("value").toString();
+                TextView tvContent = (TextView) friendQuestion.findViewById(R.id.tv_view_conversation_content);
                 String friendly = QuestionUtils.getAnsweredTitleFromUserAnswerData(dataQuestionResult.question, value);
-                ((TextView) friendQuestion.findViewById(R.id.tv_view_conversation_content)).setText(friendly);
+                if (friendly.equals(dm.getResourceText(R.string.Unanswered))) {
+                    if (dataQuestionResult.question.irrelevant_default_state.toLowerCase().equals("all")) {
+                        friendly = dm.getResourceText(R.string.I_Do_Not_Care);
+                    } else {
+                        friendly = dm.getResourceText(R.string.No_Answer);
+                    }
+                }
+                tvContent.setText(friendly);
+
             } else {
                 shouldAdd = false;
             }
@@ -117,8 +126,16 @@ public class MatchDetailsFragment extends BaseFragment implements EventHeader.On
             //set answer value
             if (dataQuestionResult.my_answer.containsKey("value")) {
                 String value = dataQuestionResult.my_answer.get("value").toString();
+                TextView tvContent = (TextView) myQuestion.findViewById(R.id.tv_view_conversation_content);
                 String friendly = QuestionUtils.getAnsweredTitleFromUserAnswerData(dataQuestionResult.question, value);
-                ((TextView) myQuestion.findViewById(R.id.tv_view_conversation_content)).setText(friendly);
+                if (friendly.equals(dm.getResourceText(R.string.Unanswered))) {
+                    if (dataQuestionResult.question.irrelevant_default_state.toLowerCase().equals("all")) {
+                        friendly = dm.getResourceText(R.string.I_Do_Not_Care);
+                    } else {
+                        friendly = dm.getResourceText(R.string.No_Answer);
+                    }
+                }
+                tvContent.setText(friendly);
             } else {
                 shouldAdd = false;
             }

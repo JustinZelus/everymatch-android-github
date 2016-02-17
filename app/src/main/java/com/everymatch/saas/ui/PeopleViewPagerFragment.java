@@ -85,8 +85,10 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
         ((FrameLayout) view.findViewById(R.id.fragment_people_view_page_empty_view_container)).addView(mEmptyView);
         mEmptyView.setVisibility(View.GONE);
         mTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
-        mTabLayout.setBackgroundColor(DataStore.getInstance().getIntColor(EMColor.PRIMARY));
-        mTabLayout.setSelectedTabIndicatorColor(DataStore.getInstance().getIntColor(EMColor.WHITE));
+        mTabLayout.setBackgroundColor(ds.getIntColor(EMColor.WHITE));
+        mTabLayout.setSelectedTabIndicatorColor(ds.getIntColor(EMColor.PRIMARY));
+        mTabLayout.setTabTextColors(ds.getIntColor(EMColor.NIGHT), ds.getIntColor(EMColor.PRIMARY));
+
         /*how many fragment to save in memory*/
         viewPager.setOffscreenPageLimit(4);
         return view;

@@ -253,7 +253,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
         activityQuestions = mDataActivity.questions;
         /*get the  answers for the activity questions (not necessarily answered))*/
-        for (DataProfile profile : responseGetUser.profiles.activity_profiles) {
+        for (DataProfile profile : responseGetUser.profiles.getActivity_profiles()) {
             if (profile.client_id.equals(mDataActivity.client_id)) {
                 activityAnswers = profile.answers;
                 break;
@@ -337,7 +337,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                                         questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTitle(question, answer);
                                         JSONObject jsonObject = new JSONObject();
                                         questionAndAnswer.userAnswerData = jsonObject;
-                                        jsonObject.put("questions_id", question.questions_id);
+                                         jsonObject.put("questions_id", question.questions_id);
                                         jsonObject.put("status", "active");
                                         // jsonObject.put("value", QuestionUtils.updateValueItem(question.question_type, answer););
                                         QuestionUtils.updateValueItem(question.question_type, answer, questionAndAnswer.userAnswerData);
@@ -395,6 +395,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             case PARTICIPANTS:
                 QuestionAndAnswer setup = new QuestionAndAnswer(new DataQuestion());
                 setup.question.form_type = "setup";
+                setup.question.question_type = QuestionType.SETUP;
                 setup.question.mandatory = true;
                 setup.question.text_title = dm.getResourceText(R.string.Participants);
                 mQuestionsAndAnswers.add(0, setup);
@@ -741,6 +742,14 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                         progressDialog.dismiss();
 
                         if (create_mode == CREATE_MODE.CREATE_ACTIVITY) {
+                            String responseStr = ((ResponseString) baseResponse).responseStr;
+                            try {
+                                DataProfile dataProfile = new Gson().fromJson(responseStr, DataProfile.class);
+                                if (dataProfile != null)
+                                    ds.getUser().profiles.addOrUpdateProfile(dataProfile);
+                            } catch (Exception ex) {
+                                EMLog.e(TAG, "could not parse created profile: " + ex.getMessage());
+                            }
                             goToDiscoverScreen(mDataActivity.client_id);
                         } else {
 
@@ -748,9 +757,9 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                             ResponseString response = (ResponseString) baseResponse;
                             DataProfile profile = new Gson().fromJson(response.responseStr, DataProfile.class);
 
-                            for (int i = 0; i < DataStore.getInstance().getUser().profiles.activity_profiles.length; i++) {
-                                if (DataStore.getInstance().getUser().profiles.activity_profiles[i].client_id.equals(mDataActivity.client_id)) {
-                                    DataStore.getInstance().getUser().profiles.activity_profiles[i] = profile;
+                            for (int i = 0; i < DataStore.getInstance().getUser().profiles.getActivity_profiles().size(); i++) {
+                                if (DataStore.getInstance().getUser().profiles.getActivity_profiles().get(i).client_id.equals(mDataActivity.client_id)) {
+                                    DataStore.getInstance().getUser().profiles.getActivity_profiles().set(i, profile);
                                     break;
                                 }
                             }
@@ -920,7 +929,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
             DataAnswer[] activityAnswers = null;
 
-            for (DataProfile profile : responseGetUser.profiles.activity_profiles) {
+            for (DataProfile profile : responseGetUser.profiles.getActivity_profiles()) {
                 if (profile.client_id.equals(mDataActivity.client_id)) {
                     activityAnswers = profile.answers;
                     break;
@@ -965,7 +974,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
         if (create_mode == CREATE_MODE.CREATE_ACTIVITY) {
             fragment = getSupportFragmentManager().findFragmentByTag(QuestionnairePickActivityFragment.TAG);
             if (fragment != null && fragment.isVisible()) {
-                if (Utils.isArrayEmpty(ds.getUser().profiles.activity_profiles)) {
+                if ((ds.getUser().profiles.getActivity_profiles().size() == 0)) {
                     /*user has no profiles*/
                     showExitDialog();
                 } else {
@@ -1052,6 +1061,12 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
     @Override
     public void onUserClick(DataPeople user) {
+    }
+
+    public boolean isInEditMode() {
+        if (create_mode == CREATE_MODE.EDIT_ACTIVITY || create_mode == CREATE_MODE.EDIT_EVENT)
+            return true;
+        return false;
     }
 
     @Override

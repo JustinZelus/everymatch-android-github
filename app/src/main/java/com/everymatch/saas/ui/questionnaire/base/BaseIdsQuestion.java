@@ -70,9 +70,11 @@ public class BaseIdsQuestion extends QuestionnaireQuestionBaseFragment {
 
         String questionIdentifier = mQuestionAndAnswer.getAnswerIdentifier(ans);
         if (selectedAnswers.contains(questionIdentifier)) {
+            //we are removing
             if (selectedAnswers.size() == 1) {
-                /* don't delete the last mark */
-                return;
+                /* this is the last mark */
+                selectedAnswers.remove(questionIdentifier);
+                //return;
             }
             selectedAnswers.remove(questionIdentifier);
         } else {

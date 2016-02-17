@@ -1,13 +1,14 @@
 package com.everymatch.saas.ui.me;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -18,16 +19,20 @@ import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.QuestionType;
 import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataQuestion;
+import com.everymatch.saas.server.request_manager.ProfileManager;
 import com.everymatch.saas.server.responses.ResponseApplication;
 import com.everymatch.saas.server.responses.ResponseGetUser;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.singeltones.PusherManager;
+import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.base.BaseFragment;
+import com.everymatch.saas.ui.me.settings.SettingsFragment;
 import com.everymatch.saas.util.QuestionUtils;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.EventHeader;
-import com.everymatch.saas.view.FloatingEditTextLayout;
+import com.everymatch.saas.view.ViewSeperator;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -42,15 +47,18 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
     private static final int TAG_ANSWER = 101;
     private static final int MAX_IMAGE_SIZE = 800;
 
+    public static final int REQUEST_CODE_FIRST_NAME = 103;
+    public static final int REQUEST_CODE_LAST_NAME = 104;
+
     // Views
     private EventHeader mHeader;
-    private LinearLayout mQuestionContainer;
+    private LinearLayout mQuestionContainer, mStaticQuestionsHolder;
     private ImageView mUserImage;
     private ScrollView mScrollView;
     private View mImageContainer;
     private View mTextChangeImage;
-    private FloatingEditTextLayout fetFirstName, fetLastName;
-    private EditText etFirstName, etLastName;
+    // private FloatingEditTextLayout fetFirstName, fetLastName;
+    //private EditText etFirstName, etLastName;
 
     // Data
     private ResponseGetUser mMyUser;
@@ -86,11 +94,12 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         mScrollView = (ScrollView) view.findViewById(R.id.fragment_my_profile_scroll_view);
         mImageContainer = view.findViewById(R.id.fragment_my_profile_image_container);
         mQuestionContainer = (LinearLayout) view.findViewById(R.id.fragment_my_profile_question_container);
+        mStaticQuestionsHolder = (LinearLayout) view.findViewById(R.id.staticQuestionsHolder);
         mHeader = (EventHeader) view.findViewById(R.id.fragment_my_profile_event_header);
         mTextChangeImage = view.findViewById(R.id.fragment_my_profile_change_image_text);
 
-        etFirstName = (EditText) view.findViewById(R.id.etFirstName);
-        etLastName = (EditText) view.findViewById(R.id.etLastName);
+        //etFirstName = (EditText) view.findViewById(R.id.etFirstName);
+        //etLastName = (EditText) view.findViewById(R.id.etLastName);
 
         mTextChangeImage.setOnClickListener(this);
 
@@ -110,8 +119,8 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
             }
         });
 
-        fetFirstName = (FloatingEditTextLayout) view.findViewById(R.id.fetFirstName);
-        fetLastName = (FloatingEditTextLayout) view.findViewById(R.id.fetLastName);
+        //fetFirstName = (FloatingEditTextLayout) view.findViewById(R.id.fetFirstName);
+        //fetLastName = (FloatingEditTextLayout) view.findViewById(R.id.fetLastName);
     }
 
     /**
@@ -133,15 +142,18 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         mMyUser = DataStore.getInstance().getUser();
 
         /* update static questions */
-        fetFirstName.getEtValue().setText(mMyUser.first_name);
-        fetLastName.getEtValue().setText(mMyUser.last_name);
+        //fetFirstName.getEtValue().setText(mMyUser.first_name);
+        //fetLastName.getEtValue().setText(mMyUser.last_name);
 
-        etFirstName.setText(ds.getUser().first_name);
-        etLastName.setText(ds.getUser().last_name);
+        //etFirstName.setText(ds.getUser().first_name);
+        //etLastName.setText(ds.getUser().last_name);
         //***************************************
 
-        mQuestionContainer.removeAllViews();
+        //add static questions
+        addStaticQuestion();
 
+        //add dynamic questions
+        mQuestionContainer.removeAllViews();
         mApplication = DataStore.getInstance().getApplicationData();
 
         for (DataQuestion dataQuestion : mApplication.getUser_profile_questions()) {
@@ -151,6 +163,38 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
                 setQuestionData(dataQuestion);
             }
         }
+    }
+
+    private void addStaticQuestion() {
+        mStaticQuestionsHolder.removeAllViews();
+
+        //first name
+        EventDataRow edrFirstName = new EventDataRow(getActivity());
+        edrFirstName.setTitle(dm.getResourceText(R.string.FirstName));
+        edrFirstName.setDetails(ds.getUser().first_name);
+        edrFirstName.getLeftMediaContainer().setVisibility(View.GONE);
+        edrFirstName.setRightIconText(Consts.Icons.icon_Next);
+        edrFirstName.setTag("first");
+        edrFirstName.setLargePaddingTopBottom();
+        edrFirstName.setOnClickListener(this);
+
+        mStaticQuestionsHolder.addView(edrFirstName);
+        mStaticQuestionsHolder.addView(new ViewSeperator(getActivity(), null));
+
+        //last name
+        EventDataRow edrLastName = new EventDataRow(getActivity());
+        edrLastName.setTag("last");
+        edrLastName.setTitle(dm.getResourceText(R.string.LastName));
+        edrLastName.setDetails(ds.getUser().last_name);
+        edrLastName.getLeftMediaContainer().setVisibility(View.GONE);
+        edrLastName.setRightIconText(Consts.Icons.icon_Next);
+        edrLastName.setLargePaddingTopBottom();
+        edrLastName.setOnClickListener(this);
+
+        mStaticQuestionsHolder.addView(edrLastName);
+        mStaticQuestionsHolder.addView(new ViewSeperator(getActivity(), null));
+
+
     }
 
     private void setImageData(DataQuestion dataQuestion) {
@@ -206,6 +250,7 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         EventDataRow eventDataRow = new EventDataRow(getActivity());
         eventDataRow.setTitle(dataQuestion.text_title);
         eventDataRow.getDetailsView().setVisibility(View.VISIBLE);
+        eventDataRow.setLargePaddingTopBottom();
         eventDataRow.getLeftIcon().setVisibility(View.GONE);
         eventDataRow.getRightIcon().setVisibility(View.VISIBLE);
         eventDataRow.getRightIcon().setText(Consts.Icons.icon_Next);
@@ -223,7 +268,7 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         mQuestionContainer.addView(view);
         view.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
         view.getLayoutParams().height = Utils.dpToPx(1);
-        view.setBackgroundColor(DataStore.getInstance().getIntColor(EMColor.FOG));
+        view.setBackgroundColor(ds.getIntColor(EMColor.FOG));
         view.requestLayout();
     }
 
@@ -246,7 +291,49 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
 
     @Override
     public void onClick(View v) {
+        if (v.getTag() != null) {
+            //need to set first or last name
+
+            String type = (String) v.getTag();
+            Fragment fragment = null;
+            if (!Utils.isEmpty(type) && type.equals("first")) {
+                fragment = FirstLastNameFragment.getInstance(dm.getResourceText(R.string.FirstName), ds.getUser().first_name);
+                fragment.setTargetFragment(MyProfileFragment.this, REQUEST_CODE_FIRST_NAME);
+            } else if (!Utils.isEmpty(type) && type.equals("last")) {
+                fragment = FirstLastNameFragment.getInstance(dm.getResourceText(R.string.LastName), ds.getUser().last_name);
+                fragment.setTargetFragment(MyProfileFragment.this, REQUEST_CODE_LAST_NAME);
+            }
+
+            ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, fragment,
+                    SettingsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                    R.anim.enter_from_left, R.anim.exit_to_right);
+
+            return;
+        }
         mCallback.onQuestionClick((DataQuestion) v.getTag(R.id.TAG_1), (DataAnswer) v.getTag(R.id.TAG_2), (String) v.getTag(R.id.TAG_3));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_FIRST_NAME || requestCode == REQUEST_CODE_LAST_NAME) {
+            if (requestCode == REQUEST_CODE_FIRST_NAME) {
+                String value = data.getStringExtra(FirstLastNameFragment.EXTRA_VALUE);
+                ds.getUser().first_name = value;
+            }
+            if (requestCode == REQUEST_CODE_LAST_NAME) {
+                String value = data.getStringExtra(FirstLastNameFragment.EXTRA_VALUE);
+                ds.getUser().last_name = value;
+            }
+
+            showDialog(dm.getResourceText(R.string.Loading));
+            ProfileManager.UpdateProfile(new GenericCallback() {
+                @Override
+                public void onDone(boolean success, Object data) {
+                    stopDialog();
+                }
+            });
+        }
     }
 
     public interface MyProfileCallbacks {

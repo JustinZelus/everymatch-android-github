@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -88,17 +89,38 @@ public class Utils {
 
     public static String getDateStringFromDataDate(DataDate dataDate, String format) {
         try {
-            //Date date = getDateDromDataDate(dataDate);
-            //SimpleDateFormat fmt = new SimpleDateFormat(format);
-            //return fmt.format(date);
-            return dataDate.day + "." + dataDate.month + "." + dataDate.year;
+            Date date = getDateDromDataDate(dataDate);
+            SimpleDateFormat fmt = new SimpleDateFormat(format, getRealCulture());
+            return fmt.format(date);
+
+            //return dataDate.day + "." + dataDate.month + "." + dataDate.year;
         } catch (Exception ex) {
             return "";
         }
+    }
 
+    public static Locale getRealCulture() {
+        try {
+            return Locale.forLanguageTag(DataStore.getInstance().getCulture().replace("he-", "iw-"));
+        } catch (Exception ex) {
+            return Locale.getDefault();
+        }
+        //Locale.forLanguageTag(DataStore.getInstance().getCulture().replace("he-", "iw-")).toLanguageTag();
     }
 
     public static Date getDateDromDataDate(DataDate dataDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, dataDate.year);
+        cal.set(Calendar.MONTH, dataDate.month - 1);
+        cal.set(Calendar.DAY_OF_MONTH, dataDate.day);
+        cal.set(Calendar.HOUR_OF_DAY, dataDate.hour);
+        cal.set(Calendar.MINUTE, dataDate.minute);
+        cal.set(Calendar.SECOND, dataDate.second);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Calendar getCalendarFromDataDate(DataDate dataDate) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, dataDate.year);
         cal.set(Calendar.MONTH, dataDate.month);
@@ -107,7 +129,7 @@ public class Utils {
         cal.set(Calendar.MINUTE, dataDate.minute);
         cal.set(Calendar.SECOND, dataDate.second);
         cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
+        return cal;
     }
 
     public static Date getDateFromString(String stringDate) {
@@ -127,6 +149,18 @@ public class Utils {
         return fmt.format(date);
     }
 
+    public static String getDeviceLoacal() {
+        String answer = Locale.US.getLanguage().replace("iw", "il") + "-" + Locale.US.getCountry();
+
+        return answer;
+    }
+
+
+    public static String getPhoneCountryCode(Context context) {
+        TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String DEVICE_COUNTRY = manager.getNetworkCountryIso();
+        return DEVICE_COUNTRY;
+    }
 
     public static String getAddress(Context context, double lat, double lon) {
 

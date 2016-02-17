@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <com.everymatch.saas.view.BaseRelativeLayout
@@ -11,17 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        app:bg_color="primary_color"
-        >
+        app:bg_color="primary_color">
 
         <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvViewLoadMoreMessages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="LoadMore"
-            android:id="@+id/tvViewLoadMoreMessages"
-            app:text_color="night_color"
-            app:text_key="@string/LoadMore"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            app:text_color="white_color"
+            app:text_key="@string/LoadMore"
+            tools:text="LoadMore" />
     </com.everymatch.saas.view.BaseRelativeLayout>
 </LinearLayout>

@@ -38,7 +38,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.login_button:
                 onLoginButtonClick();
                 break;
@@ -57,8 +57,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
 
         //set Buttons background
         btnRegister.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton());
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
-                ds.getApplicationData().start.getModel());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), ds.getApplicationData().getStart().getModel());
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         CirclePageIndicator titleIndicator = (CirclePageIndicator) findViewById(R.id.pager_indicator);
@@ -97,6 +96,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
     @Override
     protected void onGetApplicationFailure() {
     }
+
     @Override
     public void onActionClick(boolean isLoginClick) {
 
@@ -117,11 +117,11 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
 
         mCurrentFragment = findFragment(LoginFragment.TAG);
 
-        if (mCurrentFragment == null){
+        if (mCurrentFragment == null) {
             mCurrentFragment = findFragment(RegistrationFragment.TAG);
         }
 
-        if (mCurrentFragment != null && mCurrentFragment.isVisible()){
+        if (mCurrentFragment != null && mCurrentFragment.isVisible()) {
 
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_down_animation);
 
@@ -151,7 +151,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
     @Override
     public void onForgotPasswordClick() {
         replaceFragment(R.id.activity_sign_main_layout, new RecoverPasswordFragment(),
-                RecoverPasswordFragment.TAG, true,RecoverPasswordFragment.TAG);
+                RecoverPasswordFragment.TAG, true, RecoverPasswordFragment.TAG);
     }
 
     @Override

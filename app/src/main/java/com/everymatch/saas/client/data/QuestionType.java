@@ -37,4 +37,5 @@ public class QuestionType {
     // Time types
     public static final String PACE = "pace";
     public static final String TIME = "time";
+    public static final String DISTANCE = "distance";
 }

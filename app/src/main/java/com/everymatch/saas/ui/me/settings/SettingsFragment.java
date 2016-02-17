@@ -1,16 +1,13 @@
 package com.everymatch.saas.ui.me.settings;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
@@ -113,28 +110,32 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
         edrTimeZone.getRightIcon().setVisibility(View.VISIBLE);
         edrTimeZone.setRightIconText(Consts.Icons.icon_Arrowright);
         edrTimeZone.setTitle(dm.getResourceText(R.string.Time_Zone));
+        edrTimeZone.setLargePaddingTopBottom();
         edrTimeZone.setOnClickListener(this);
-        edrTimeZone.setRightText(ds.getUser().user_settings.getTime_zone().title);
+        edrTimeZone.setDetails(ds.getUser().user_settings.getTime_zone().title);
 
         /** Units *********************************************/
         edrUnits = (EventDataRow) v.findViewById(R.id.edrUnits);
         edrUnits.setRightIconText(Consts.Icons.icon_Arrowright);
-        edrUnits.setRightText(ds.getUser().user_settings.getUnitsPromo());
+        edrUnits.setDetails(ds.getUser().user_settings.getUnitsPromo());
         edrUnits.setTitle(dm.getResourceText(R.string.Units));
+        edrUnits.setLargePaddingTopBottom();
         edrUnits.setOnClickListener(this);
 
         /** Currency *********************************************/
         edrCurrencies = (EventDataRow) v.findViewById(R.id.edrCurrency);
-        edrCurrencies.getRightIcon().setVisibility(View.VISIBLE);
+        edrCurrencies.setRightIconText(Consts.Icons.icon_Arrowright);
+        edrCurrencies.setDetails(ds.getUser().user_settings.currency);
         edrCurrencies.setTitle(dm.getResourceText(R.string.Currency));
-        edrCurrencies.setRightText(ds.getUser().user_settings.currency);
+        edrCurrencies.setLargePaddingTopBottom();
         edrCurrencies.setOnClickListener(this);
 
         /** Language *********************************************/
         edrLanguage = (EventDataRow) v.findViewById(R.id.edrLanguage);
         edrLanguage.setRightIconText(Consts.Icons.icon_Arrowright);
-        edrLanguage.setRightText(ds.getCulture());
+        edrLanguage.setDetails(ds.getCulture());
         edrLanguage.setTitle(dm.getResourceText(R.string.Culture_text));
+        edrLanguage.setLargePaddingTopBottom();
         edrLanguage.setOnClickListener(this);
 
         (v.findViewById(R.id.btnSettingsLogout)).setOnClickListener(this);
@@ -151,8 +152,8 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                     Constants.API_SERVICE_URL = "https://api.everymatch.me/";
                     Constants.AUTH2_SERVICE_URL = "https://oauth2.everymatch.me/";
                 } else {
-                    Constants.API_SERVICE_URL = "http://192.168.1.101:4433/";
-                    Constants.AUTH2_SERVICE_URL = "http://192.168.1.101:4431/";
+                    Constants.API_SERVICE_URL = "http://192.168.1.101:4434/";
+                    Constants.AUTH2_SERVICE_URL = "http://192.168.1.101:4432/";
                 }
             }
         });
@@ -161,6 +162,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
         }
 
         toggleButton.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
+        toggleButton.setVisibility(View.GONE);
 
         return v;
     }
@@ -176,34 +178,31 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     }
 
     private void updateUi() {
-        edrTimeZone.setRightText(ds.getUser().user_settings.getTime_zone().title);
-        edrUnits.setRightText(ds.getUser().user_settings.getUnitsPromo());
-        edrCurrencies.setRightText(ds.getUser().user_settings.currency);
+        edrTimeZone.setDetails(ds.getUser().user_settings.getTime_zone().title);
+        edrUnits.setDetails(ds.getUser().user_settings.getUnitsPromo());
+        edrCurrencies.setDetails(ds.getUser().user_settings.currency);
 
-        edrLanguage.setRightText(userSelectedCulture.text_title);
+        edrLanguage.setDetails(userSelectedCulture.text_title);
     }
 
     private void setHeader(View view) {
         mHeader = (EventHeader) view.findViewById(R.id.fragment_settings_header);
         mHeader.setListener(this);
-        mHeader.getBackButton().setText(canSave ? dm.getResourceText(R.string.Cancel) : Consts.Icons.icon_ArrowBack);
-        mHeader.getIconOne().setText(dm.getResourceText(getString(R.string.Save).toUpperCase()));
-        mHeader.getIconOne().setTextSize(TypedValue.COMPLEX_UNIT_SP, Constants.ACTION_TEXT_SIZE_SP);
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setVisibility(View.GONE);
-        mHeader.setTitle(canSave ? "" : getResources().getString(R.string.Settings));
+        mHeader.setSaveCancelMode(dm.getResourceText(R.string.Settings));
         setSaveEnable();
     }
 
     @Override
     public void onBackButtonClicked() {
-        if (canSave) {
-            /*user clicked cancel - restore values*/
-            /*ds.getUser().user_settings.weight = weight;
-            ds.getUser().user_settings.setDistance(distance);
-            ds.getUser().user_settings.default_culture = default_culture;*/
-        }
+        //restore values
+        UserSettings userSettings = new Gson().fromJson(userSettingsOriginalJson, UserSettings.class);
+        ds.getUser().user_settings.setTime_zone(userSettings.getTime_zone());
+        ds.getUser().user_settings.setDistance(userSettings.getDistance());
+        ds.getUser().user_settings.weight = userSettings.weight;
 
+        //no need to set language because it never changed until save click
         getActivity().onBackPressed();
     }
 
@@ -236,26 +235,6 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
 
     @Override
     public void onThreeIconClicked() {
-        if (!isClicked) {
-            mHeader.getTitle().setVisibility(View.GONE);
-            mHeader.getEditTitle().setVisibility(View.VISIBLE);
-            mHeader.getEditTitle().setFocusable(true);
-
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInputFromWindow(mHeader.getEditTitle().getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
-
-            isClicked = true;
-        } else {
-            mHeader.getTitle().setVisibility(View.VISIBLE);
-            mHeader.setTitle(getResources().getString(R.string.Settings));
-            mHeader.getEditTitle().setVisibility(View.GONE);
-
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-
-            isClicked = false;
-        }
-
     }
 
     /**
@@ -362,7 +341,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                 ResponseApplication.DataCurrency dataCurrency = (ResponseApplication.DataCurrency) data.getSerializableExtra(EXTRA_CURRENCY);
                 if (dataCurrency != null) {
                     ds.getUser().user_settings.currency = dataCurrency.code;
-                    edrCurrencies.getRightText().setText("" + dataCurrency.code);
+                    updateUi();
                 }
                 break;
         }
@@ -431,12 +410,16 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                 try {
                     Log.i(TAG, "RequestUpdateSettings onSuccess");
                     String responseStr = ((ResponseString) baseResponse).responseStr;
+                    //JSONObject settings = new JSONObject(responseStr);
+                    //settings.getJSONObject("units").getString("distance");
                     UserSettings userSettings = new Gson().fromJson(responseStr, UserSettings.class);
                     if (userSettings != null) {
                         EMLog.d(TAG, "Update Setting Success!");
                         canSave = false;
                         setSaveEnable();
-                        ds.getUser().user_settings = userSettings;
+                        //we are not updating user settings because we already changed them
+                        //ds.getUser().user_settings = userSettings;
+
                         //update user language preference
                         Preferences.getInstance().setLanguage(ds.getCulture());
 
@@ -446,6 +429,8 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             getActivity().finish();
+                        } else {
+                            getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception ex) {
@@ -469,7 +454,5 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     public void setSaveEnable() {
         mHeader.getIconOne().setAlpha(canSave ? 1f : 0.5f);
         mHeader.getIconOne().setEnabled(canSave);
-        mHeader.getBackButton().setText(canSave ? dm.getResourceText(R.string.Cancel) : Consts.Icons.icon_ArrowBack);
-        mHeader.setTitle(canSave ? "" : getResources().getString(R.string.Settings));
     }
 }

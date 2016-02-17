@@ -119,7 +119,7 @@ public class Crop {
         start(context, fragment, REQUEST_CROP);
     }
 
-    
+
     /**
      * Send the crop Intent with a custom request code
      *

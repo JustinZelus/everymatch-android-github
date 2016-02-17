@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.everymatch.saas.view.BaseLinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/event_header"
@@ -9,55 +8,57 @@
     android:clickable="true"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/margin_m"
-    android:paddingRight="@dimen/margin_m"
     app:bg_color="background_color">
 
     <com.everymatch.saas.view.BaseTextView
         android:id="@+id/view_empty_text_title"
+        style="@style/EmTextStyleHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_m"
-        android:layout_marginBottom="@dimen/margin_m"
-        style="@style/EmTextStyleHeading"
+        android:layout_margin="@dimen/margin_s"
         app:text_color="night_color"
         tools:text="No Matches Yet" />
 
     <com.everymatch.saas.view.BaseIconTextView
         android:id="@+id/view_empty_image_icon"
-        android:layout_width="170dp"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:textSize="150dp"
-        app:text_color="fog_color"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_marginBottom="@dimen/margin_m"
-        android:layout_weight="1" />
+        android:gravity="center"
+        android:textSize="120sp"
+        app:text_color="fog_color" />
 
     <com.everymatch.saas.view.BaseTextView
         android:id="@+id/view_empty_text_summary"
+        style="@style/EmTextStyleMeta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_m"
+        android:layout_marginBottom="@dimen/margin_s"
+        android:layout_marginLeft="@dimen/margin_s"
+        android:layout_marginRight="@dimen/margin_s"
         android:gravity="center_horizontal"
-        style="@style/EmTextStyleNormal"
         app:text_color="moon_color" />
 
     <com.everymatch.saas.view.BaseButton
         android:id="@+id/view_empty_button_first"
+        style="@style/EmTextStyleButton"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginBottom="@dimen/margin_s"
+        android:layout_marginLeft="@dimen/margin_m"
+        android:layout_marginRight="@dimen/margin_m"
         app:bg="rounded"
-        style="@style/EmTextStyleButton"
         app:text_color="background_color" />
 
     <com.everymatch.saas.view.BaseButton
         android:id="@+id/view_empty_button_second"
+        style="@style/EmTextStyleButton"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="@dimen/margin_m"
+        android:layout_marginRight="@dimen/margin_m"
         app:bg="stroke"
-        style="@style/EmTextStyleButton"
         app:text_color="primary_color" />
 
 </com.everymatch.saas.view.BaseLinearLayout>

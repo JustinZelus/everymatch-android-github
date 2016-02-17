@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +25,6 @@ import com.everymatch.saas.view.RangeTimePickerDialog;
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * Created by PopApp_laptop on 18/10/2015.
@@ -37,13 +34,14 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
 
     public static final String EXTRA_TIME_ZONE = "extra.time.zone";
     private static final int REQUEST_CODE_DIALOG_FRAGMENT = 2;
-    public static final String TIME_FORMAT = "dd.MM.yyyy";
+    //public static final String TIME_FORMAT = "dd.MM.yyyy";
+    public static final String TIME_FORMAT = "EEE, MMM d, yyyy";
 
     //Data
-    private boolean wasToSet;
     DataDate dataDateFrom = new DataDate();
     DataDate dataDateTo = new DataDate();
     DataTimeZone mDataTimeZone;
+    private int timeZoneIndex;
 
 
     //Views
@@ -61,6 +59,7 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
 
         Calendar cFrom = Calendar.getInstance();
         cFrom.set(Calendar.MINUTE, 0);
+        cFrom.add(Calendar.HOUR, 1);
 
         dataDateFrom.year = cFrom.get(Calendar.YEAR);
         dataDateFrom.month = cFrom.get(Calendar.MONTH) + 1;
@@ -77,9 +76,13 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         dataDateTo.year = cTo.get(Calendar.YEAR);
         dataDateTo.month = cTo.get(Calendar.MONTH) + 1;
         dataDateTo.day = cTo.get(Calendar.DAY_OF_MONTH);
-        dataDateTo.hour = cTo.get(Calendar.HOUR_OF_DAY);
-        dataDateTo.minute = cTo.get(Calendar.MINUTE);
-        dataDateTo.second = cTo.get(Calendar.SECOND);
+        dataDateTo.hour = 23;
+        dataDateTo.minute = 59;
+        dataDateTo.second = 59;
+
+        mDataTimeZone = ds.getUser().user_settings.getTime_zone();
+        timeZoneIndex = ds.getApplicationData().getTimeZoneIndex(mDataTimeZone.country_code, mDataTimeZone.utc);
+        mDataTimeZone = ds.getApplicationData().getTime_zone().get(timeZoneIndex);
     }
 
     @Override
@@ -104,38 +107,45 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         tvToTime = (BaseTextView) view.findViewById(R.id.tvScheduleToTime);
         tvToTime.setOnClickListener(this);
         tvOptional = (BaseTextView) view.findViewById(R.id.tvScheduleOptional);
-        tvOptional.setText("(Optional)");
+        tvOptional.setText(dm.getResourceText(R.string.Set_End_Time));
         tvOptional.setOnClickListener(this);
 
         mQuestionToLine = view.findViewById(R.id.question_schedule_to_line);
         mQuestionToLine.setOnClickListener(this);
         mToContainer = view.findViewById(R.id.question_schedule_to_container);
 
+        tvTimeZoneValue = (BaseTextView) view.findViewById(R.id.tvSettingsTimeZoneValue);
+        tvTimeZoneValue.setOnClickListener(this);
+
+        updateUi();
+        recoverAnswer();
+        setAnswer();
+    }
+
+    @Override
+    protected void setHeader() {
+        super.setHeader();
+
+        if (mActivity.isInEditMode())
+            mHeader.setSaveCancelMode(dm.getResourceText(R.string.Edit_Event_Schedule));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //allow next always
+        setTitleEnabled(true);
+        setHeader();
+    }
+
+    private void updateUi() {
         tvFromDate.setText(Utils.getDateStringFromDataDate(dataDateFrom, TIME_FORMAT));
         tvFromTime.setText(dataDateFrom.getHourString());
 
         tvToDate.setText(Utils.getDateStringFromDataDate(dataDateTo, TIME_FORMAT));
         tvToTime.setText(dataDateTo.getHourString());
 
-        tvTimeZoneValue = (BaseTextView) view.findViewById(R.id.tvSettingsTimeZoneValue);
-        if (mDataTimeZone != null) {
-            setTimeZoneText();
-        } else {
-            mDataTimeZone = ds.getUser().user_settings.getTime_zone();
-            setTimeZoneText();
-        }
-
-        if (!TextUtils.isEmpty(mQuestionAndAnswer.userAnswerStr))
-            recoverAnswer();
-        else if (mQuestionAndAnswer.question.default_value != null) {
-            recoverDefaultAnswer();
-        } else {
-            setAnswer();
-        }
-
-        if (wasToSet) {
-            mToContainer.setVisibility(View.VISIBLE);
-        }
+        setTimeZoneText();
     }
 
     private void setTimeZoneText() {
@@ -146,23 +156,12 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
 
     @Override
     public void recoverDefaultAnswer() {
-        try {
-            String str = mQuestionAndAnswer.question.default_value;
-            setAnswer(str);
-            recoverAnswer();
-        } catch (Exception e) {
-            e.printStackTrace();
-            EMLog.e(TAG, "could not parse default value on questionId: " + mQuestionAndAnswer.question.questions_id);
-        }
+        recoverAnswer();
     }
 
     private void recoverAnswer() {
-        if (TextUtils.isEmpty(mQuestionAndAnswer.userAnswerStr)) {
-            setAnswer();
-            setTitleEnabled(false);
-            mDataTimeZone = ds.getApplicationData().getTimeZoneBySystem();
+        if (mQuestionAndAnswer.userAnswerData == null || !mQuestionAndAnswer.userAnswerData.has("value"))
             return;
-        }
         //update UI according to previews answer
         try {
             JSONObject value = mQuestionAndAnswer.userAnswerData.getJSONObject("value");
@@ -180,60 +179,59 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
             dataDateTo.minute = value.getJSONObject("to").getInt("minute");
             dataDateTo.second = value.getJSONObject("to").getInt("second");
 
+            //hide optional marl if user already clicked it
+            if (!(dataDateTo.hour == 23 && dataDateTo.minute == 59))
+                showOptionalFiled(false);
 
-            //hide optional marl since user alreadt clicked it
-            tvOptional.performClick();
-
-            if (mDataTimeZone != null) {
-                setTimeZoneText();
-            } else {
             /* get time zone */
             /* there is a problem here : i can't get the right timezone by the given country_code and gmt */
-                JSONObject time_zone = value.getJSONObject("from").getJSONObject("time_zone");
-                String countryCode = time_zone.getString("country_code");
-                String gmt = time_zone.getString("gmt");
+            JSONObject time_zone = value.getJSONObject("from").getJSONObject("time_zone");
+            //String countryCode = time_zone.getString("country_code");
+            //String gmt = time_zone.getString("gmt");
+            timeZoneIndex = time_zone.getInt("index");
+            if (mDataTimeZone == null)
+                mDataTimeZone = ds.getApplicationData().getTime_zone().get(timeZoneIndex);
 
-                if (!TextUtils.isEmpty(countryCode) && !TextUtils.isEmpty(gmt)) {
-                    this.mDataTimeZone = ds.getApplicationData().getTimeZoneByCountryCodeAndGmt(countryCode, gmt);
-                    if (mDataTimeZone != null) {
-                        setTimeZoneText();
-                    } else {
-                        this.mDataTimeZone = ds.getApplicationData().getTimeZoneBySystem();
-                        setTimeZoneText();
-                    }
-                }
-            }
-            tvFromDate.setText(dataDateFrom.getYearString());
-            tvFromTime.setText(dataDateFrom.getHourString());
-
-            tvToDate.setText(dataDateTo.getYearString());
-            tvToTime.setText(dataDateTo.getHourString());
+            updateUi();
 
         } catch (Exception ex) {
             EMLog.e(TAG, ex.getMessage());
         }
 
-        setAnswer(mQuestionAndAnswer.userAnswerStr);
+        setAnswer();
+    }
+
+    private void showOptionalFiled(boolean addHour) {
+        mToContainer.setVisibility(View.VISIBLE);
+        tvOptional.setVisibility(View.GONE);
+
+        if (!addHour)
+            return;
+
+        // update to to be one hour after from
+        Calendar calendar = Utils.getCalendarFromDataDate(dataDateFrom);
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+
+        dataDateTo.year = calendar.get(Calendar.YEAR);
+        dataDateTo.month = calendar.get(Calendar.MONTH);
+        dataDateTo.day = calendar.get(Calendar.DAY_OF_MONTH);
+        dataDateTo.hour = calendar.get(Calendar.HOUR_OF_DAY);
+        dataDateTo.minute = calendar.get(Calendar.MINUTE);
+        dataDateTo.second = calendar.get(Calendar.SECOND);
+
+        updateUi();
+        setAnswer();
     }
 
     @Override
     public void onClick(View v) {
+        Calendar calendar;
         switch (v.getId()) {
             case R.id.tvScheduleOptional:
+                showOptionalFiled(true);
 
-                //TODO hour after
-
-               /* dataDateTo.year = dataDateFrom.year;
-                dataDateTo.month = dataDateFrom.month;
-                dataDateTo.day = dataDateFrom.day;
-                dataDateTo.hour = dataDateFrom.;
-                dataDateTo.minute = 59;
-                dataDateTo.second = 59;*/
-
-                mToContainer.setVisibility(View.VISIBLE);
-                tvOptional.setVisibility(View.GONE);
                 break;
-            case R.id.EdrTimeZone:
+            case R.id.tvSettingsTimeZoneValue:
                 FragmentTimeZones dialogTimeZones = new FragmentTimeZones();
                 dialogTimeZones.setTargetFragment(this, REQUEST_CODE_DIALOG_FRAGMENT);
                 ((QuestionnaireActivity) getActivity()).replaceFragment(R.id.fragment_container_full, dialogTimeZones,
@@ -244,31 +242,39 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
                 DatePickerDialog fromDialog = new DatePickerDialog(mActivity, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        /*if (!dateInputCheck(true, year, monthOfYear, dayOfMonth)) {
+                            showInvalidTimePopup();
+                            return;
+                        }*/
+                        //date is fine, check hour
                         dataDateFrom.year = year;
-                        dataDateFrom.month = monthOfYear;
+                        dataDateFrom.month = monthOfYear + 1;
                         dataDateFrom.day = dayOfMonth;
-                        tvFromDate.setText(Utils.getDateStringFromDataDate(dataDateFrom, TIME_FORMAT));
 
-                        if (wasToSet) {
-
-                            // Move the "to" date to one hour late in the same day
-                            if (Utils.isAfterDate(dataDateFrom, dataDateTo)) {
-                                dataDateTo.day = dataDateFrom.day;
-                                dataDateTo.month = dataDateFrom.month + 1;
-                                dataDateTo.year = dataDateFrom.year;
-                                dataDateTo.hour = dataDateFrom.hour + 1;
-                                dataDateTo.minute = dataDateFrom.minute;
-                                dataDateTo.second = dataDateFrom.second;
-
-                                tvToDate.setText(Utils.getDateStringFromDataDate(dataDateTo, TIME_FORMAT));
-                                tvToTime.setText(dataDateTo.getHourString());
+                        //if from later than to
+                        Utils.getDateDromDataDate(dataDateFrom).after(Utils.getDateDromDataDate(dataDateTo));
+                        {
+                            dataDateTo.year = dataDateFrom.year;
+                            dataDateTo.month = dataDateFrom.month;
+                            dataDateTo.day = dataDateFrom.day;
+                            if (tvOptional.getVisibility() != View.VISIBLE) {
+                                fixHoursIfNeeded();
                             }
                         }
 
+                        updateUi();
                         setAnswer();
                     }
-                }, dataDateFrom.year, dataDateFrom.month, dataDateFrom.day);
-                fromDialog.getDatePicker().setMinDate(new Date().getTime() - 1000);
+                }, dataDateFrom.year, dataDateFrom.month - 1, dataDateFrom.day);
+                //set min date to now
+                //fromDialog.getDatePicker().setMinDate(new Date().getTime() - 1000);
+                fromDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
+                //set max date to dateTo
+                // Calendar calMax = Utils.getCalendarFromDataDate(dataDateTo);
+                //calMax.add(Calendar.MONTH, -1);
+                Calendar m = Calendar.getInstance();
+                m.add(Calendar.YEAR, 5);
+                fromDialog.getDatePicker().setMaxDate(m.getTime().getTime());
                 fromDialog.show();
                 break;
             case R.id.tvScheduleFromTime:
@@ -277,66 +283,50 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         dataDateFrom.hour = hourOfDay;
                         dataDateFrom.minute = minute;
-                        tvFromTime.setText(dataDateFrom.getHourString());
 
-                        if (wasToSet) {
-                            // Move the "to" date to one hour late
-                            if (Utils.isAfterOrSameHour(dataDateFrom, dataDateTo)) {
-                                dataDateTo.hour = dataDateFrom.hour + 1;
-                                dataDateTo.minute = dataDateFrom.minute;
-                                dataDateTo.second = dataDateFrom.second;
-                                tvToTime.setText(dataDateTo.getHourString());
+                        if (dataDateFrom.isSameDay(dataDateTo)) {
+                            if (tvOptional.getVisibility() != View.VISIBLE) {
+                                fixHoursIfNeeded();
                             }
                         }
-
+                        updateUi();
                         setAnswer();
-
                     }
                 }, dataDateFrom.hour, dataDateFrom.minute, true);
-
                 fromHourDialog.show();
 
                 break;
             case R.id.question_schedule_to_line:
             case R.id.tvScheduleToDate:
 
-                int year = dataDateTo.year;
-                int month = dataDateTo.month;
-                int day = dataDateTo.day;
-
-                if (!wasToSet) {
-                    year = dataDateFrom.year;
-                    month = dataDateFrom.month;
-                    day = dataDateFrom.day;
-                }
-
                 DatePickerDialog toDialog = new DatePickerDialog(mActivity, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                        if (!wasToSet) { // First "to" value will be to one hour from "from" value
-                            dataDateTo.hour = dataDateFrom.hour + 1;
-                            dataDateTo.minute = dataDateFrom.minute;
-                            tvToTime.setText(dataDateTo.getHourString());
-                        }
-
-                        wasToSet = true;
-
-                        mToContainer.setVisibility(View.VISIBLE);
                         dataDateTo.year = year;
                         dataDateTo.month = monthOfYear + 1;
                         dataDateTo.day = dayOfMonth;
-                        tvToDate.setText(Utils.getDateStringFromDataDate(dataDateTo, TIME_FORMAT));
+
+                        if (dataDateFrom.isSameDay(dataDateTo)) {
+                            Utils.getDateDromDataDate(dataDateFrom).after(Utils.getDateDromDataDate(dataDateTo));
+                            fixHoursIfNeeded();
+                        }
+
+                        updateUi();
                         setAnswer();
+
                     }
-                }, year, month, day);
+                }, dataDateTo.year, dataDateTo.month - 1, dataDateTo.day);
 
                 // Set minimum date to "from" date
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, dataDateFrom.year);
-                calendar.set(Calendar.MONTH, dataDateFrom.month);
-                calendar.set(Calendar.DAY_OF_MONTH, dataDateFrom.day);
-                toDialog.getDatePicker().setMinDate(calendar.getTimeInMillis() - 1000);
+                Calendar calMin = Utils.getCalendarFromDataDate(dataDateFrom);
+                calMin.add(Calendar.MONTH, -1);
+                toDialog.getDatePicker().setMinDate(calMin.getTimeInMillis());
+
+                //set max to 5 year
+                Calendar max = Calendar.getInstance();
+                max.add(Calendar.YEAR, 5);
+                toDialog.getDatePicker().setMaxDate(max.getTimeInMillis());
+
                 toDialog.show();
 
                 break;
@@ -344,22 +334,94 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
                 new TimePickerDialog(mActivity, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                        // To date can't be after From date
-                        if (Utils.isDataDateToday(dataDateFrom) && (hourOfDay < dataDateFrom.hour ||
-                                hourOfDay == dataDateFrom.hour && minute <= dataDateFrom.minute)) {
-                            showInvalidTimePopup();
-                            return;
-                        }
-
                         dataDateTo.hour = hourOfDay;
                         dataDateTo.minute = minute;
-                        tvToTime.setText(dataDateTo.getHourString());
+                        if (dataDateFrom.isSameDay(dataDateTo)) {
+                            if (!Utils.getDateDromDataDate(dataDateFrom).before(Utils.getDateDromDataDate(dataDateTo)))
+                                fixHoursIfNeeded();
+                        }
+
+                        updateUi();
                         setAnswer();
                     }
                 }, dataDateTo.hour, dataDateTo.minute, true).show();
                 break;
         }
+    }
+
+    private void fixHoursIfNeeded() {
+        Calendar to = Utils.getCalendarFromDataDate(dataDateFrom);
+
+        to.add(Calendar.HOUR_OF_DAY, 1);
+
+        dataDateTo.year = to.get(Calendar.YEAR);
+        dataDateTo.month = to.get(Calendar.MONTH);
+        dataDateTo.day = to.get(Calendar.DAY_OF_MONTH);
+        dataDateTo.hour = to.get(Calendar.HOUR_OF_DAY);
+        dataDateTo.minute = to.get(Calendar.MINUTE);
+        dataDateTo.second = to.get(Calendar.SECOND);
+
+
+/*
+        if (dataDateFrom.hour >= dataDateTo.hour) {
+            if (dataDateTo.hour > 1) {
+                dataDateFrom.hour = dataDateTo.hour - 1;
+            } else {
+                //set hours to now
+                Calendar cFrom = Calendar.getInstance();
+                dataDateFrom.hour = cFrom.get(Calendar.HOUR_OF_DAY);
+                dataDateFrom.minute = 0;
+                dataDateFrom.second = 0;
+
+                // Set one rounded hour from now
+                cFrom.add(Calendar.HOUR_OF_DAY, 1);
+                dataDateTo.hour = cFrom.get(Calendar.HOUR_OF_DAY);
+                dataDateTo.minute = 0;
+            }
+        }*/
+
+    }
+
+    /**
+     * return's true if to is after from
+     */
+    private boolean dateInputCheck(boolean dataIsFrom, int year, int monthOfYear, int dayOfMonth) {
+        if (dataIsFrom) {
+            // dataDataFrom values
+            if (year > dataDateTo.year)
+                return false;
+            if (year < dataDateTo.year)
+                return true;
+
+            // this is the same year
+            if (monthOfYear > dataDateTo.month)
+                return false;
+            if (monthOfYear < dataDateTo.month)
+                return true;
+
+            //this is also the same month
+            if (dayOfMonth > dataDateTo.day)
+                return false;
+
+        } else {
+            // dataDataTo values
+            if (dataDateFrom.year > year)
+                return false;
+            if (dataDateFrom.year < year)
+                return true;
+
+            // this is the same year
+            if (dataDateFrom.month > monthOfYear)
+                return false;
+            if (dataDateFrom.month < monthOfYear)
+                return true;
+
+            //this is also the same month
+            if (dataDateTo.day > dayOfMonth)
+                return false;
+
+        }
+        return true;
     }
 
     private void showInvalidTimePopup() {
@@ -415,7 +477,10 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         switch (requestCode) {
             case REQUEST_CODE_DIALOG_FRAGMENT:
                 DataTimeZone dataTimeZone = (DataTimeZone) data.getSerializableExtra(EXTRA_TIME_ZONE);
+                int index = data.getIntExtra(FragmentTimeZones.EXTRA_TIME_ZONE_INDEX, timeZoneIndex);
                 if (dataTimeZone != null) {
+                    timeZoneIndex = index;
+                    //mDataTimeZone = ds.getApplicationData().getTime_zone().get(index);
                     mDataTimeZone = dataTimeZone;
                     setTimeZoneText();
                 }
@@ -427,13 +492,10 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         JSONObject jsonObject = new JSONObject();
         try {
             JSONObject timeZoneJson = new JSONObject();
-            if (mDataTimeZone == null) {
-                timeZoneJson.put("country_code", mActivity.getResources().getConfiguration().locale.getCountry());
-                timeZoneJson.put("gmt", new GregorianCalendar().getTimeZone().getRawOffset() / 60 / 60 / 1000);
-            } else {
-                timeZoneJson.put("country_code", mDataTimeZone.country_code);
-                timeZoneJson.put("gmt", "" + mDataTimeZone.getGmt());
-            }
+
+            timeZoneJson.put("country_code", mDataTimeZone.country_code);
+            timeZoneJson.put("gmt", "" + mDataTimeZone.getGmt());
+            timeZoneJson.put("index", "" + timeZoneIndex);
 
             jsonObject.put("year", dataDate.year);
             jsonObject.put("month", dataDate.month);

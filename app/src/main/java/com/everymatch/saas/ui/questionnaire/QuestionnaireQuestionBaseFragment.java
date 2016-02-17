@@ -1,6 +1,8 @@
 package com.everymatch.saas.ui.questionnaire;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -14,11 +16,11 @@ import com.everymatch.saas.Constants;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.QuestionType;
-import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataQuestion;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventHeader;
 import com.google.gson.Gson;
 
@@ -40,11 +42,11 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
     public static final String ARG_ROLE_ANSWER_ID = "arg.role.answer.id";
     private static final String QUESTION_NUMBER_FORMAT = "%s/%s";
 
-
     /*Data*/
     QuestionnaireActivity mActivity;
     protected QuestionAndAnswer mQuestionAndAnswer;
     protected String originalDataJson;
+    protected String units = "";
 
     protected boolean mHaveAnswer = false;
     boolean isSubQuestion = false;
@@ -125,12 +127,17 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
 
         setHeader();
 
-        //if we came from summery...disable save until changes has made
-        if (fromSummery)
-            setTitleEnabled(false);
+        //if we have a valid value -> set next button enabled
+        try {
+            if (mQuestionAndAnswer.userAnswerData != null && mQuestionAndAnswer.userAnswerData.has("value") && !Utils.isEmpty(mQuestionAndAnswer.userAnswerData.get("value").toString())) {
+                setTitleEnabled(true);
+            }
+        } catch (Exception ex) {
+        }
+
     }
 
-    private void setHeader() {
+    protected void setHeader() {
         mHeader.setListener(this);
         mHeader.getBackButton().setText(Consts.Icons.icon_Details);
         mHeader.getIconOne().setText(dm.getResourceText(R.string.Next));
@@ -141,22 +148,24 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
         mHeader.getIconThree().setVisibility(View.GONE);
         mHeader.setTitle("");
 
-        if (isSubQuestion) {
+
+        if (fromSummery || fromAnythingElse) {
+            mHeader.getIconOne().setText(dm.getResourceText(R.string.Done));
+            mHeader.getBackButton().setText(Consts.Icons.icon_New_Close);
+            mHeader.getBackButton().setVisibility(View.VISIBLE);
+            setTitleEnabled(false);
+        }
+
+        if (isSubQuestion || this instanceof QuestionnaireQuestionRole) {
             mHeader.getBackButton().setVisibility(View.VISIBLE);
             mHeader.getBackButton().setText(Consts.Icons.icon_New_Close);
             mHeader.getIconOne().setText(dm.getResourceText(R.string.Done));
-        }
-
-        if (fromSummery || fromAnythingElse) {
-            mHeader.getIconOne().setText(dm.getResourceText(R.string.Save));
-            mHeader.getBackButton().setText(Consts.Icons.icon_New_Close);
-            mHeader.getBackButton().setVisibility(View.VISIBLE);
             setTitleEnabled(false);
         }
     }
 
     protected void showQuestionNumber() {
-        if (isSubQuestion || fromSummery || fromAnythingElse)
+        if (isSubQuestion || fromSummery || fromAnythingElse || this instanceof QuestionnaireQuestionRole)
             return;
 
         int mandatoryCount = 0;
@@ -189,8 +198,11 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
         mHaveAnswer = true;
         setTitleEnabled(true);
 
+        //if (!isSubQuestion)
+        units = mQuestion.getUnits();
+
         // the way the user see the answer
-        mQuestionAndAnswer.userAnswerStr = answer;
+        mQuestionAndAnswer.userAnswerStr = answer + " " + units;
         if (mQuestionAndAnswer.question.question_type.equals(QuestionType.IMAGE_UPLOAD))
             mQuestionAndAnswer.userAnswerStr = dm.getResourceText(R.string.Change_Picture);
 
@@ -288,14 +300,19 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
 
     @Override
     public void onBackButtonClicked() {
-        if (fromSummery) {
+        if (mActivity.isInEditMode()) {
+            mActivity.forceBack();
+            return;
+        }
+
+        if (fromSummery || this instanceof QuestionnaireQuestionRole) {
             restorePreviewsData();
-            getFragmentManager().popBackStack();
+            getFragmentManager().popBackStackImmediate();
             return;
         }
 
         if (fromAnythingElse) {
-            getFragmentManager().popBackStack();
+            getFragmentManager().popBackStackImmediate();
             return;
         }
 
@@ -312,32 +329,16 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
         //if (!mHaveAnswer) return;
         mQuestionAndAnswer.isAnsweredConfirmedByClickingNext = true;
         if (isSubQuestion) {
+            //notify role fragment about answer
+            getTargetFragment().onActivityResult(QuestionnaireQuestionRole.REQUEST_CODE_ROLE_SUB_QUESTION, Activity.RESULT_OK, new Intent());
             mActivity.getSupportFragmentManager().popBackStackImmediate();
             return;
         }
 
-        // check if answer have dependent question
-        if (mQuestionAndAnswer.question.have_dependent_questions && mQuestionAndAnswer.question.answers != null && mQuestionAndAnswer.question.answers.length > 0) {
-            // find the answer in answers array
-            DataAnswer pickedAnswer = null;
-            for (DataAnswer dataAnswer : mQuestionAndAnswer.question.answers) {
-                if (dataAnswer.text_title != null && dataAnswer.text_title.equalsIgnoreCase(mQuestionAndAnswer.userAnswerStr)) {
-                    pickedAnswer = dataAnswer;
-                    break;
-                }
-            }
-
-            // add dependent question to mandatory questions array
-            if (pickedAnswer != null && pickedAnswer.questions != null) {
-                for (int i = 0; i < pickedAnswer.questions.length; i++) {
-                    QuestionAndAnswer dependentQuestion = new QuestionAndAnswer(pickedAnswer.questions[i]);
-                    dependentQuestion.isDependentsQuestion = true;
-
-                    // add the question to position mQuestionIndex to be the next to be displayed
-                    mActivity.mQuestionsAndAnswers.add(mActivity.mQuestionIndex + 1, dependentQuestion);
-                }
-            }
+        if (mActivity.isInEditMode() && !fromSummery) {
+            mActivity.sendAnswersToServer();
         }
+
 
         if (fromSummery) {
             updateSummeryData();

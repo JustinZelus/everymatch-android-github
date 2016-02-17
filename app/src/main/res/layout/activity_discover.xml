@@ -20,16 +20,25 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/discoverMenu"
+        android:layout_above="@+id/line"
         android:layout_below="@+id/eventHeader">
 
     </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/discoverMenu"
+        android:id="@+id/line"
+        android:background="@color/fog"
+        android:layout_height="1dp"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/discoverMenu"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
+        android:background="@color/white"
         android:orientation="horizontal">
 
         <com.everymatch.saas.view.DiscoverMenuItem
@@ -46,7 +55,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:dmi_icon_code="\ue692"
-            app:dmi_title_res="@string/Events" />
+            app:dmi_title_res="@string/events" />
 
         <com.everymatch.saas.view.DiscoverMenuItem
             android:id="@+id/dmiPeople"
@@ -56,20 +65,43 @@
             app:dmi_icon_code="\ue64f"
             app:dmi_title_res="@string/People" />
 
-        <com.everymatch.saas.view.DiscoverMenuItem
-            android:id="@+id/dmiNotification"
+        <RelativeLayout
+            android:id="@+id/dmiNotificationHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:dmi_icon_code="\ue651"
-            app:dmi_title_res="@string/Notification" />
+            android:layout_weight="1">
+
+            <com.everymatch.saas.view.DiscoverMenuItem
+                android:id="@+id/dmiNotification"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:dmi_icon_code="\ue902"
+                app:dmi_title_res="@string/Notification" />
+
+            <com.everymatch.saas.view.BaseTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:padding="2dp"
+                android:layout_margin="3dp"
+                android:gravity="center"
+                android:id="@+id/tvBadge"
+                android:textSize="11sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_badge"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                app:text_color="white_color"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
 
         <com.everymatch.saas.view.DiscoverMenuItem
             android:id="@+id/dmiMore"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:dmi_icon_code="\ue630"
+            app:dmi_icon_code="\ue906"
             app:dmi_title_res="@string/More" />
 
 

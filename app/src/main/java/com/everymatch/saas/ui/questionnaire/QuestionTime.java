@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class QuestionTime extends QuestionnaireQuestionBaseFragment {
     public final String TAG = getClass().getName();
 
-    private enum TIME_MODE {TIME_MODE_SEC, TIME_MODE_MIN, TIME_MODE_HOUR}
+    public enum TIME_MODE {TIME_MODE_SEC, TIME_MODE_MIN, TIME_MODE_HOUR}
 
     //pace -> need to convert unit
     //time -> don't need to convert unit
@@ -79,6 +79,7 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
 
         recoverAnswerData();
         setAnswer();
+
     }
 
     private void loadQuestionData() {
@@ -106,6 +107,39 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
         }
 
 
+        String time = dm.getResourceText(R.string.Seconds_Short);
+        if (time_mode == TIME_MODE.TIME_MODE_MIN)
+            time = dm.getResourceText(R.string.Minutes_Short);
+        if (time_mode == TIME_MODE.TIME_MODE_HOUR)
+            time = dm.getResourceText(R.string.Hours_Short);
+
+        units = mQuestion.getUnits();
+        tvTitle.setText(mQuestion.text_title + "\n" + units);
+
+        /*if (mQuestion.question_type.equals(QuestionType.TIME)) {
+            //add units
+            if (mQuestion.units != null && mQuestion.units.containsKey("value") && mQuestion.units.get("value") != null) {
+                units = "(" + time + ")";
+                tvTitle.setText(mQuestion.text_title + "\n" + units);
+            }
+        }
+
+        if (mQuestion.question_type.equals(QuestionType.PACE)) {
+            //add units
+            if (mQuestion.units != null && mQuestion.units.containsKey("value") && mQuestion.units.get("value") != null) {
+                units = "(" + time + "/" + dm.getResourceText(mQuestion.units.get("value").toString()) + ")";
+                tvTitle.setText(mQuestion.text_title + "\n" + units);
+            }
+        }
+
+        if (mQuestion.question_type.equals(QuestionType.DISTANCE)) {
+            //add units
+            if (mQuestion.units != null && mQuestion.units.containsKey("value") && mQuestion.units.get("value") != null) {
+                units = "(" + dm.getResourceText(mQuestion.units.get("value").toString() + ")");
+                tvTitle.setText(mQuestion.text_title + "\n" + units);
+            }
+        }*/
+
         switch (time_mode) {
             case TIME_MODE_SEC: // hide min and hour
                 wheelMin.setVisibility(View.GONE);
@@ -118,6 +152,8 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
                 getView().findViewById(R.id.tvDotsLeft).setVisibility(View.GONE);
                 break;
             case TIME_MODE_HOUR:
+                wheelSec.setVisibility(View.GONE);
+                getView().findViewById(R.id.tvDotsRight).setVisibility(View.GONE);
                 break;
         }
 
@@ -157,18 +193,25 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
         if (time_mode == TIME_MODE.TIME_MODE_HOUR) {
             //prepare hours
             for (int i = mMin / 60 / 60; i < mMax / 60 / 60; i++) {
-                Minutes.add(String.format("%02d", i));
+                Hours.add(String.format("%02d", i));
             }
 
             //prepare minutes
-            for (int i = mMin / 60; i < mMax / 60; i++) {
+            for (int i = 0; i < 60; i += mStep / 60) {
                 Minutes.add(String.format("%02d", i));
             }
 
-            //prepare seconds
-            for (int i = 0; i < 60; i += mStep) {
-                Seconds.add(String.format("%02d", i));
+            //prepare Minutes LastArray
+            int leftMinutes = (mMax % 60);
+            for (int i = 0; i <= leftMinutes; i += mStep) {
+                MinutesLastArray.add(String.format("%02d", i));
             }
+
+            /*//prepare seconds
+            for (int i = 0; i < 60; i += mStep / 60 / 60) {
+                Seconds.add(String.format("%02d", i));
+            }*/
+
 
         }
     }
@@ -198,7 +241,7 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
                 int secIndex = wheelSec.getItems().indexOf("" + String.format("%02d", sec)) - 1;
                 wheelSec.setSeletion(secIndex > 0 ? secIndex : 0);
 
-                int hourIndex = wheelSec.getItems().indexOf("" + String.format("%02d", hour)) - 1;
+                int hourIndex = wheelHour.getItems().indexOf("" + String.format("%02d", hour)) - 1;
                 wheelHour.setSeletion(hourIndex > 0 ? hourIndex : 0);
 
             } catch (Exception ex) {
@@ -215,7 +258,7 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
     private void checkLogic() {
         if (wheelHour.getSeletedIndex() == Hours.size() - 1 && time_mode == TIME_MODE.TIME_MODE_HOUR) {
             // we are on the last minute check if we past the last ellawed second
-            if (wheelMin.getSeletedIndex() > MinutesLastArray.size()) {
+            if (wheelMin.getSeletedIndex() > Math.max(MinutesLastArray.size() - 1, 0)) {
                 //we past it!!!
                 wheelMin.setSeletion(MinutesLastArray.size() - 1);
             }
@@ -223,7 +266,7 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
 
         if (wheelMin.getSeletedIndex() == Minutes.size() - 1 && time_mode == TIME_MODE.TIME_MODE_MIN) {
             // we are on the last minute check if we past the last ellawed second
-            if (wheelSec.getSeletedIndex() > SecondsLastArray.size()) {
+            if (wheelSec.getSeletedIndex() > Math.max(SecondsLastArray.size() - 1, 0)) {
                 //we past it!!!
                 wheelSec.setSeletion(SecondsLastArray.size() - 1);
             }

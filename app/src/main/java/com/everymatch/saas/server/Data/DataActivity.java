@@ -40,6 +40,15 @@ public class DataActivity implements Serializable {
     public class DataUrl implements Serializable {
         public String url;
     }
+
+    public DataEvent_Activity getEvent_activityById(String id) {
+        for (DataEvent_Activity event : getEvents()) {
+            if (event.event_id.equals(id)) {
+                return event;
+            }
+        }
+        return null;
+    }
 }
 
 

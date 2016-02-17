@@ -137,9 +137,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                app:text_color="night_color"
+                                app:text_color="primary_color"
                                 android:text="Add Profile"
-                                app:text_key="@string/Add_Profile" />
+                                app:text_key="@string/Add_activity_profile" />
                         </RelativeLayout>
 
                         <LinearLayout

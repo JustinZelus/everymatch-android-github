@@ -1,5 +1,14 @@
 package com.everymatch.saas.server.Data;
 
+import com.everymatch.saas.R;
+import com.everymatch.saas.client.data.DataManager;
+import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.FormType;
+import com.everymatch.saas.client.data.QuestionType;
+import com.everymatch.saas.client.data.Types;
+import com.everymatch.saas.ui.questionnaire.QuestionTime;
+import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.Utils;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -11,6 +20,8 @@ import java.util.HashMap;
  * Created by Dacid on 29/06/2015.
  */
 public class DataQuestion implements Serializable {
+    public final String TAG = getClass().getName();
+
     public int questions_id;
     public boolean have_dependent_questions;
     public DataAnswer answers[];
@@ -115,4 +126,83 @@ public class DataQuestion implements Serializable {
         return ans;
     }
 
+    private String getTimeUnits() {
+        String answer = "";
+        try {
+
+            float mStep = step == 0 ? 1 : step;
+            String[] rangeStr = range.split(",");
+            int mMin = Integer.parseInt(rangeStr[0]);
+            int mMax = Integer.parseInt(rangeStr[1]);
+
+            //need to change the unit according to user unit
+            if (question_type.equals(QuestionType.PACE)) {
+                if (DataStore.getInstance().getUser().user_settings.getDistance().equals(Types.UNIT_MILE)) {
+                    EMLog.d(TAG, "user in mile...");
+                    mMin = (int) ((double) mMin * 1.61);
+                    mMax = (int) ((double) mMax * 1.61);
+                }
+            }
+
+            QuestionTime.TIME_MODE time_mode = null;
+            if (mMax < 60) {
+                time_mode = QuestionTime.TIME_MODE.TIME_MODE_SEC;
+            } else if (mMax >= 60 && mStep < 60) {
+                time_mode = QuestionTime.TIME_MODE.TIME_MODE_MIN;
+            } else if ((mMax >= 60 && mStep >= 60) || mMax > 3600) {
+                time_mode = QuestionTime.TIME_MODE.TIME_MODE_HOUR;
+            }
+
+            DataManager dm = DataManager.getInstance();
+            String time = dm.getResourceText(R.string.Seconds_Short);
+            if (time_mode == QuestionTime.TIME_MODE.TIME_MODE_MIN)
+                time = dm.getResourceText(R.string.Minutes_Short);
+            if (time_mode == QuestionTime.TIME_MODE.TIME_MODE_HOUR)
+                time = dm.getResourceText(R.string.Hours_Short);
+
+            if (question_type.equals(QuestionType.TIME)) {
+                //add units
+                //if (units != null && units.containsKey("value") && units.get("value") != null) {
+                answer = "(" + time + ")";
+                // }
+            }
+
+            if (question_type.equals(QuestionType.PACE)) {
+                //add units
+                if (units != null && units.containsKey("value") && units.get("value") != null) {
+                    answer = "(" + time + "/" + dm.getResourceText(units.get("value").toString()) + ")";
+                }
+            }
+
+            if (question_type.equals(QuestionType.DISTANCE)) {
+                //add units
+                if (units != null && units.containsKey("value") && units.get("value") != null) {
+                    answer = "(" + dm.getResourceText(units.get("value").toString() + ")");
+                }
+            }
+
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
+        return answer;
+    }
+
+    public String getUnits() {
+        String answer = "";
+        try {
+            if (form_type.equals(FormType.TIME)) {
+                answer = getTimeUnits();
+                return answer;
+            }
+
+            if (units != null && units.containsKey("value") && units.get("value") != null && !Utils.isEmpty(units.get("value").toString())) {
+                answer = "(" + units.get("value").toString() + ")";
+            }
+
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
+
+        return answer;
+    }
 }

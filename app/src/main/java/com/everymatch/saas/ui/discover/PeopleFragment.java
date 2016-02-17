@@ -60,7 +60,7 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
     private TextView mTextAboutTitle;
     private EventDataRow mTextAge;
     private EventDataRow mTextLocation;
-    private EventDataRow mTextPersonality;
+    private EventDataRow edrPersonality;
     private FrameLayout mEventsContainer;
     private LinearLayout mActivitiesContainer;
     private TextView mTextActivityProfileTitle;
@@ -120,7 +120,7 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
         mTextHowYouMatch = (TextView) view.findViewById(R.id.fragment_people_text_how_your_match);
         mTextAge = (EventDataRow) view.findViewById(R.id.fragment_people_data_row_age);
         mTextLocation = (EventDataRow) view.findViewById(R.id.fragment_people_data_row_location);
-        mTextPersonality = (EventDataRow) view.findViewById(R.id.fragment_people_data_row_personality);
+        edrPersonality = (EventDataRow) view.findViewById(R.id.fragment_people_data_row_personality);
         mEventsContainer = (FrameLayout) view.findViewById(R.id.fragment_people_events_container);
         mActivitiesContainer = (LinearLayout) view.findViewById(R.id.fragment_people_activities_container);
         mTextActivityProfileTitle = (TextView) view.findViewById(R.id.fragment_people_activity_profile_title);
@@ -205,13 +205,15 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
                             if (success) {
                                 DataMatchResults matchResults = (DataMatchResults) data;
                                 mTextHowYouMatch.setTag(matchResults);
-                                mTextHowYouMatch.setText("" + matchResults.match + "%");
+                                mTextHowYouMatch.setText("" + Math.round(matchResults.match) + "%");
                             }
                         }
                     });
                 } else {
+                    DataMatchResults dataMatchResults = (DataMatchResults) mTextHowYouMatch.getTag();
                     // this is the second call - go to match activity
-                    MatchActivity.start(getActivity(), (DataMatchResults) mTextHowYouMatch.getTag(), RequestMatch.MATCH_TYPE_USER_TO_USER, mUserFullObject, null);
+                    if (Math.round(dataMatchResults.match) > 0)
+                        MatchActivity.start(getActivity(), dataMatchResults, RequestMatch.MATCH_TYPE_USER_TO_USER, mUserFullObject, null);
                 }
             }
         });
@@ -220,26 +222,13 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
         mTextAge.setTitle(dm.getResourceText(R.string.Age));
         mTextAge.setRightText(mUserFullObject.age);
 
-        // Location
-        mTextLocation.setTitle(dm.getResourceText(R.string.Location));
-        if (mUserFullObject.location != null) {
-            String location = "";
-
-            if (!TextUtils.isEmpty(mUserFullObject.location.city)) {
-                location += mUserFullObject.location.city;
-
-                if (!TextUtils.isEmpty(mUserFullObject.location.country_code)) {
-                    location += ", " + mUserFullObject.location.country_code;
-                }
-
-            } else if (!TextUtils.isEmpty(mUserFullObject.location.country_code)) {
-                location += mUserFullObject.location.country_code;
-            }
-
-            mTextLocation.setRightText(location);
+        if (!Utils.isEmpty(mUserFullObject.gender)) {
+            edrPersonality.setTitle(dm.getResourceText(R.string.Gender));
+            edrPersonality.setRightText(mUserFullObject.gender);
+        } else {
+            edrPersonality.setVisibility(View.GONE);
         }
 
-        mTextPersonality.setTitle(dm.getResourceText("Personality"));
 
         // About
         if (TextUtils.isEmpty(mUserFullObject.about)) {
@@ -300,7 +289,7 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
 
                 //if i didn't fill this activity there is no reason to show match
                 if (!ds.getUser().hasActivity(dataActivity.client_id)) {
-                    eventDataRow.getRightText().setVisibility(View.INVISIBLE);
+                    eventDataRow.getRightText().setVisibility(View.GONE);
                 }
 
                 mActivitiesContainer.addView(eventDataRow);

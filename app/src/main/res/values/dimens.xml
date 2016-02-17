@@ -57,12 +57,14 @@
     <dimen name="margin_s">20dp</dimen>
     <dimen name="margin_m">40dp</dimen>
     <dimen name="margin_l">70dp</dimen>
+    <dimen name="margin_xl">120dp</dimen>
 
-    <dimen name="text_size_heading">32dp</dimen>
-    <dimen name="text_size_normal">16dp</dimen>
-    <dimen name="text_size_meta">14dp</dimen>
-    <dimen name="text_size_service">12dp</dimen>
-    <dimen name="text_size_button">14dp</dimen>
+
+    <dimen name="text_size_heading">32sp</dimen>
+    <dimen name="text_size_normal">16sp</dimen>
+    <dimen name="text_size_meta">14sp</dimen>
+    <dimen name="text_size_service">12sp</dimen>
+    <dimen name="text_size_button">14sp</dimen>
 
     <dimen name="people_carousel_height">70dp</dimen>
     <dimen name="fab_margin">16dp</dimen>

@@ -219,14 +219,14 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
                 meCallback.onSettingsClick();
                 break;
             case R.id.btnMeAddProfile:
-                if (ds.getUser().profiles.activity_profiles.length == ds.getApplicationData().getActivities().length) {
+                if (ds.getUser().profiles.getActivity_profiles().size() == ds.getApplicationData().getActivities().length) {
                     Toast.makeText(getActivity(), "You already filled all profiles!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 meCallback.onAddProfileClick();
                 break;
             case R.id.tvAddProfile:
-                if (ds.getUser().profiles.activity_profiles.length == ds.getApplicationData().getActivities().length) {
+                if (ds.getUser().profiles.getActivity_profiles().size() == ds.getApplicationData().getActivities().length) {
                     Toast.makeText(getActivity(), "You already filled all profiles!", Toast.LENGTH_SHORT).show();
                     return;
                 }

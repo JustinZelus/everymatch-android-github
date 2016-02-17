@@ -32,7 +32,14 @@ public class DataConversation extends BaseResponse implements Serializable {
     private DataChatMessage last_message;
     public DataDate updated_date;
     public String created_by;
-    public String conversation_title;
+
+    public String getConversation_title() {
+        if (conversation_title == null)
+            conversation_title = "";
+        return conversation_title;
+    }
+
+    private String conversation_title;
     public String updated_by;
 
-   }
+}

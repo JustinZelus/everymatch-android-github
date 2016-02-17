@@ -23,4 +23,5 @@ public class ResponseOtherUser extends BaseResponse implements Serializable {
     public String about;
     public boolean is_friend;
     public String image_url;
+    public String gender;
 }

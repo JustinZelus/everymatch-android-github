@@ -34,6 +34,8 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
 
     private static final String TAG = EditEventFragment.class.getSimpleName();
     private static final int CODE_EDIT_EVENT = 19;
+
+    // Data
     private DataEvent mEvent;
 
     // Views
@@ -88,39 +90,31 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
 
         String profileSummary = "";
 
-        for (DataActivity activity : ds.getApplicationData().getActivities()) {
+        DataActivity activity = ds.getApplicationData().getActivityClientIdById(Integer.parseInt(mEvent.activity_client_id));
+        DataEvent_Activity event = activity.getEvent_activityById(mEvent.dataPublicEvent.event_id);
 
-            if (activity.client_id.equals(mEvent.activity_client_id)) {
+        for (DataQuestion question : event.questions) {
 
-                for (DataEvent_Activity event : activity.getEvents()) {
-
-                    if (event.event_id.equals(mEvent.dataPublicEvent.event_id)) {
-
-                        for (DataQuestion question : event.questions) {
-
-                            if (question.is_important) {
-
-                                if (TextUtils.isEmpty(profileSummary)) {
-                                    profileSummary += question.text_title;
-                                } else {
-                                    profileSummary += ", " + question.text_title;
-                                }
-                            }
-
-                            if (question.form_type.equals(FormType.SCHEDULE)) {
-                                mRowSchedule.setTag(R.id.TAG_1, question);
-                            } else if (question.form_type.equals(FormType.LOCATION)) {
-                                mRowLocation.setTag(R.id.TAG_1, question);
-                            }
-                        }
-
-                        break;
-                    }
+            if (question.is_important) {
+                if (TextUtils.isEmpty(profileSummary)) {
+                    profileSummary += question.text_title;
+                } else {
+                    profileSummary += ", " + question.text_title;
                 }
             }
+
+            if (question.form_type.equals(FormType.SCHEDULE)) {
+                mRowSchedule.setTag(R.id.TAG_1, question);
+            } else if (question.form_type.equals(FormType.LOCATION)) {
+                mRowLocation.setTag(R.id.TAG_1, question);
+            }
+
+            //break;
         }
 
+
         mRowProfile.setDetails(profileSummary);
+
 
         // Location
         mRowLocation.setDetails(mEvent.dataPublicEvent.getLocation().text_address);
@@ -159,7 +153,6 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
         eventHeader.getIconThree().setVisibility(View.GONE);
         eventHeader.setTitle(DataManager.getInstance().getResourceText(R.string.EventEdit));
     }
-
 
     @Override
     public void onBackButtonClicked() {

@@ -10,4 +10,7 @@ public class DataProfile implements Serializable{
     public String type;
     public DataAnswer answers[];
     public String client_id;
+    public DataDate updated_date;
+    public String users_id;
+    public DataDate created_date;
 }

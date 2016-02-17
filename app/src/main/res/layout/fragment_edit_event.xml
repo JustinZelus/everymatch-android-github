@@ -46,7 +46,7 @@
                     android:layout_marginBottom="1dp"
                     app:bg_color="white_color"
                     app:iconText="icon-Details"
-                    app:text_key="@string/Event_Profile"
+                    app:text_key="@string/Details"
                     app:left_icon_visible="true"
                     tools:text="About,Status,Location,Personality,recommendations..."
                     app:row_title="Profile" />

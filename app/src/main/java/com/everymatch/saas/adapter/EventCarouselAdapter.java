@@ -14,7 +14,10 @@ import android.widget.TextView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataManager;
+import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.Data.DataEvent;
+import com.everymatch.saas.util.ShapeDrawableUtils;
 import com.everymatch.saas.util.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -46,6 +49,8 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
         public ImageView image;
         public ImageView imagePlaceHolder;
         public RelativeLayout rlHolder;
+        public RelativeLayout rlActivityLabelHolder;
+        public TextView tvActivityLabel;
 
         public EventViewHolder(View v) {
             super(v);
@@ -56,13 +61,15 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
             image = (ImageView) v.findViewById(R.id.view_event_image);
             imagePlaceHolder = (ImageView) v.findViewById(R.id.view_event_image_placeholder);
             rlHolder = (RelativeLayout) v.findViewById(R.id.rlEventHolder);
+            rlActivityLabelHolder = (RelativeLayout) v.findViewById(R.id.rlActivityLabelHolder);
+            tvActivityLabel = (TextView) v.findViewById(R.id.tvActivityLabel);
         }
     }
 
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_event, viewGroup, false);
-        if (getItemCount() == 1 ) {
+        if (getItemCount() == 1) {
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             int width = display.getWidth();
@@ -109,6 +116,14 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
                 Picasso.with(viewHolder.image.getContext()).load(Utils.getImageUrl
                         (event.dataPublicEvent.image_url, imageWidth, imageHeight, "crop")).into(viewHolder.image);
             }
+
+            //activity label
+            String title = DataStore.getInstance().getApplicationData().getActivityTitleByEventId(event.client_id);
+            viewHolder.tvActivityLabel.setText(title);
+            viewHolder.rlActivityLabelHolder.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton(DataStore.getInstance().getIntColor(EMColor.WHITE),0));
+
+            if (Utils.isEmpty(title))
+                viewHolder.rlActivityLabelHolder.setVisibility(View.GONE);
         }
     }
 

@@ -27,6 +27,8 @@ import com.everymatch.saas.view.EventHeader;
  */
 public class FragmentTimeZones extends BaseFragment implements View.OnClickListener, EventHeader.OnEventHeader, AdapterTimeZone.TimeZoneCallback {
     public static final String TAG = "FragmentTimeZones";
+    public static final String EXTRA_TIME_ZONE_INDEX = "extra.time.zone.index";
+
 
     ListView mListView;
     AdapterTimeZone mAdapter;
@@ -148,9 +150,10 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
     }
 
     @Override
-    public void onSelectedTimeZone(DataTimeZone dataTimeZone) {
+    public void onSelectedTimeZone(DataTimeZone dataTimeZone, int index) {
         Intent result = new Intent();
         result.putExtra(SettingsFragment.EXTRA_TIME_ZONE, dataTimeZone);
+        result.putExtra(EXTRA_TIME_ZONE_INDEX, index);
         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }

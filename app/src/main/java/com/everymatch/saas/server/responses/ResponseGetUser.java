@@ -41,6 +41,7 @@ public class ResponseGetUser extends BaseResponse {
     public String email;
     public String phone;
     public String registered_app_id;
+    public String gender;
     //public int time_zone;
     //public String country_code;
 
@@ -120,7 +121,23 @@ public class ResponseGetUser extends BaseResponse {
     public class Profiles implements Serializable {
 
         public DataUserProfile user_profile;
-        public DataProfile activity_profiles[];
+        private ArrayList<DataProfile> activity_profiles;
+
+        public ArrayList<DataProfile> getActivity_profiles() {
+            if (activity_profiles == null)
+                activity_profiles = new ArrayList<>();
+            return activity_profiles;
+        }
+
+        public void addOrUpdateProfile(DataProfile dataProfile) {
+            for (DataProfile profile : getActivity_profiles()) {
+                if (profile.client_id.equals(dataProfile.client_id)) {
+                    profile = dataProfile;
+                    return;
+                }
+            }
+            getActivity_profiles().add(dataProfile);
+        }
     }
 
     public class Notifications {
@@ -149,20 +166,26 @@ public class ResponseGetUser extends BaseResponse {
         return new String[0];
     }
 
+    public int getUnread() {
+        int answer = getInbox().getUnread();
+        return answer;
+    }
+
+    public void incrementUnread() {
+        getInbox().setUnread(getUnread() + 1);
+    }
+
     public class DataInbox implements Serializable {
-        //public HashMap<String,String> unread;
         public int unread;
 
         public int getUnread() {
-            /*if(unread==null)
-                return 0;
-
-            return  0;*/
             return unread;
         }
-        /*public DataInbox() {
-            this.unread = 0;
-        }*/
+
+        public void setUnread(int n) {
+            unread = n;
+        }
+
     }
 
     public HashMap<String, DataEventHolder> getAllEvents() {

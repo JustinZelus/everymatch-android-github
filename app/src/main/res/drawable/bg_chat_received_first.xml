@@ -1,9 +1,0 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-android:shape="rectangle">
-<corners
-    android:radius="0sp"
-    android:bottomLeftRadius="@dimen/chatMessageCornerRadius"
-    android:bottomRightRadius="@dimen/chatMessageCornerRadius"
-    android:topRightRadius="@dimen/chatMessageCornerRadius" />
-<solid android:color="@color/primary"></solid>
-</shape>

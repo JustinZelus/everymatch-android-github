@@ -89,10 +89,6 @@
     <string name="loadMoreMessages">Load more Messages</string>
     <string name="discover_matches_title">Discover Matches</string>
 
-    <!--INBOX  -->
-    <string name="reply">Reply</string>
-    <string name="archive">Archive</string>
-    <string name="report_abuse">Report abuse</string>
 
     <!--SETUP QUESTIONS  -->
     <string name="pleaseSelectSpotsNumber">Please Select The Number Of \nSpots In Your Event</string>

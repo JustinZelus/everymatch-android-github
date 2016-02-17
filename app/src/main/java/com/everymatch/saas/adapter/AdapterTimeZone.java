@@ -55,7 +55,8 @@ public class AdapterTimeZone extends EmBaseAdapter<DataTimeZone> {
         final BaseIconTextView icon = (BaseIconTextView) v.findViewById(R.id.tvTimeZoneIcon);
 
         title.setText(item.title);
-        subTitle.setText(item.country_code);
+        subTitle.setText(item.utc);
+        v.setTag(position);
 
 
         icon.setText(selectedTimeZone.equals(item) ? Consts.Icons.icon_StatusPositive : Consts.Icons.icon_selectEmpty);
@@ -64,9 +65,10 @@ public class AdapterTimeZone extends EmBaseAdapter<DataTimeZone> {
             @Override
             public void onClick(View v) {
                 selectedTimeZone = item;
+                int index = (int) v.getTag();
                 notifyDataSetChanged();
                 if (callback != null)
-                    callback.onSelectedTimeZone(item);
+                    callback.onSelectedTimeZone(item, index);
             }
         });
         return v;
@@ -74,10 +76,10 @@ public class AdapterTimeZone extends EmBaseAdapter<DataTimeZone> {
 
     @Override
     public boolean filterObject(DataTimeZone dataTimeZone, String constraint) {
-        return dataTimeZone.title.toLowerCase().startsWith(constraint.toLowerCase());
+        return dataTimeZone.title.toLowerCase().contains(constraint.toLowerCase());
     }
 
     public interface TimeZoneCallback {
-        void onSelectedTimeZone(DataTimeZone dataTimeZone);
+        void onSelectedTimeZone(DataTimeZone dataTimeZone, int index);
     }
 }

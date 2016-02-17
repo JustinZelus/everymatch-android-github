@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingRight="@dimen/margin_xs"
+                android:padding="7dp"
                 app:text_color="primary_color"
                 tools:text="01/01/2015" />
 
@@ -47,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/margin_s"
+                android:padding="7dp"
                 app:text_color="primary_color"
                 tools:text="00:00" />
         </LinearLayout>
@@ -100,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:padding="7dp"
                 android:paddingRight="@dimen/margin_xs"
                 app:text_color="primary_color"
                 tools:text="01/01/2015" />
@@ -109,6 +112,7 @@
                 style="@style/EmTextStyleNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="7dp"
                 android:paddingRight="@dimen/margin_s"
                 app:text_color="primary_color"
                 tools:text="00:00" />
@@ -123,6 +127,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:paddingRight="@dimen/margin_s"
+            android:padding="7dp"
             app:text_color="moon_color"
             tools:text="(optional)" />
     </RelativeLayout>
@@ -140,13 +145,13 @@
         <com.everymatch.saas.view.BaseTextView
             android:id="@+id/EdrTimeZone"
             style="@style/EmTextStyleNormal"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_xs"
-            android:paddingTop="@dimen/margin_xs"
             app:first_letter_capitalize="true"
             app:text_color="night_color"
-            app:text_key="@string/Time_Zone" />
+            app:text_key="@string/Time_Zone"
+            tools:text="TimeZone"
+            android:layout_centerVertical="true" />
 
         <com.everymatch.saas.view.BaseTextView
             android:id="@+id/tvSettingsTimeZoneValue"
@@ -155,7 +160,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/icon"
-            android:paddingRight="@dimen/margin_xs"
+            android:padding="@dimen/margin_xs"
             android:text=""
             app:text_color="primary_color" />
 

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.RangeSeekBar;
 
 /**
@@ -19,12 +20,13 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
     //Views
     TextView mValueTextView;
     RangeSeekBar<Integer> mRangeBar;
+    boolean isTouched = false;
+
 
     //Data
     int mMin, mMax;
     float mStep;
     boolean sendAnswerOnChange;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,12 +56,20 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
 
         listener.onRangeSeekBarValuesChanged(mRangeBar, mMin, mMax);
 
+        //add units
+        if (mQuestion.units != null && mQuestion.units.containsKey("value") && !Utils.isEmpty(mQuestion.units.get("value").toString())) {
+            units = "(" + mQuestion.units.get("value").toString() + ")";
+            units = mQuestion.getUnits();
+            tvTitle.setText(mQuestion.text_title + "\n" + units);
+        }
+
         recoverAnswer();
     }
 
     RangeSeekBar.OnRangeSeekBarChangeListener<Integer> listener = new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
         @Override
         public void onRangeSeekBarValuesChanged(RangeSeekBar rangeSeekBar, Integer low, Integer high) {
+
             //input check
             if (low == high) {
                 if (high < mMax)
@@ -68,10 +78,12 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
                     low--;
                 }
             }
-            mValueTextView.setText(low.toString() + " - " + high);
+            mValueTextView.setText(isTouched ? low.toString() + " - " + high : "");
+            isTouched = true;
             if (sendAnswerOnChange)
                 setAnswer(mValueTextView.getText().toString());
             sendAnswerOnChange = true;
+
         }
 
     };

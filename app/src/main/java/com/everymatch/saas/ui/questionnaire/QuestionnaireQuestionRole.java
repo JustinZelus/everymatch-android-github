@@ -1,5 +1,7 @@
 package com.everymatch.saas.ui.questionnaire;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -12,9 +14,8 @@ import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataQuestion;
 import com.everymatch.saas.singeltones.Consts;
-import com.everymatch.saas.singeltones.YesNoCallback;
 import com.everymatch.saas.ui.base.BaseFragment;
-import com.everymatch.saas.ui.dialog.DialogYesNo;
+import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.ViewSeperator;
@@ -25,8 +26,9 @@ import java.util.ArrayList;
  * Created by PopApp_laptop on 20/12/2015.
  */
 public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment {
+    public final String TAG = getClass().getName();
     public static final String ARG_DATA_ANSWER = "arg.answers";
-    public static final int ACTION_ROLE_QUESTION = 200;
+    public static final int REQUEST_CODE_ROLE_SUB_QUESTION = 200;
 
     /*Data*/
     private DataAnswer mAnswer;
@@ -56,6 +58,28 @@ public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        //here we need to set title enabled not only if we have userAnswerData (see on base)
+        try {
+            for (DataQuestion question : mAnswer.questions) {
+                if (question.mandatory) {
+                    QuestionAndAnswer qaa = mQuestionAndAnswer.getQaaByQuestionId(mAnswer.answer_id, question.questions_id);
+                    if (qaa.userAnswerData == null ||
+                            !qaa.userAnswerData.has("value") ||
+                            Utils.isEmpty(qaa.userAnswerData.get("value").toString())) {
+                        setTitleEnabled(false);
+                        return;
+                    }
+                }
+            }
+            setTitleEnabled(true);
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
+    }
+
+    @Override
     public void recoverDefaultAnswer() {
 
     }
@@ -64,18 +88,12 @@ public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvTitle.setText(mAnswer.text_title);
-        setHeader();
         llQuestionsHolder = (LinearLayout) view.findViewById(R.id.questionsHolder);
         addQuestionsRows();
     }
 
-    private void setHeader() {
-        mHeader.getBackButton().setVisibility(View.VISIBLE);
-        mHeader.getBackButton().setText(dm.getResourceText(R.string.Cancel));
-        mHeader.getIconOne().setText(dm.getResourceText(R.string.Done));
-    }
-
     private void addQuestionsRows() {
+        llQuestionsHolder.removeAllViews();
         for (DataQuestion question : mAnswer.questions) {
             EventDataRow edr = new EventDataRow(getActivity());
             edr.setTag(question);
@@ -112,29 +130,23 @@ public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment
                 edr.setDetails(qaa.userAnswerStr);
                 edr.getDetailsView().setTextColor(ds.getIntColor(EMColor.PRIMARY));
             } else {
-                edr.setDetails(qaa.question.mandatory ? dm.getResourceText(R.string.Unanswered) : qaa.question.irrelevant_default_state);
+                if (qaa.question.mandatory) {
+                    edr.setDetails(dm.getResourceText(R.string.Unanswered));
+                } else {
+                    if (qaa.question.irrelevant_default_state.equals("all"))
+                        edr.setDetails(dm.getResourceText(R.string.All));
+                    else
+                        edr.setDetails(dm.getResourceText(R.string.None));
+                }
                 edr.getDetailsView().setTextColor(ds.getIntColor(EMColor.MOON));
             }
         }
     }
 
     @Override
-    public void onBackButtonClicked() {
-        new DialogYesNo(getActivity(), "Are you sure?", "all your answers will be deleted", new YesNoCallback() {
-
-            @Override
-            public void onYes() {
-                /** user clicked YES */
-                //mQuestionAndAnswer.restoreDefaultValues();
-                restorePreviewsData();
-                getFragmentManager().popBackStackImmediate();
-            }
-
-            @Override
-            public void onNo() {
-
-            }
-        }).show();
+    protected void showQuestionNumber() {
+        //on need to show question number
+        return;
     }
 
     @Override
@@ -142,7 +154,7 @@ public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment
         //super.onClick(v);
         DataQuestion question = (DataQuestion) v.getTag();
         BaseFragment questionFragment = mActivity.getNextQuestionFragment(question.form_type, -1);
-        questionFragment.setTargetFragment(this, ACTION_ROLE_QUESTION);
+        questionFragment.setTargetFragment(this, REQUEST_CODE_ROLE_SUB_QUESTION);
 
         /* fragment arguments */
         Bundle args = new Bundle();
@@ -155,13 +167,31 @@ public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                 .addToBackStack("questionRole" + question.questions_id)
-                .replace(R.id.fragment_container_full, questionFragment)
+                .add(R.id.fragment_container_full, questionFragment)
                 .commit();
     }
 
     @Override
     public void onOneIconClicked() {
+        try {
+            //mark the first qaa as answered -> on list, we check if the first qaa is clicked to mark remove
+            QuestionAndAnswer qaa = mQuestionAndAnswer.subQuestionsMap.get(mAnswer.answer_id).get(0);
+            if (qaa != null) {
+                qaa.isAnsweredConfirmedByClickingNext = true;
+            }
+        } catch (Exception ex) {
+        }
+
+        getTargetFragment().onActivityResult(QuestionnaireQuestionList.REQUEST_CODE_GO_TO_ROLE, Activity.RESULT_OK, new Intent());
         mActivity.getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ROLE_SUB_QUESTION) {
+            addQuestionsRows();
+        }
     }
 }
 

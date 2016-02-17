@@ -58,7 +58,8 @@ public class EventActivity extends BaseActivity implements PeopleListener {
 
     @Override
     public void onUserClick(DataPeople user) {
-        UserActivity.openOtherUserFragment(this, user);
+        if (!user.users_id.equals(ds.getUser().users_id))
+            UserActivity.openOtherUserFragment(this, user);
     }
 
     @Override

@@ -44,31 +44,59 @@ public class RequestUpdateSettings extends BaseRequest {
 
     @Override
     public String getEncodedBody() {
-        Map m = new HashMap<>();
-        m.put("AppID", EverymatchApplication.getContext().getResources().getString(R.string.app_id));
-        m.put("DayOfBirth", user.age);
-        m.put("Email", user.email);
-        m.put("FirstName", user.first_name);
-        m.put("Gender", "male");
-        m.put("Id", user.users_id);
-        m.put("LastName", user.last_name);
-        m.put("MonthOfBirth", "3");
-        m.put("PhoneNumber", user.phone);
-        m.put("UserName", user.email);
-        m.put("YearOfBirth", "1970");
-        m.put("CountryCode", user.user_settings.getTime_zone().country_code);
-        m.put("Time Zone", user.user_settings.getTime_zone().utc);
-        m.put("Currency", user.user_settings.currency);
-        m.put("Distance", user.user_settings.getDistance());
+        try {
+            DataStore ds = DataStore.getInstance();
+            JSONObject out = new JSONObject();
+            out.put("currency", ds.getUser().user_settings.currency);
+            out.put("default_culture", ds.getCulture());
+
+            //add  units
+            JSONObject units = new JSONObject();
+            units.put("distance", ds.getUser().user_settings.getDistance());
+            units.put("weight", ds.getUser().user_settings.weight);
+            out.put("units", units);
+
+            //add time zone
+            JSONObject time_zone = new JSONObject();
+            units.put("utc", ds.getUser().user_settings.getTime_zone().utc);
+            units.put("country_code", "");//TODO add country code here
+            out.put("title", ds.getUser().user_settings.getTime_zone().title);
+            out.put("index", "1");
+            out.put("time_zone", time_zone);
+
+            String str = out.toString();
+            return str;
+
+
+        } catch (Exception ex) {
+            return "{}";
+        }
+
+
+        /*Map m = new HashMap<>();
+        m.put("app_id", EverymatchApplication.getContext().getResources().getString(R.string.app_id));
+        m.put("day_of_birth", user.age);
+        m.put("email", user.email);
+        m.put("first_name", user.first_name);
+        m.put("gender", "male");
+        m.put("id", user.users_id);
+        m.put("last_name", user.last_name);
+        m.put("month_of_birth", "3");
+        m.put("phone_number", user.phone);
+        m.put("user_name", user.email);
+        m.put("year_of_birth", "1970");
+        m.put("country_code", user.user_settings.getTime_zone().country_code);
+        m.put("time_zone", user.user_settings.getTime_zone().utc);
+        m.put("currency", user.user_settings.currency);
+        m.put("distance", user.user_settings.getDistance());
         m.put("default_culture", DataStore.getInstance().getCulture());
-        m.put("Weight", user.user_settings.weight);
+        m.put("weight", user.user_settings.weight);
         //m.put("Image eUrl", "");
         //m.put("Password", "");
         //m.put("ConfirmPassword", "");
 
         JSONObject obj = new JSONObject(m);
-        String str = obj.toString();
-        return str;
+        String str = obj.toString();*/
     }
 
     @Override

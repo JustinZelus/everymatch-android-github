@@ -257,7 +257,7 @@ public class SplashActivity extends BaseLoginActivity {
     }
 
     private void loadWalkTroughImages() {
-        int size = ds.getApplicationData().start.getModel().size();
+        int size = ds.getApplicationData().getStart().getModel().size();
         /*for the logo*/
         size++;
         EMLog.d(TAG, "" + size + "Images to load");
@@ -274,9 +274,9 @@ public class SplashActivity extends BaseLoginActivity {
             String url;
             if (i == size - 1) {
                 /*this is the logo imageview*/
-                url = ds.getApplicationData().start.getModel().get(0).icon_image_url + "?&width=" + Utils.dpToPx(120) + "&height=" + Utils.dpToPx(120) + "&mode=max";
+                url = ds.getApplicationData().getStart().getModel().get(0).icon_image_url + "?&width=" + Utils.dpToPx(120) + "&height=" + Utils.dpToPx(120) + "&mode=max";
             } else {
-                url = ds.getApplicationData().start.getModel().get(i).background_image + "?width=" + screenWidth + "&height=" + screenHeight + "&mode=max";
+                url = ds.getApplicationData().getStart().getModel().get(i).background_image + "?width=" + screenWidth + "&height=" + screenHeight + "&mode=max";
 
             }
             ImageView imageView = new ImageView(SplashActivity.this);

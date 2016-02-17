@@ -54,6 +54,7 @@ public class QuestionAndAnswer implements Serializable {
         if (this.question.default_value != null) {
             //setUserAnswerStrByDefaultValue();
             userAnswerStr = QuestionUtils.getAnsweredTitleFromUserAnswerData(question, question.default_value);
+            userAnswerStr += " " + question.getUnits();
         }
 
         subQuestionsMap = new HashMap<>();
@@ -162,7 +163,7 @@ public class QuestionAndAnswer implements Serializable {
                 String defaultList = "";
                 for (DataAnswer a : question.answers) {
                     if (a.is_default)
-                        defaultList += a.text_title + ",";
+                        defaultList += a.value + ",";
                 }
                 if (defaultList.endsWith(","))
                     defaultList = defaultList.substring(0, defaultList.length() - 1).trim();
@@ -175,7 +176,7 @@ public class QuestionAndAnswer implements Serializable {
     public void restoreDefaultValues() {
         userAnswerData = originalUserAnswerData;
         userAnswerStr = originalUserAnswerStr;
-        //isAnsweredConfirmedByClickingNext = originalIsAnsweredConfirmedByClickingNext;
+        isAnsweredConfirmedByClickingNext = false;
         //isDependentsQuestion = originalIsDependentsQuestion;
         //question = originalQuestion;
         subQuestionsMap.clear();

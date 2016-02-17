@@ -203,6 +203,12 @@ public class QuestionUtils {
             }
         }
 
+        //add units
+        if (question.units != null && question.units.containsKey("value") && !Utils.isEmpty(question.units.get("value").toString())) {
+            String units = " (" + question.units.get("value").toString() + ")";
+            value += units;
+        }
+
         return TextUtils.isEmpty(value) ? dm.getResourceText(R.string.Unanswered) : value;
     }
 

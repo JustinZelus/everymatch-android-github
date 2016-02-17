@@ -68,8 +68,11 @@ public class EventsAdapter extends EmBaseAdapter<DataEvent> {
         TextView participants = (TextView) view.findViewById(R.id.view_event_text_participants);
         TextView match = (TextView) view.findViewById(R.id.view_event_text_match);
         BaseIconTextView matchIcon = (BaseIconTextView) view.findViewById(R.id.view_event_tex);
-
         ImageView image = (ImageView) view.findViewById(R.id.view_event_image);
+
+        //activity title
+        RelativeLayout rlActivityTitleHolder = (RelativeLayout) view.findViewById(R.id.rlActivityLabelHolder);
+        rlActivityTitleHolder.setVisibility(View.GONE);
 
         if (event != null && event.dataPublicEvent != null) {
             title.setText(event.dataPublicEvent.event_title);

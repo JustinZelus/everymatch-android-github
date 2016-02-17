@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.R;
@@ -89,6 +90,8 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
     private BaseIconTextView mToolbar3Button;
     private BaseTextView mToolbar3Text;
     private BaseTextView mAboutDetails;
+    private RelativeLayout rlActionLoader;
+    private LinearLayout llActions;
 
     private FragmentTransaction transaction;
     private ListPopupWindow mMorePopup;
@@ -204,23 +207,18 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         mToolbar3Button.setOnClickListener(this);
         mToolbar3Text = (BaseTextView) view.findViewById(R.id.event_toolbar_3_text);
 
-       /* mPeopleViewAll = (BaseTextView) view.findViewById(R.id.event_people_view_all);
-        mPeopleViewAll.setOnClickListener(this);*/
-
         mPeopleList = (LinearLayout) view.findViewById(R.id.event_people_list);
-        /*mPeopleList.setAdapter(mAdapter);
-        mPeopleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                               @Override
-                                               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                                               }
-                                           }
-
-        );*/
 
         mAboutDetails = (BaseTextView) view.findViewById(R.id.event_about_details);
         mAboutTitle = (BaseTextView) view.findViewById(R.id.event_about_title);
 
+
+        llActions = (LinearLayout) view.findViewById(R.id.actions);
+        rlActionLoader = (RelativeLayout) view.findViewById(R.id.actionsLoader);
+        llActions.measure(0, 0);
+        rlActionLoader.getLayoutParams().height = llActions.getMeasuredHeight();
+        rlActionLoader.requestLayout();
     }
 
     private void setData(View view) {
@@ -251,6 +249,9 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         if (!TextUtils.isEmpty(mEvent.dataPublicEvent.event_icon)) {
             Picasso.with(getContext()).load(mEvent.dataPublicEvent.event_icon).into(mLogo);
         }
+
+         //Title
+        mHeader.setTitle(mEvent.dataPublicEvent.title);
 
         // DETAILS
         mDetailsRow.setTitle(dm.getResourceText(R.string.Details));
@@ -644,10 +645,16 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
         /* if we came here -> we must call the server */
 
+        /*show loader  */
+        rlActionLoader.setVisibility(View.VISIBLE);
+        llActions.setClickable(false);
+
         // ServerConnector.getInstance().processRequest(new RequestEventActions(null, mEvent._id, action), new ServerConnector.OnResultListener() {
         ServerConnector.getInstance().processRequest(new RequestEventActions(mEvent.getEvent_actions().get(position)), new ServerConnector.OnResultListener() {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
+                rlActionLoader.setVisibility(View.GONE);
+                llActions.setClickable(true);
                 ResponseEvent responseEvent = (ResponseEvent) baseResponse;
                 if (responseEvent != null) {
                     mEvent.setEvent(responseEvent);
@@ -657,6 +664,8 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
             @Override
             public void onFailure(ErrorResponse errorResponse) {
+                rlActionLoader.setVisibility(View.GONE);
+                llActions.setClickable(true);
             }
         });
 

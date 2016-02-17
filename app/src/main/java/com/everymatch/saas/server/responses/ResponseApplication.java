@@ -3,6 +3,7 @@ package com.everymatch.saas.server.responses;
 import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.server.Data.ApplicationSettings;
 import com.everymatch.saas.server.Data.DataActivity;
+import com.everymatch.saas.server.Data.DataEvent_Activity;
 import com.everymatch.saas.server.Data.DataQuestion;
 import com.everymatch.saas.server.Data.DataTimeZone;
 
@@ -17,6 +18,8 @@ import java.util.GregorianCalendar;
 public class ResponseApplication extends BaseResponse {
     public String culture_name;
     public String app_id;
+    public String parent_app_id;
+    public String text_parent_service_title;
     public String timestamp;
     private DataActivity activities[];
     private DataQuestion user_profile_questions[];
@@ -69,7 +72,13 @@ public class ResponseApplication extends BaseResponse {
         return null;
     }
 
-    public Start start;
+    public Start getStart() {
+        if (start == null)
+            start = new Start();
+        return start;
+    }
+
+    private Start start;
 
     public Event event;
 
@@ -111,10 +120,26 @@ public class ResponseApplication extends BaseResponse {
         return null;
     }
 
+    public String getActivityTitleByEventId(String eventClientId) {
+        String answer = "";
+        try {
+            for (DataActivity activity : getActivities()) {
+                for (DataEvent_Activity event : activity.getEvents()) {
+                    if (event.client_id.equals(eventClientId)) {
+                        return event.text_title;
+                        //return activity.text_title;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        }
+
+        return answer;
+    }
 
     public DataActivity getActivityClientIdById(int clientId) {
         for (DataActivity activity : getActivities()) {
-            if (activity.client_id.equals(""+clientId))
+            if (activity.client_id.equals("" + clientId))
                 return activity;
         }
         return null;
@@ -124,6 +149,16 @@ public class ResponseApplication extends BaseResponse {
         if (settings == null)
             settings = new ApplicationSettings();
         return settings;
+    }
+
+    public int getTimeZoneIndex(String country_code, String utc) {
+        int i = 0;
+        for (DataTimeZone dataTimeZone : getTime_zone()) {
+            if (dataTimeZone.country_code.equals(country_code) && dataTimeZone.utc.equals(utc))
+                return i;
+            i++;
+        }
+        return 0;
     }
 
     public class Start {
@@ -148,6 +183,7 @@ public class ResponseApplication extends BaseResponse {
 
     public class Event {
         public ArrayList<DataQuestion> publish_questions;
+        public ArrayList<DataQuestion> setup_questions;
     }
 
     public class DataCurrency implements Serializable {

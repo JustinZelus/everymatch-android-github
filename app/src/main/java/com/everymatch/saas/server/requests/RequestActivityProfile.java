@@ -5,6 +5,7 @@ import com.everymatch.saas.Constants;
 import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.server.Data.DataProfile;
 import com.everymatch.saas.singeltones.Preferences;
 
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class RequestActivityProfile extends BaseRequest {
     }
 
     @Override
-    public String getServiceUrl(){
+    public String getServiceUrl() {
         return Constants.API_SERVICE_URL;
     }
 
@@ -30,7 +31,11 @@ public class RequestActivityProfile extends BaseRequest {
         return "api/activityprofiles?hl=" + DataStore.getInstance().getCulture() +
                 "&app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id) +
                 "&client_id=" + client_id;
+    }
 
+    @Override
+    public boolean parseResponseAsJson() {
+        return false;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class RequestActivityProfile extends BaseRequest {
 
     @Override
     public Class getResponseClass() {
-        return null;
+        return DataProfile.class;
     }
 
     @Override

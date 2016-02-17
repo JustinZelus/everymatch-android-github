@@ -18,6 +18,7 @@ import com.everymatch.saas.server.Data.DataNotifications;
 import com.everymatch.saas.server.request_manager.NotificationManager;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.singeltones.GenericCallback;
+import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.base.BaseListFragment;
 import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.ui.event.EventFragment;
@@ -27,6 +28,7 @@ import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.EventHeader;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -55,6 +57,10 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
     public ArrayList<DataNotifications> notifications;
     AdapterNotification adapter;
 
+
+    //Views
+    EventDataRow edrChat;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,25 +87,22 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
     private void setInBox() {
         mTopContainer.removeAllViews();
         mTopContainer.setVisibility(View.VISIBLE);
-        EventDataRow edr = new EventDataRow(getActivity());
-        edr.setLeftIconVisibility(true);
-        edr.getLeftIcon().setText(Consts.Icons.icon_Mail);
-        edr.setDetails(null);
-        edr.setTitle(dm.getResourceText(R.string.Inbox_title));
-        edr.getTitleView().setTextColor(ds.getIntColor(EMColor.MOON));
-        edr.setRightIconText(Consts.Icons.icon_Arrowright);
-        edr.getWrapperLayout().setBackgroundColor(ds.getIntColor(EMColor.WHITE));
+        edrChat = new EventDataRow(getActivity());
+        edrChat.setLeftIconVisibility(true);
+        edrChat.getLeftIcon().setText(Consts.Icons.icon_Mail);
+        edrChat.setDetails(null);
+        edrChat.setTitle(dm.getResourceText(R.string.Inbox_title) + " (" + ds.getUser().getUnread() + ")");
+        edrChat.getTitleView().setTextColor(ds.getIntColor(EMColor.MOON));
+        edrChat.setRightIconText(Consts.Icons.icon_Arrowright);
+        edrChat.getWrapperLayout().setBackgroundColor(ds.getIntColor(EMColor.WHITE));
 
-        edr.setOnClickListener(new View.OnClickListener() {
+        edrChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 InboxActivity.startInbox(getActivity());
-                        /*((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, new ConversationsFragment(),
-                        ConversationsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
-                        R.anim.enter_from_left, R.anim.exit_to_right);*/
             }
         });
-        mTopContainer.addView(edr);
+        mTopContainer.addView(edrChat);
     }
 
     protected void setHeader() {
@@ -199,5 +202,15 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
     @Override
     protected void fetchNextPage() {
 
+    }
+
+    @Override
+    protected void handleBroadcast(Serializable eventObject, String eventName) {
+        switch (eventName) {
+            case PusherManager.PUSHER_EVENT_EVENT_INBOX_UNREAD:
+            case PusherManager.PUSHER_EVENT_EVENT_NEW_MESSAGE:
+                edrChat.setTitle(dm.getResourceText(R.string.Inbox_title) + " (" + ds.getUser().getUnread() + ")");
+                break;
+        }
     }
 }

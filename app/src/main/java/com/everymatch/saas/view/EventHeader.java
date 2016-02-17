@@ -1,13 +1,18 @@
 package com.everymatch.saas.view;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
+import com.everymatch.saas.client.data.DataManager;
+import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.EMColor;
 
 
 /**
@@ -15,9 +20,16 @@ import com.everymatch.saas.R;
  */
 public class EventHeader extends LinearLayout implements View.OnClickListener {
 
+    public static int TEXT_SIZE_SP = 18;
     private Context mContext;
     public OnEventHeader mListener;
 
+    //Data
+    DataManager dm = DataManager.getInstance();
+    DataStore ds = DataStore.getInstance();
+    public boolean mClick = false;
+
+    //Views
     private BaseIconTextView mBackButton;
     private BaseTextView mTitle;
     private BaseEditText mEditTitle;
@@ -27,7 +39,6 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
     private TextView mTextCenter;
     private BaseIconTextView tvArrowDown;
 
-    public boolean mClick = false;
 
     public EventHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -56,7 +67,7 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
         icon3.setOnClickListener(this);
     }
 
-    public View getTitle() {
+    public BaseTextView getTitle() {
         return mTitle;
     }
 
@@ -65,7 +76,10 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
     }
 
     public void setTitle(String title) {
-        mTitle.setText(title);
+        if (title == null)
+            mTitle.setText("");
+        else
+            mTitle.setText(title);
     }
 
     public void setTitle(int resId) {
@@ -100,6 +114,18 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
         return icon3;
     }
 
+    public void setSaveCancelMode(String centerText) {
+        getIconOne().setText(dm.getResourceText(R.string.Save));
+        getCenterText().setText(centerText);
+        getCenterText().setVisibility(VISIBLE);
+        getBackButton().setText(dm.getResourceText(R.string.Cancel));
+        getBackButton().setVisibility(VISIBLE);
+
+        getBackButton().setTextSize(TypedValue.COMPLEX_UNIT_SP, TEXT_SIZE_SP);
+        getIconOne().setTextSize(TypedValue.COMPLEX_UNIT_SP, TEXT_SIZE_SP);
+        getTitle().setVisibility(GONE);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -131,6 +157,12 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
 
     public void setListener(OnEventHeader listener) {
         mListener = listener;
+    }
+
+    public void setIconOneEnabled(boolean enabled) {
+        getIconOne().setClickable(enabled);
+        getIconOne().setTextColor(ds.getIntColor(EMColor.WHITE));
+        ObjectAnimator.ofFloat(getIconOne(), View.ALPHA.getName(), enabled ? 1.0f : 0.5f).start();
     }
 
     /**

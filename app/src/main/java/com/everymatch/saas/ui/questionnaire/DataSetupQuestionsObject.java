@@ -2,6 +2,7 @@ package com.everymatch.saas.ui.questionnaire;
 
 import android.text.TextUtils;
 
+import com.everymatch.saas.client.data.JoinType;
 import com.everymatch.saas.util.EMLog;
 
 import org.json.JSONArray;
@@ -15,9 +16,9 @@ import org.json.JSONObject;
 
 public class DataSetupQuestionsObject {
     public int numberOfSpots = -1;
-    public String joinType;
+    public String joinType = JoinType.FREE;
     public String privacy;
-    public boolean isParticipating;
+    public boolean isParticipating = true;
     /* the invited users */
     public String participants;
 

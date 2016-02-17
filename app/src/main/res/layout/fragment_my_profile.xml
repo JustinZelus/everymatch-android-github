@@ -48,13 +48,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="15dp"
                         android:layout_marginLeft="10dp"
                         android:gravity="center_vertical">
 
                         <com.everymatch.saas.view.BaseIconTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
                             android:textSize="24dp"
                             app:iconText="Camera"
                             app:text_color="white_color" />
@@ -62,7 +63,7 @@
                         <com.everymatch.saas.view.BaseTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="1dp"
+                            android:layout_marginBottom="5dp"
                             android:paddingLeft="10dp"
                             android:textSize="15dp"
                             app:font="lato_font"
@@ -79,80 +80,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <com.everymatch.saas.view.FloatingEditTextLayout
-                        android:id="@+id/fetFirstName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        app:fl_hint_resource="@string/FirstName"
-                        app:fl_isLeftIconVisible="false"
-                        app:fl_title_resource="@string/FirstName" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        >
-
-                        <com.everymatch.saas.view.BaseEditText
-                            android:id="@+id/etFirstName"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:background="@drawable/input_area"
-                            android:layout_gravity="center"
-                            android:ems="10"
-                            android:gravity="left|center_vertical"
-                            android:hint="@string/FirstName"
-                            android:inputType="textPersonName"
-                            android:singleLine="true"
-                            android:textSize="16sp" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-
-                    <com.everymatch.saas.view.BaseLinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:orientation="vertical"
-                        app:bg_color="fog_color" />
-
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.everymatch.saas.view.BaseEditText
-                            android:id="@+id/etLastName"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:padding="5dp"
-                            android:background="@drawable/input_area"
-                            android:ems="10"
-                            android:focusable="true"
-                            android:gravity="left|center_vertical"
-                            android:hint="@string/LastName"
-                            android:inputType="textPersonName"
-                            android:singleLine="true"
-                            android:textSize="16sp" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-
-
-                    <com.everymatch.saas.view.FloatingEditTextLayout
-                        android:id="@+id/fetLastName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        app:fl_hint_resource="@string/LastName"
-                        app:fl_isLeftIconVisible="false"
-                        app:fl_title_resource="@string/LastName" />
-
-                    <com.everymatch.saas.view.BaseLinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:orientation="vertical"
-                        app:bg_color="fog_color" />
 
                 </LinearLayout>
 

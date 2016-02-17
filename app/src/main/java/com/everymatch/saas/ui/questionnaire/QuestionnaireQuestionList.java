@@ -1,5 +1,6 @@
 package com.everymatch.saas.ui.questionnaire;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.TypedValue;
@@ -15,7 +16,6 @@ import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.singeltones.YesNoCallback;
 import com.everymatch.saas.ui.dialog.DialogYesNo;
 import com.everymatch.saas.ui.questionnaire.base.BaseIdsQuestion;
-import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.ViewSeperator;
 
@@ -26,6 +26,7 @@ import java.util.ArrayList;
  */
 public class QuestionnaireQuestionList extends BaseIdsQuestion {
 
+    public static final int REQUEST_CODE_GO_TO_ROLE = 203;
     /*Data*/
 
     /*Views*/
@@ -94,13 +95,20 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
         edr.getRightIcon().setText(Consts.Icons.icon_Arrowright);
 
         /** check if all mandatory question has been answered */
-
-        if (AnsweredAllMandatory(answer)) {
+        boolean isAnsweredByClickingNext = false;
+        try {
+            QuestionAndAnswer qaa = mQuestionAndAnswer.subQuestionsMap.get(answer.answer_id).get(0);
+            isAnsweredByClickingNext = qaa.isAnsweredConfirmedByClickingNext;
+        } catch (Exception ex) {
+        }
+        //if (AnsweredAllMandatory(answer)) {
+        if (isAnsweredByClickingNext) {
             edr.getRightIcon().setText(Consts.Icons.icon_Done);
             edr.getRightIcon().setTextColor(ds.getIntColor(EMColor.PRIMARY));
             edr.getRightText().setText(dm.getResourceText(R.string.remove));
             edr.getRightText().setTextColor(ds.getIntColor(EMColor.NEGATIVE));
-            edr.getRightText().setTextSize(Utils.dpToPx(7));
+            edr.getRightText().setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_normal));
+            // edr.getRightText().setTextSize(Utils.dpToPx(7));
             edr.getRightText().setTag(answer);
             edr.getRightText().setOnClickListener(onRemoveClick);
 
@@ -119,11 +127,31 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
     private boolean AnsweredAllMandatory(DataAnswer answer) {
         /* get all sub question and answers for that answer */
         ArrayList<QuestionAndAnswer> subQuestions = mQuestionAndAnswer.subQuestionsMap.get(answer.answer_id);
+
+        boolean hasMandatory = false;
+        //check if this question has mandatory question at all
         for (QuestionAndAnswer qaa : subQuestions) {
-            if (qaa.question.mandatory && Utils.isEmpty(qaa.userAnswerStr) && qaa.isAnsweredConfirmedByClickingNext)
-                return false;
+            if (qaa.question.mandatory) {
+                hasMandatory = true;
+                break;
+            }
         }
-        return true;
+        //if we have at least one mandatory question - check if all of them has clicked next
+        if (hasMandatory) {
+            for (QuestionAndAnswer qaa : subQuestions) {
+                if (qaa.question.mandatory && !qaa.isAnsweredConfirmedByClickingNext)
+                    return false;
+            }
+            return true;
+        } else {
+            //no mandatory -> check if has at least one next click
+            for (QuestionAndAnswer qaa : subQuestions) {
+                if (qaa.isAnsweredConfirmedByClickingNext)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private View.OnClickListener onRegularClick = new View.OnClickListener() {
@@ -141,10 +169,12 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
                 return;
 
             //if (!mQuestion.multiple && selectedAnswers.size() > 0) return;
+            QuestionnaireQuestionRole role = QuestionnaireQuestionRole.getInstance(ans);
+            role.setTargetFragment(QuestionnaireQuestionList.this, REQUEST_CODE_GO_TO_ROLE);
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                     .addToBackStack("question_role")
-                    .add(R.id.fragment_container_full, QuestionnaireQuestionRole.getInstance(ans))
+                    .add(R.id.fragment_container_full, role)
                     .commit();
         }
     };
@@ -156,7 +186,7 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
             if (answer == null)
                 return;
 
-            new DialogYesNo(getActivity(), "Are you sure?", "Are you sure you want to delete?", new YesNoCallback() {
+            new DialogYesNo(getActivity(), dm.getResourceText(R.string.Remove), dm.getResourceText(R.string.Confirm_Remove), new YesNoCallback() {
                 @Override
                 public void onYes() {
                     /** user clicked YES */
@@ -166,6 +196,14 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
                     for (QuestionAndAnswer qaa : subQuestions) {
                         qaa.restoreDefaultValues();
                     }
+
+                    //unmark as answered by clicking next
+                    try {
+                        QuestionAndAnswer qaa = mQuestionAndAnswer.subQuestionsMap.get(answer.answer_id).get(0);
+                        qaa.isAnsweredConfirmedByClickingNext = false;
+                    } catch (Exception ex) {
+                    }
+
                     addAnswersRows();
                     setAnswer(mQuestionAndAnswer.question.getAnswerValuesByAnswerIds(getConcatedList()));
                 }
@@ -178,4 +216,11 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
         }
     };
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_GO_TO_ROLE) {
+            addAnswersRows();
+        }
+    }
 }

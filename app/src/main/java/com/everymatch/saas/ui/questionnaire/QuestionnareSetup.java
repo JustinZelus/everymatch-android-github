@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.EMColor;
@@ -47,14 +48,16 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
         inflater.inflate(R.layout.question_setup, (ViewGroup) view.findViewById(R.id.answers_container));
 
         tvEventSetupSpotsNumber = (BaseTextView) view.findViewById(R.id.tvEventSetupSpotsNumber);
+        ((TextView) view.findViewById(R.id.tvSpotsTitle)).setText(ds.getApplicationData().event.setup_questions.get(0).text_title);
         tvEventSetupPrivacy = (BaseTextView) view.findViewById(R.id.tvEventSetupPrivacy);
-        tvEventSetupPrivacy.setTextColor(ds.getIntColor(EMColor.PRIMARY));
 
         switchSetupIsParticipating = (Switch) view.findViewById(R.id.SwitchSetupIsParticipating);
         switchSetupEventJoinType = (Switch) view.findViewById(R.id.SwitchSetupEventJoinType);
 
         view.findViewById(R.id.edrJoinType).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.edrJoinType)).setText(ds.getApplicationData().event.setup_questions.get(1).text_title);
         view.findViewById(R.id.edrIsParticipating).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.tvPrivacy)).setText(ds.getApplicationData().event.setup_questions.get(2).text_title);
 
         switchSetupEventJoinType.setOnCheckedChangeListener(this);
         switchSetupIsParticipating.setOnCheckedChangeListener(this);
@@ -67,21 +70,46 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
     }
 
     @Override
-    public void recoverDefaultAnswer() {
-        //can't have default answer here
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
+            view.findViewById(R.id.llAreYouParticipatingHolder).setVisibility(View.GONE);
             recoverAnswer();
         } else {
             // Default setup values
             switchSetupEventJoinType.setChecked(false);
         }
     }
+
+    @Override
+    protected void setHeader() {
+        super.setHeader();
+
+        if (mActivity.isInEditMode())
+            mHeader.setSaveCancelMode(dm.getResourceText(R.string.Edit_Event_Participants));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setHeader();
+    }
+
+    /*@Override
+    public void onOneIconClicked() {
+        if (mActivity.isInEditMode()) {
+            mActivity.sendAnswersToServer();
+            return;
+        }
+        super.onOneIconClicked();
+    }*/
+
+    @Override
+    public void recoverDefaultAnswer() {
+        //can't have default answer here
+    }
+
 
     private void recoverAnswer() {
         if (tvEventSetupSpotsNumber.getText().equals(dm.getResourceText(R.string.click_to_set))) {
@@ -100,9 +128,26 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
         // participating
         switchSetupIsParticipating.setChecked(mActivity.dataSetupQuestionsObject.isParticipating);
 
-        // participating
-        switchSetupEventJoinType.setChecked(mActivity.dataSetupQuestionsObject.
-                joinType.equalsIgnoreCase(JoinType.FREE) ? false : true);
+        // Join Type
+        switchSetupEventJoinType.setChecked(mActivity.dataSetupQuestionsObject.joinType.equalsIgnoreCase(JoinType.FREE) ? false : true);
+
+        if (mActivity.isInEditMode()) {
+
+            //Recover Spots
+            tvEventSetupSpotsNumber.setText("" + mActivity.dataSetupQuestionsObject.numberOfSpots);
+
+            int numberOfSpots = mActivity.dataSetupQuestionsObject.numberOfSpots;
+            tvEventSetupSpotsNumber.setText(numberOfSpots == -1 ? spots[0] : numberOfSpots + "");
+            tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.PRIMARY));
+
+            // Recover Privacy
+            tvEventSetupPrivacy.setText(mActivity.dataSetupQuestionsObject.privacy);
+
+            //no are you participating in edit mode
+
+            // Join Type
+            switchSetupEventJoinType.setChecked(mActivity.dataSetupQuestionsObject.joinType.equalsIgnoreCase(JoinType.FREE) ? false : true);
+        }
 
         setAnswer();
     }
@@ -122,6 +167,7 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
         public void onClick(DialogInterface dialog, int which) {
             tvEventSetupSpotsNumber.setText(spots[which]);
             mActivity.dataSetupQuestionsObject.numberOfSpots = which == 0 ? -1 : Integer.parseInt(spots[which]);
+            tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.PRIMARY));
             setAnswer();
         }
     };
@@ -164,8 +210,10 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
         setAnswer("setup");
     }
 
+
     @Override
     protected JSONObject createJsonObject() {
         return super.createJsonObject();
     }
+
 }

@@ -386,7 +386,7 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     public void onAddActivityButtonClick() {
         mDiscoverActivitiesViewController.toggleActivitySelectionPopup();
         // set the question flag to activity creation
-        if (ds.getUser().profiles.activity_profiles.length == ds.getApplicationData().getActivities().length) {
+        if (ds.getUser().profiles.getActivity_profiles().size() == ds.getApplicationData().getActivities().length) {
             Toast.makeText(getActivity(), "You already filled all profiles!", Toast.LENGTH_SHORT).show();
             return;
         }

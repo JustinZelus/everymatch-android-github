@@ -15,7 +15,6 @@
         android:gravity="center"
         android:padding="5dp"
         android:id="@+id/rlViewChatTime"
-
         >
 
         <RelativeLayout
@@ -24,7 +23,6 @@
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:padding="6dp"
-            android:background="@drawable/bg_chat_message_time"
             android:layout_centerHorizontal="true">
 
             <TextView
@@ -75,7 +73,6 @@
                 android:id="@+id/rl_view_chat_baloon"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_chat_received"
                 android:minHeight="40dp"
                 android:padding="10dp"
                 android:layout_alignParentTop="true"

@@ -131,7 +131,7 @@ public class QuestionnairePickActivityFragment extends ListFragment implements A
         * if user has at least one profile! no need to add user profile questions
         * else: leave only activity questions
         * */
-        if (Utils.isArrayEmpty(DataStore.getInstance().getUser().profiles.activity_profiles)) {
+        if (DataStore.getInstance().getUser().profiles.getActivity_profiles().size() == 0) {
             output.addAll(Arrays.asList(DataStore.getInstance().getApplicationData().getUser_profile_questions()));
         }
 
@@ -179,10 +179,10 @@ public class QuestionnairePickActivityFragment extends ListFragment implements A
                 if (wantedHeight > maxHeight)
                     wantedHeight = maxHeight;
 
-                wantedHeight-=2;
+                wantedHeight -= 2;
                 AbsListView.LayoutParams layoutParams = (AbsListView.LayoutParams) convertView.getLayoutParams();
                 Holder.setLayoutParams(layoutParams);
-                Holder.setPadding(0,0,0,0);
+                Holder.setPadding(0, 0, 0, 0);
                 //url += "?width=" + screenWidth + "&height=" + wantedHeight + "&mode=max";
                 url += "?width=" + screenWidth + "&height=" + wantedHeight + "&mode=crop";
             }

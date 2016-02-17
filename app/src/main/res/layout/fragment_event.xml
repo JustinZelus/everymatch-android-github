@@ -146,113 +146,134 @@
                         android:layout_marginBottom="2.2dp"
                         app:bg_color="fog_color" />
 
-                    <LinearLayout
-                        android:id="@+id/actions"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingBottom="4dp"
-                        android:paddingTop="4dp"
-                        android:weightSum="3">
+                        android:layout_height="match_parent">
 
                         <LinearLayout
-                            android:id="@+id/action_1"
-                            android:layout_width="0dp"
+                            android:id="@+id/actions"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal"
-                            android:tag="action_1">
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingBottom="4dp"
+                            android:paddingTop="4dp"
+                            android:weightSum="3">
 
-                            <com.everymatch.saas.view.BaseIconTextView
-                                android:id="@+id/event_toolbar_1_icon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="center"
+                            <LinearLayout
+                                android:id="@+id/action_1"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:gravity="center_horizontal"
-                                android:text="\@"
-                                android:textSize="24dp"
-                                app:iconText="icon-Chat"
-                                app:text_color="primary_color" />
+                                android:orientation="vertical"
+                                android:tag="action_1">
 
-                            <com.everymatch.saas.view.BaseTextView
-                                android:id="@+id/event_toolbar_1_text"
+                                <com.everymatch.saas.view.BaseIconTextView
+                                    android:id="@+id/event_toolbar_1_icon"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center"
+                                    android:gravity="center_horizontal"
+                                    android:text="\@"
+                                    android:textSize="24dp"
+                                    app:iconText="icon-Chat"
+                                    app:text_color="primary_color" />
+
+                                <com.everymatch.saas.view.BaseTextView
+                                    android:id="@+id/event_toolbar_1_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="Join"
+                                    android:textSize="14sp"
+                                    app:text_color="fog_color" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/action_2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical"
+                                android:tag="action_2">
+
+                                <com.everymatch.saas.view.BaseIconTextView
+                                    android:id="@+id/event_toolbar_2_icon"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:gravity="center_horizontal"
+                                    android:text="\@"
+                                    android:textSize="24dp"
+                                    app:iconText="icon-IconEdit"
+                                    app:text_color="primary_color" />
+
+                                <com.everymatch.saas.view.BaseTextView
+                                    android:id="@+id/event_toolbar_2_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="Save"
+                                    android:textSize="14sp"
+                                    app:text_color="fog_color" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/action_3"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical"
+                                android:tag="action_3">
+
+                                <com.everymatch.saas.view.BaseIconTextView
+                                    android:id="@+id/event_toolbar_3_icon"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center"
+                                    android:gravity="center_horizontal"
+                                    android:textSize="24dp"
+                                    app:iconText="icon_MoreV"
+                                    app:text_color="primary_color" />
+
+                                <com.everymatch.saas.view.BaseTextView
+                                    android:id="@+id/event_toolbar_3_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="More"
+                                    android:textSize="14sp"
+                                    app:text_color="fog_color" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/actionsLoader"
+                            android:background="#871a1a1a"
+                            android:visibility="invisible"
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp">
+
+                            <ProgressBar
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:gravity="center"
-                                android:text="Join"
-                                android:textSize="14sp"
-                                app:text_color="fog_color" />
-                        </LinearLayout>
+                                android:layout_centerInParent="true" />
 
-                        <LinearLayout
-                            android:id="@+id/action_2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal"
-                            android:tag="action_2">
+                        </RelativeLayout>
 
-                            <com.everymatch.saas.view.BaseIconTextView
-                                android:id="@+id/event_toolbar_2_icon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
-                                android:gravity="center_horizontal"
-                                android:text="\@"
-                                android:textSize="24dp"
-                                app:iconText="icon-IconEdit"
-                                app:text_color="primary_color" />
-
-                            <com.everymatch.saas.view.BaseTextView
-                                android:id="@+id/event_toolbar_2_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:text="Save"
-                                android:textSize="14sp"
-                                app:text_color="fog_color" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/action_3"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:tag="action_3">
-
-                            <com.everymatch.saas.view.BaseIconTextView
-                                android:id="@+id/event_toolbar_3_icon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="center"
-                                android:gravity="center_horizontal"
-                                android:textSize="24dp"
-                                app:iconText="icon_MoreV"
-                                app:text_color="primary_color" />
-
-                            <com.everymatch.saas.view.BaseTextView
-                                android:id="@+id/event_toolbar_3_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:text="More"
-                                android:textSize="14sp"
-                                app:text_color="fog_color" />
-                        </LinearLayout>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <com.everymatch.saas.view.BaseLinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:bg_color="silver_color">
@@ -276,12 +297,12 @@
 
                         <com.everymatch.saas.view.BaseTextView
                             android:id="@+id/event_about_details"
+                            style="@style/EmTextStyleMeta"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="10dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            style="@style/EmTextStyleMeta"
                             app:text_color="moon_color" />
                     </com.everymatch.saas.view.BaseLinearLayout>
                 </LinearLayout>
@@ -316,6 +337,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/event_eventHeader"
         android:clickable="true"
+
         app:bg_color="white_color">
 
         <ProgressBar

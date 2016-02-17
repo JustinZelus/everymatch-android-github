@@ -112,11 +112,6 @@
                     app:right_icon_visible="false"
                     app:right_text_visible="true" />
 
-                <com.everymatch.saas.view.BaseView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:bg_color="fog_color" />
-
                 <com.everymatch.saas.view.EventDataRow
                     android:id="@+id/fragment_people_data_row_personality"
                     android:layout_width="match_parent"

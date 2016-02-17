@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.everymatch.saas.view.BaseScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,228 +18,298 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scrollView3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|top"
-            android:orientation="vertical">
-
-            <com.everymatch.saas.view.BaseTextView
-                android:id="@+id/event_data_row_details"
-                style="@style/EmTextStyleHeading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_s"
-                android:layout_marginTop="@dimen/margin_s"
-                app:text_color="night_color"
-                app:text_key="@string/Event_Is_Ready"
-                tools:text="Event Is Ready" />
-
-            <com.everymatch.saas.view.BaseRelativeLayout
-                android:id="@+id/fragment_questionaire_publish_image_holder"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_gravity="center_horizontal"
-                app:bg_color="moon_color">
-
-                <ImageView
-                    android:id="@+id/imgPublishEventImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:scaleType="centerCrop" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@drawable/vertical_black_gradient" />
-
-                <LinearLayout
-                    android:id="@+id/uploadImageLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_margin="10dp"
-                    android:orientation="horizontal">
-
-                    <com.everymatch.saas.view.BaseIconTextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:iconText="icon-Camera"
-                        app:text_color="white_color" />
-
-                    <com.everymatch.saas.view.BaseTextView
-                        android:id="@+id/fragment_questionaire_publish_text_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="7dp"
-                        app:text_color="white_color"
-                        app:text_key="@string/Upload_Image"
-                        tools:text="upload image" />
-                </LinearLayout>
-            </com.everymatch.saas.view.BaseRelativeLayout>
-
-            <com.everymatch.saas.view.BaseLinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:bg_color="white_color">
-
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <com.everymatch.saas.view.BaseEditText
-                        android:id="@+id/etEventtName"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/input_area"
-                        android:ems="10"
-                        android:gravity="left|center_vertical"
-                        android:hint="@string/Event_Name"
-                        android:inputType="textPersonName"
-                        android:singleLine="true"
-                        android:textSize="16sp" />
-
-                </android.support.design.widget.TextInputLayout>
-
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.everymatch.saas.view.BaseEditText
-                        android:id="@+id/etEventDesc"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/input_area"
-                        android:ems="10"
-                        android:focusable="true"
-                        android:gravity="left|center_vertical"
-                        android:inputType="textPersonName"
-                        android:padding="5dp"
-                        android:singleLine="true"
-                        android:textSize="16sp" />
-
-                </android.support.design.widget.TextInputLayout>
-
-            </com.everymatch.saas.view.BaseLinearLayout>
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/fragment_questionaire_publish_button_holder"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|top"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <com.everymatch.saas.view.BaseTextView
+                    android:id="@+id/event_data_row_details"
+                    style="@style/EmTextStyleHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_s"
+                    android:layout_marginTop="@dimen/margin_s"
+                    app:text_color="night_color"
+                    app:text_key="@string/Event_Is_Ready"
+                    tools:text="Event Is Ready" />
+
+                <com.everymatch.saas.view.BaseRelativeLayout
+                    android:id="@+id/fragment_questionaire_publish_image_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_gravity="center_horizontal"
+                    app:bg_color="moon_color">
+
+                    <ImageView
+                        android:id="@+id/imgPublishEventImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:scaleType="centerCrop" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/vertical_black_gradient" />
+
+                    <LinearLayout
+                        android:id="@+id/uploadImageLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <com.everymatch.saas.view.BaseIconTextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:iconText="icon-Camera"
+                            app:text_color="white_color" />
+
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/fragment_questionaire_publish_text_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="7dp"
+                            app:text_color="white_color"
+                            app:text_key="@string/Upload_Image"
+                            tools:text="upload image" />
+                    </LinearLayout>
+                </com.everymatch.saas.view.BaseRelativeLayout>
+
+                <com.everymatch.saas.view.BaseLinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp">
+                    android:orientation="vertical"
+                    android:padding="4dp"
 
-                    <com.everymatch.saas.view.BaseLinearLayout
-                        bg_color="white_color"
+                    app:bg_color="white_color">
+
+                    <RelativeLayout
+                        android:id="@+id/eventNameHolder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
+                        android:paddingBottom="@dimen/margin_xs"
+                        android:paddingTop="@dimen/margin_xs">
 
-                        <com.everymatch.saas.view.BaseButton
-                            android:id="@+id/btnInviteParticipants"
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/tvEventNameTitle"
+                            style="@style/EmTextStyleNormal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_xs"
+                            android:paddingLeft="3dp"
+                            app:text_color="night_color"
+                            android:text="@string/Event_Name"
+                            app:text_key="@string/Event_Name" />
+
+                        <com.everymatch.saas.view.BaseEditText
+                            android:id="@+id/etEventtName"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:textSize="14sp"
-                            app:bg="rounded"
-                            app:text_color="white_color" />
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvEventNameTitle"
+                            android:layout_gravity="center"
+                            android:background="@drawable/input_area"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:hint="@string/Event_Name"
+                            android:inputType="textPersonName"
+                            app:text_color="moon_color"
+                            android:singleLine="true"
+                            android:textSize="13sp" />
 
-                    </com.everymatch.saas.view.BaseLinearLayout>
+                        <com.everymatch.saas.view.BaseIconTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:paddingRight="@dimen/margin_xs"
+                            android:text="\@"
+                            android:textSize="24sp"
+                            app:iconText="icon-Arrowright"
+                            app:text_color="fog_color" />
+                    </RelativeLayout>
 
-                    <com.everymatch.saas.view.BaseTextView
-                        android:id="@+id/tvInvite"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/fog"></LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        app:text_color="white_color"
-                        app:text_key="@string/Invite_Participants"
-                        tools:text="INVITE PARTICIPANTS" />
+                        android:paddingBottom="@dimen/margin_xs"
+                        android:paddingTop="@dimen/margin_xs">
 
-                    <com.everymatch.saas.view.BaseIconTextView
-                        android:id="@+id/iconInvite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/tvInvite"
-                        android:layout_toStartOf="@+id/tvInvite"
-                        app:iconText="icon-Mail"
-                        android:visibility="gone"
-                        app:text_color="white_color"
-                        tools:text="-" />
-                </RelativeLayout>
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/tvEventDescTitle"
+                            style="@style/EmTextStyleNormal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:text_color="night_color"
+                            android:paddingLeft="3dp"
+                            android:layout_marginBottom="@dimen/margin_xs"
+                            android:text="@string/Description"
+                            app:text_key="@string/Description" />
+
+                        <com.everymatch.saas.view.BaseEditText
+                            android:id="@+id/etEventDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvEventDescTitle"
+                            android:background="@drawable/input_area"
+                            android:ems="10"
+                            android:focusable="true"
+                            android:gravity="left|center_vertical"
+                            android:hint="@string/Add_Event_Description"
+                            android:inputType="textPersonName"
+                            app:text_color="moon_color"
+                            android:singleLine="true"
+                            android:textSize="13sp" />
+
+                        <com.everymatch.saas.view.BaseIconTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:paddingRight="@dimen/margin_xs"
+                            android:text="\@"
+                            android:textSize="24sp"
+                            app:iconText="icon-Arrowright"
+                            app:text_color="fog_color" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/fog"></LinearLayout>
+
+                </com.everymatch.saas.view.BaseLinearLayout>
 
 
-                <RelativeLayout
+                <LinearLayout
+                    android:id="@+id/fragment_questionaire_publish_button_holder"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
 
-                    <com.everymatch.saas.view.BaseLinearLayout
-                        bg_color="white_color"
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
+                        android:layout_marginBottom="10dp">
 
-                        <com.everymatch.saas.view.BaseButton
-                            android:id="@+id/btnPublish"
+                        <com.everymatch.saas.view.BaseLinearLayout
+                            bg_color="white_color"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:textSize="14sp"
-                            app:bg="stroke"
-                            app:text_color="white_color" />
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp">
 
-                    </com.everymatch.saas.view.BaseLinearLayout>
+                            <com.everymatch.saas.view.BaseButton
+                                android:id="@+id/btnInviteParticipants"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:textSize="14sp"
+                                app:bg="rounded"
+                                app:text_color="white_color" />
 
-                    <com.everymatch.saas.view.BaseTextView
-                        android:id="@+id/tvPublish"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        app:text_color="primary_color"
-                        app:text_key="@string/Publish"
-                        tools:text="PUBLISH" />
+                        </com.everymatch.saas.view.BaseLinearLayout>
 
-                    <com.everymatch.saas.view.BaseIconTextView
-                        android:id="@+id/iconPublish"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/tvPublish"
-                        android:layout_toStartOf="@+id/tvPublish"
-                        app:text_color="white_color"
-                        tools:text="-" />
-                </RelativeLayout>
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/tvInvite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            app:text_color="white_color"
+                            app:text_key="@string/Invite_Participants"
+                            tools:text="INVITE PARTICIPANTS" />
+
+                        <com.everymatch.saas.view.BaseIconTextView
+                            android:id="@+id/iconInvite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/tvInvite"
+                            android:layout_toStartOf="@+id/tvInvite"
+                            android:visibility="gone"
+                            app:iconText="icon-Mail"
+                            app:text_color="white_color"
+                            tools:text="-" />
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.everymatch.saas.view.BaseLinearLayout
+                            bg_color="white_color"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp">
+
+                            <com.everymatch.saas.view.BaseButton
+                                android:id="@+id/btnPublish"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:textSize="14sp"
+                                app:bg="stroke"
+                                app:text_color="white_color" />
+
+                        </com.everymatch.saas.view.BaseLinearLayout>
+
+                        <com.everymatch.saas.view.BaseTextView
+                            android:id="@+id/tvPublish"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            app:text_color="primary_color"
+                            app:text_key="@string/Publish"
+                            tools:text="PUBLISH" />
+
+                        <com.everymatch.saas.view.BaseIconTextView
+                            android:id="@+id/iconPublish"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/tvPublish"
+                            android:layout_toStartOf="@+id/tvPublish"
+                            app:text_color="white_color"
+                            tools:text="-" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
 
             </LinearLayout>
+        </ScrollView>
 
-
-        </LinearLayout>
     </LinearLayout>
 
 
-</com.everymatch.saas.view.BaseScrollView>
+</com.everymatch.saas.view.BaseLinearLayout>
