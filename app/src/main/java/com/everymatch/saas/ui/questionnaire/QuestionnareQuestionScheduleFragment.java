@@ -134,8 +134,8 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
     public void onStart() {
         super.onStart();
         //allow next always
-        setTitleEnabled(true);
         setHeader();
+        setTitleEnabled(true);
     }
 
     private void updateUi() {

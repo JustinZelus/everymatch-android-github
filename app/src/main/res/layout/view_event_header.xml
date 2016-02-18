@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:gravity="start"
-            android:maxLength="20"
+            android:maxLength="40"
             android:paddingBottom="6dp"
             android:paddingLeft="6dp"
             android:paddingTop="6dp"

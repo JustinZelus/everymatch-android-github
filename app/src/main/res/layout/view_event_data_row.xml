@@ -11,17 +11,15 @@
         android:id="@+id/llEdrWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:background="@color/white"
         android:gravity="center"
-        android:minHeight="53dp"
+        android:minHeight="55dp"
         android:orientation="horizontal"
-        android:paddingBottom="7dp"
-        android:paddingLeft="10dp"
+        android:paddingBottom="@dimen/margin_xs"
         android:paddingRight="10dp"
-        android:paddingTop="7dp">
+        android:paddingTop="@dimen/margin_xs">
 
         <FrameLayout
             android:id="@+id/view_vent_data_row_left_media_container"
@@ -30,23 +28,24 @@
 
             <com.everymatch.saas.view.BaseIconTextView
                 android:id="@+id/event_data_row_icon_left"
-                android:layout_width="35dp"
-                android:layout_height="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_vertical|left"
-                android:paddingRight="10dp"
-                android:textSize="25dp"
-                app:text_color="fog_color"
+                android:padding="10dp"
+                android:textSize="23sp"
+                app:text_color="night_color"
                 tools:text="\@" />
 
             <FrameLayout
-                android:layout_width="30dp"
-                android:layout_height="30dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
 
                 <com.everymatch.saas.view.BaseImageView
                     android:id="@+id/view_event_data_row_image_left"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_gravity="center_vertical|left"
                     android:scaleType="centerCrop"
                     android:visibility="gone" />
@@ -63,6 +62,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="left"
+            android:paddingLeft="@dimen/margin_xs"
             android:orientation="vertical">
 
             <com.everymatch.saas.view.BaseTextView
@@ -113,7 +113,7 @@
                 android:layout_alignParentLeft="true"
                 android:gravity="center"
                 android:text="\@"
-                android:textSize="24sp"
+                android:textSize="16sp"
                 app:text_color="fog_color" />
 
         </LinearLayout>

@@ -24,7 +24,8 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
 
     private static final String TAG = SignActivity.class.getSimpleName();
 
-    private Button btnLogin, btnRegister;
+    //Views
+    private Button btnLogin, btnRegister, btnStart;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private DisableableViewPager mViewPager;
     private Fragment mCurrentFragment;
@@ -46,6 +47,10 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
             case R.id.register_button:
                 onRegisterButtonClick();
                 break;
+
+            case R.id.btnStart:
+                onStartClick();
+                break;
         }
     }
 
@@ -53,6 +58,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
         //bind views
         btnLogin = (Button) findViewById(R.id.login_button);
         btnRegister = (Button) findViewById(R.id.register_button);
+        btnStart = (Button) findViewById(R.id.btnStart);
         mViewPager = (DisableableViewPager) findViewById(R.id.pager);
 
         //set Buttons background
@@ -65,6 +71,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
 
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
+        btnStart.setOnClickListener(this);
     }
 
     private void onLoginButtonClick() {
@@ -75,6 +82,10 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
     private void onRegisterButtonClick() {
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_up_animation, 0)
                 .replace(R.id.activity_sign_main_layout, RegistrationFragment.newInstance(), RegistrationFragment.TAG).commit();
+    }
+
+    private void onStartClick() {
+
     }
 
     @Override

@@ -120,6 +120,14 @@
         <item name="android:paddingRight">2dp</item>
     </style>
 
+    <style name="EventsActionIconStyle">
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_margin">@dimen/margin_xxs</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+
 
     <style name="MenuDialogAnimation">
         <item name="android:windowEnterAnimation">@anim/enter_from_top</item>

@@ -33,7 +33,7 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
     private static final String KEY_EVENT = "key.event";
 
     private static final String TAG = EditEventFragment.class.getSimpleName();
-    private static final int CODE_EDIT_EVENT = 19;
+    public  static final int CODE_EDIT_EVENT = 19;
 
     // Data
     private DataEvent mEvent;
@@ -81,6 +81,15 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
         setDetails();
     }
 
+    public String numberFormat(int n) {
+        String answer = "" + n;
+        try {
+            answer = (String.format("%02d", n));
+        } catch (Exception ex) {
+        }
+        return answer;
+    }
+
     /***
      * Set event details
      */
@@ -120,21 +129,24 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
         mRowLocation.setDetails(mEvent.dataPublicEvent.getLocation().text_address);
 
         // Schedule
-        String strDate = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "EEE, MMM d, ''yy");
+        String strDate = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "EEE, MMM d, yyyy");
         if (mEvent.dataPublicEvent.schedule.from != null)
-            strDate += "    " + mEvent.dataPublicEvent.schedule.from.hour + ":" + mEvent.dataPublicEvent.schedule.from.minute + " - " +
-                    mEvent.dataPublicEvent.schedule.to.hour + ":" + mEvent.dataPublicEvent.schedule.to.minute;
+            strDate += "    " + numberFormat(mEvent.dataPublicEvent.schedule.from.hour) + ":"
+                    + numberFormat(mEvent.dataPublicEvent.schedule.from.minute) + " - " +
+                    numberFormat(mEvent.dataPublicEvent.schedule.to.hour) +
+                    ":" + numberFormat(mEvent.dataPublicEvent.schedule.to.minute);
         mRowSchedule.setDetails(strDate);
 
 
         // Participants
-        mRowParticipants.setTitle(mEvent.dataPublicEvent.getUsers().size() + " " + dm.getResourceText(R.string.Participants));
+        int size = mEvent.dataPublicEvent.getUsers().size();
+        mRowParticipants.setTitle(dm.getResourceText(R.string.Participants));
 
         if (mEvent.dataPublicEvent.spots == -1) {
             mRowParticipants.setDetails(DataManager.getInstance().getResourceText(R.string.Unlimited));
         } else {
             try {
-                mRowParticipants.setDetails(new MessageFormat(DataManager.getInstance().getResourceText
+                mRowParticipants.setDetails("" + size + " " + new MessageFormat(DataManager.getInstance().getResourceText
                         (R.string.Event_open_spots)).format(new Object[]{mEvent.dataPublicEvent.spots}));
             } catch (Exception e) {
                 mRowParticipants.setDetails(String.valueOf(mEvent.dataPublicEvent.spots));

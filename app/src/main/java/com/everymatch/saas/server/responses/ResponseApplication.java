@@ -145,6 +145,17 @@ public class ResponseApplication extends BaseResponse {
         return null;
     }
 
+    public DataEvent_Activity getDataEventActivityByEventClientId(String eventClientId) {
+        for (DataActivity activity : getActivities()) {
+            for (DataEvent_Activity dataEventActivity : activity.getEvents()) {
+                if (dataEventActivity.client_id.equals(eventClientId)) {
+                    return dataEventActivity;
+                }
+            }
+        }
+        return null;
+    }
+
     public ApplicationSettings getSettings() {
         if (settings == null)
             settings = new ApplicationSettings();

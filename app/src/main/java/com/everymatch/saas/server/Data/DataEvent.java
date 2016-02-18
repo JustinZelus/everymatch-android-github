@@ -20,7 +20,14 @@ public class DataEvent implements Serializable {
     public String owner_user_id;
     public String activity_client_id;
     public String client_id;
-    public DataDisplaySettings display_settings;
+
+    public DataDisplaySettings getDisplay_settings() {
+        if (display_settings == null)
+            display_settings = new DataDisplaySettings();
+        return display_settings;
+    }
+
+    private DataDisplaySettings display_settings;
     public DataPrivacySettings privacy_settings;
     public DataEntity entity;
 
@@ -72,4 +79,16 @@ public class DataEvent implements Serializable {
         this.role_name = event.role_name;
         this._id = event._id;
     }
+
+    public boolean showPrecentage() {
+        try {
+            String mStatus = dataPublicEvent.user_event_status.status;
+            if (mStatus.equals("saved") || mStatus.equals("guest"))
+                return true;
+        } catch (Exception ex) {
+            return false;
+        }
+        return false;
+    }
+
 }

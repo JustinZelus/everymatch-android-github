@@ -10,6 +10,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.everymatch.saas.Constants;
@@ -58,6 +59,7 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
     /*Views*/
     protected EventHeader mHeader;
     protected TextView tvTitle;
+    private LinearLayout answersContainer;
 
     public QuestionnaireQuestionBaseFragment() {
     }
@@ -85,6 +87,8 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        answersContainer = (LinearLayout) view.findViewById(R.id.answers_container);
         /* init QuestionAndAnswer object it can be sub-QuestionAndAnswer;*/
         getSubQuestionAndAnswerIfNeeded();
 
@@ -148,6 +152,25 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
         mHeader.getIconThree().setVisibility(View.GONE);
         mHeader.setTitle("");
 
+        if (mActivity.IS_VIEW_MODE) {
+            mHeader.getIconOne().setVisibility(View.GONE);
+            mHeader.getIconTwo().setVisibility(View.GONE);
+            mHeader.getIconThree().setVisibility(View.GONE);
+            mHeader.getBackButton().setText(Consts.Icons.icon_Arrowback);
+            mHeader.getBackButton().setVisibility(View.VISIBLE);
+
+            mHeader.getTitle().setVisibility(View.INVISIBLE);
+            mHeader.getCenterText().setVisibility(View.INVISIBLE);
+
+            if (!(this instanceof QuestionnaireQuestionBaseFragment)) {
+                //this is summery
+                mHeader.getTitle().setVisibility(View.VISIBLE);
+                mHeader.setTitle(mActivity.mGeneratedEvent.dataPublicEvent.event_title);
+            }
+
+            blockUI();
+            return;
+        }
 
         if (fromSummery || fromAnythingElse) {
             mHeader.getIconOne().setText(dm.getResourceText(R.string.Done));
@@ -427,5 +450,12 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
 
         if (originalDataJson == null)
             originalDataJson = new Gson().toJson(mQuestionAndAnswer);
+    }
+
+
+    public void blockUI() {
+        for (int i = 0; i < answersContainer.getChildCount(); i++) {
+            answersContainer.getChildAt(i).setClickable(false);
+        }
     }
 }

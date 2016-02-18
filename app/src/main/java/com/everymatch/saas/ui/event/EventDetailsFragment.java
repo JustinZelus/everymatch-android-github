@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.everymatch.saas.R;
+import com.everymatch.saas.server.Data.DataEvent;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.EventHeader;
@@ -18,22 +20,47 @@ import com.everymatch.saas.view.EventHeader;
  */
 public class EventDetailsFragment extends Fragment implements EventHeader.OnEventHeader {
 
+    public static final String ARG_EVENT = "arg.event";
+
+    //Data
+    private DataEvent dataEvent;
+
+
+    //Views
+    LinearLayout llRowsContainer;
+
     private EventHeader mHeader;
     private EventDataRow mDetailsRow;
     private EventDataRow mLocationRow;
     private EventDataRow mDateRow;
     private EventDataRow mPeople;
 
+
+    public static EventDetailsFragment getInstance(DataEvent dataEvent) {
+        EventDetailsFragment answer = new EventDetailsFragment();
+        Bundle bundle = new Bundle(1);
+        bundle.putSerializable(ARG_EVENT, dataEvent);
+        answer.setArguments(bundle);
+        return answer;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dataEvent = (DataEvent) getArguments().getSerializable(ARG_EVENT);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_details, container, false);
-
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        llRowsContainer = (LinearLayout) view.findViewById(R.id.rowsContainer);
 
         mHeader = (EventHeader) view.findViewById(R.id.event_details_eventHeader);
         mHeader.setListener(this);
@@ -43,6 +70,9 @@ public class EventDetailsFragment extends Fragment implements EventHeader.OnEven
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setVisibility(View.GONE);
 
+        addRows();
+
+        /*
         mDetailsRow = (EventDataRow) view.findViewById(R.id.row_1);
         mDetailsRow.getLeftIcon().setVisibility(View.GONE);
         mDetailsRow.getRightIcon().setText(Consts.Icons.icon_Arrowright);
@@ -94,6 +124,13 @@ public class EventDetailsFragment extends Fragment implements EventHeader.OnEven
                 goToOneDetailFragment(mPeople.getTitleView().getText().toString(), mPeople.getDetailsView().getText().toString());
             }
         });
+*/
+    }
+
+    private void addRows() {
+        llRowsContainer.removeAllViews();
+
+
 
     }
 

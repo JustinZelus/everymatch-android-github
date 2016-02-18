@@ -124,6 +124,39 @@ public class EventCarouselAdapter extends BaseRecyclerViewAdapter<EventCarouselA
 
             if (Utils.isEmpty(title))
                 viewHolder.rlActivityLabelHolder.setVisibility(View.GONE);
+
+            /*
+            //Event status
+            String mStatus = mEvent.dataPublicEvent.user_event_status.status;
+
+            if (mStatus.equals("participating")) {
+                mPercent.setText(dm.getResourceText(R.string.Participating));
+                mPercent.setTextColor(ds.getIntColor(EMColor.POSITIVE));
+                mPercentIcon.setText(im.getIconString("StatusPositive"));
+                mPercentIcon.setTextColor(ds.getIntColor(EMColor.POSITIVE));
+            } else if (mStatus.equals("pending")) {
+                mPercent.setText(dm.getResourceText(R.string.Pending));
+                mPercent.setTextColor(ds.getIntColor(EMColor.MAYBE));
+                mPercentIcon.setText(im.getIconString("StatusMaybe"));
+                mPercentIcon.setTextColor(ds.getIntColor(EMColor.MAYBE));
+            } else if (mStatus.equals("saved")) {
+                mPercent.setText(dm.getResourceText(R.string.Saved));
+                mPercent.setTextColor(ds.getIntColor(EMColor.MAYBE));
+                mPercentIcon.setText(im.getIconString("StatusLater"));
+                mPercentIcon.setTextColor(ds.getIntColor(EMColor.MAYBE));
+            } else if (mStatus.equals("hosting")) {
+                mPercent.setText("HOSTING");
+                mPercent.setTextColor(ds.getIntColor(EMColor.WHITE));
+                mPercentIcon.setText(im.getIconString("StatusHosting"));
+                mPercentIcon.setTextColor(ds.getIntColor(EMColor.WHITE));
+            } else if (mStatus.equals("invited")) {
+                mPercent.setText("INVITED");
+                mPercent.setTextColor(ds.getIntColor(EMColor.NEGATIVE));
+                mPercentIcon.setText(im.getIconString("StatusInvited"));
+                mPercentIcon.setTextColor(ds.getIntColor(EMColor.NEGATIVE));
+            }
+
+            */
         }
     }
 

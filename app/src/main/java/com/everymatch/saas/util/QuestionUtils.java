@@ -120,14 +120,12 @@ public class QuestionUtils {
         if (answer == null || answer.value == null) {
             value = DataManager.getInstance().getResourceText(R.string.Unanswered);
         } else {
-
+            Gson gson = new Gson();
+            String json = gson.toJson(answer.value);
             try {
-                Gson gson;
                 switch (question.form_type) {
                     case FormType.LOCATION:
-                        gson = new Gson();
                         // DataLocation location = gson.fromJson(gson.toJson(answer.value), DataLocation.class);
-                        String json = gson.toJson(answer.value);
                         JSONObject jsonObject = new JSONObject(json);
                         DataLocation location = DataLocation.fromJsonObject(jsonObject);
 
@@ -194,6 +192,11 @@ public class QuestionUtils {
                         value = answer.value.toString().replace(",", "-");
                         break;
 
+                    case FormType.SCHEDULE:
+                        DataDate from = new Gson().fromJson(gson.toJson(json), DataDate.class);
+
+                        break;
+
                     default:
                         value = (String) answer.value;
                         break;
@@ -219,6 +222,7 @@ public class QuestionUtils {
                 case QuestionType.MY_LOCATION:
                 case QuestionType.EVENT_LOCATION:
                 case QuestionType.EVENT_LIST:
+                case QuestionType.EVENT_SCHEDULE:
                     //here we need to converts answer.value to json object
                     String str = new Gson().toJson(answer.value);
                     JSONObject jsonObject = new JSONObject(str);

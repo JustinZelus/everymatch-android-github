@@ -30,7 +30,7 @@ public class QuestionnaireNotMandatoryFragment extends BaseFragment
     public static final int REQUEST_CODE_NOT_MANDATORY = 121;
 
     //Data
-    private static final String QUESTION_NUMBER_FORMAT = "%s/%s";
+    public static final String QUESTION_NUMBER_FORMAT = "%s/%s";
     QuestionnaireActivity mActivity;
     ArrayList<DataQuestion> mNotMandatoryQuestions = new ArrayList<>();
 

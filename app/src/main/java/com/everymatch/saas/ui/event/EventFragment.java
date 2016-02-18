@@ -47,6 +47,7 @@ import com.everymatch.saas.ui.chat.ChatFragment;
 import com.everymatch.saas.ui.common.PeopleCarouselFragment;
 import com.everymatch.saas.ui.inbox.InboxActivity;
 import com.everymatch.saas.ui.match.MatchActivity;
+import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.ui.user.UserActivity;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.util.Utils;
@@ -250,8 +251,8 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
             Picasso.with(getContext()).load(mEvent.dataPublicEvent.event_icon).into(mLogo);
         }
 
-         //Title
-        mHeader.setTitle(mEvent.dataPublicEvent.title);
+        //Title
+        mHeader.setTitle(mEvent.dataPublicEvent.event_title);
 
         // DETAILS
         mDetailsRow.setTitle(dm.getResourceText(R.string.Details));
@@ -479,9 +480,12 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                 break;
 
             case R.id.event_row_details:
-                transaction.addToBackStack("myFragment")
-                        .replace(R.id.event_layout, new EventDetailsFragment(/*TODO send details*/))
-                        .commit();
+                ////*transaction.addToBackStack("myFragment")
+                //       .add(R.id.event_layout, new EventDetailsFragment(/*TODO send details*/))
+                //      .commit();*/
+                QuestionnaireActivity.IS_VIEW_MODE = true;
+                QuestionnaireActivity.editEvent(this, mEvent, null, QuestionnaireActivity.EDIT_EVENT_TYPE.PROFILE, EditEventFragment.CODE_EDIT_EVENT);
+
                 break;
             case R.id.event_row_location:
                 EventLocationFragment eventLocationFragment = new EventLocationFragment();

@@ -15,15 +15,15 @@ import org.json.JSONObject;
  */
 
 public class DataSetupQuestionsObject {
-    public int numberOfSpots = -1;
+    public int numberOfSpots = -2;
     public String joinType = JoinType.FREE;
-    public String privacy;
+    public String privacy = "public";
     public boolean isParticipating = true;
     /* the invited users */
     public String participants;
 
     public DataSetupQuestionsObject() {
-        this.numberOfSpots = -1;
+        this.numberOfSpots = -2;
     }
 
     public JSONObject getEntityObject() {

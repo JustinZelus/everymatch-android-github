@@ -75,11 +75,11 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
 
         if (mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
             view.findViewById(R.id.llAreYouParticipatingHolder).setVisibility(View.GONE);
-            recoverAnswer();
         } else {
             // Default setup values
             switchSetupEventJoinType.setChecked(false);
         }
+        recoverAnswer();
     }
 
     @Override
@@ -112,41 +112,47 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
 
 
     private void recoverAnswer() {
-        if (tvEventSetupSpotsNumber.getText().equals(dm.getResourceText(R.string.click_to_set))) {
-            tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.MOON));
-            setTitleEnabled(false);
-        } else {
-            // spots
-            int numberOfSpots = mActivity.dataSetupQuestionsObject.numberOfSpots;
-            tvEventSetupSpotsNumber.setText(numberOfSpots == -1 ? spots[0] : numberOfSpots + "");
-            tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.PRIMARY));
+        try {
+            //spots
+            if (mActivity.dataSetupQuestionsObject.numberOfSpots == -2) {
+                tvEventSetupSpotsNumber.setText(dm.getResourceText(R.string.click_to_set));
+                tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.MOON));
+                setTitleEnabled(false);
+            } else {
+                int numberOfSpots = mActivity.dataSetupQuestionsObject.numberOfSpots;
+                tvEventSetupSpotsNumber.setText(numberOfSpots == -1 ? spots[0] : numberOfSpots + "");
+                tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.PRIMARY));
+                setTitleEnabled(true);
+            }
+
+
+            // privacy
+            tvEventSetupPrivacy.setText(Utils.setFirstLetterUpperCase(mActivity.dataSetupQuestionsObject.privacy));
+
+            // participating
+            switchSetupIsParticipating.setChecked(mActivity.dataSetupQuestionsObject.isParticipating);
+
+            // Join Type
+            switchSetupEventJoinType.setChecked(mActivity.dataSetupQuestionsObject.joinType.equalsIgnoreCase(JoinType.FREE) ? false : true);
+
+        } catch (Exception ex) {
         }
-
-        // privacy
-        tvEventSetupPrivacy.setText(Utils.setFirstLetterUpperCase(mActivity.dataSetupQuestionsObject.privacy));
-
-        // participating
-        switchSetupIsParticipating.setChecked(mActivity.dataSetupQuestionsObject.isParticipating);
-
-        // Join Type
-        switchSetupEventJoinType.setChecked(mActivity.dataSetupQuestionsObject.joinType.equalsIgnoreCase(JoinType.FREE) ? false : true);
-
         if (mActivity.isInEditMode()) {
 
             //Recover Spots
-            tvEventSetupSpotsNumber.setText("" + mActivity.dataSetupQuestionsObject.numberOfSpots);
+            //tvEventSetupSpotsNumber.setText("" + mActivity.dataSetupQuestionsObject.numberOfSpots);
 
-            int numberOfSpots = mActivity.dataSetupQuestionsObject.numberOfSpots;
-            tvEventSetupSpotsNumber.setText(numberOfSpots == -1 ? spots[0] : numberOfSpots + "");
-            tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.PRIMARY));
+            //int numberOfSpots = mActivity.dataSetupQuestionsObject.numberOfSpots;
+            //tvEventSetupSpotsNumber.setText(numberOfSpots == -1 ? spots[0] : numberOfSpots + "");
+            //tvEventSetupSpotsNumber.setTextColor(ds.getIntColor(EMColor.PRIMARY));
 
             // Recover Privacy
-            tvEventSetupPrivacy.setText(mActivity.dataSetupQuestionsObject.privacy);
+            //tvEventSetupPrivacy.setText(mActivity.dataSetupQuestionsObject.privacy);
 
             //no are you participating in edit mode
 
             // Join Type
-            switchSetupEventJoinType.setChecked(mActivity.dataSetupQuestionsObject.joinType.equalsIgnoreCase(JoinType.FREE) ? false : true);
+            //switchSetupEventJoinType.setChecked(mActivity.dataSetupQuestionsObject.joinType.equalsIgnoreCase(JoinType.FREE) ? false : true);
         }
 
         setAnswer();
@@ -207,7 +213,8 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
     }
 
     public void setAnswer() {
-        setAnswer("setup");
+        if (mActivity.dataSetupQuestionsObject.numberOfSpots != -2)
+            setAnswer("setup");
     }
 
 

@@ -60,6 +60,8 @@ import java.util.List;
 public class QuestionnaireActivity extends BaseActivity implements PeopleListener {
     private static final String TAG = QuestionnaireActivity.class.getSimpleName();
 
+    public static boolean IS_VIEW_MODE = false;
+
     public enum CREATE_MODE {CREATE_ACTIVITY, CREATE_EVENT, ANSWER_SINGLE_QUESTION, EDIT_ACTIVITY, EDIT_EVENT}
 
     public enum EDIT_EVENT_TYPE {SETTINGS, PROFILE, SIGNLE_QUESTION, PARTICIPANTS}
@@ -299,7 +301,6 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
      * Use this method in order to create a process for editing an event
      */
     private void createEditEventProcess() {
-
         mCurrentQuestionIndex = 0;
 
         edit_event_type = (EDIT_EVENT_TYPE) getIntent().getSerializableExtra(EXTRA_EVENT_EDIT_TYPE);
@@ -308,72 +309,66 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
         mGeneratedEvent = (DataEvent) getIntent().getSerializableExtra(EXTRA_EVENT);
 
-        ResponseApplication responseApplication = DataStore.getInstance().getApplicationData();
+        //ResponseApplication responseApplication = DataStore.getInstance().getApplicationData();
 
-        for (DataActivity activity : responseApplication.getActivities()) {
+        DataEvent_Activity dataEventActivity = ds.getApplicationData().getDataEventActivityByEventClientId(mGeneratedEvent.client_id);
 
-            if (activity.client_id.equals(mGeneratedEvent.activity_client_id)) {
+        for (int i = 0; i < dataEventActivity.questions.length; i++) {
+            DataQuestion question = dataEventActivity.questions[i];
 
-                for (DataEvent_Activity event : activity.getEvents()) {
+            // In single question mode - we are only looking for a SINGLE question
+            if (requiredSingleQuestion != null && question.questions_id == requiredSingleQuestion.questions_id) {
+                requiredSingleQuestion = question;
+                mCurrentQuestionIndex = i; // save position so the base questionare fragment will edit this answer position
+            }
 
-                    if (event.event_id.equals(mGeneratedEvent.dataPublicEvent.event_id)) {
+            QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer(question);
 
-                        for (int i = 0; i < event.questions.length; i++) {
-
-                            DataQuestion question = event.questions[i];
-
-                            // In single question mode - we are only looking for a SINGLE question
-                            if (requiredSingleQuestion != null && question.questions_id ==
-                                    requiredSingleQuestion.questions_id) {
-                                requiredSingleQuestion = question;
-                                mCurrentQuestionIndex = i; // save position so the base questionare fragment will edit this answer position
-                            }
-
-                            QuestionAndAnswer questionAndAnswer = new QuestionAndAnswer(question);
-
-                            for (DataAnswer answer : mGeneratedEvent.profile.answers) {
-                                try {
-                                    if (answer.questions_id == question.questions_id) {
-                                        questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTitle(question, answer);
-                                        JSONObject jsonObject = new JSONObject();
-                                        questionAndAnswer.userAnswerData = jsonObject;
-                                         jsonObject.put("questions_id", question.questions_id);
-                                        jsonObject.put("status", "active");
-                                        // jsonObject.put("value", QuestionUtils.updateValueItem(question.question_type, answer););
-                                        QuestionUtils.updateValueItem(question.question_type, answer, questionAndAnswer.userAnswerData);
-                                        //questionAndAnswer.userAnswerData = QuestionUtils.getAnswerValue(question.question_type, answer);
-                                        break;
-                                    }
-                                } catch (Exception ex) {
-                                    EMLog.e(TAG, ex.getMessage());
-                                }
-
-                            }
-
-                            questionAndAnswer.isAnsweredConfirmedByClickingNext = true;
-
-                            /* Location and schedule should not be visible in the summary, hence save them for later*/
-                            if (edit_event_type == EDIT_EVENT_TYPE.PROFILE && (FormType.SCHEDULE.equals(question.form_type) || FormType.LOCATION.equals(question.form_type))) {
-                                mTemporaryQuestionsAndAnswers.add(questionAndAnswer);
-                            } else {
-                                mQuestionsAndAnswers.add(questionAndAnswer);
-                            }
-                        }
-
+            for (DataAnswer answer : mGeneratedEvent.profile.answers) {
+                try {
+                    if (answer.questions_id == question.questions_id) {
+                        questionAndAnswer.userAnswerStr = QuestionUtils.getAnsweredTitle(question, answer);
+                        JSONObject jsonObject = new JSONObject();
+                        questionAndAnswer.userAnswerData = jsonObject;
+                        jsonObject.put("questions_id", question.questions_id);
+                        jsonObject.put("status", "active");
+                        // jsonObject.put("value", QuestionUtils.updateValueItem(question.question_type, answer););
+                        QuestionUtils.updateValueItem(question.question_type, answer, questionAndAnswer.userAnswerData);
+                        //questionAndAnswer.userAnswerData = QuestionUtils.getAnswerValue(question.question_type, answer);
                         break;
                     }
+                } catch (Exception ex) {
+                    EMLog.e(TAG, ex.getMessage());
                 }
+
             }
+
+            questionAndAnswer.isAnsweredConfirmedByClickingNext = true;
+
+            /* Location and schedule should not be visible in the summary, hence save them for later*/
+            if (edit_event_type == EDIT_EVENT_TYPE.PROFILE && (FormType.SCHEDULE.equals(question.form_type) || FormType.LOCATION.equals(question.form_type))) {
+                mTemporaryQuestionsAndAnswers.add(questionAndAnswer);
+            } else {
+                mQuestionsAndAnswers.add(questionAndAnswer);
+            }
+
+            // break;
         }
+
 
         // Recover setup question
-        dataSetupQuestionsObject.isParticipating = mGeneratedEvent.dataPublicEvent.is_participating;
-        dataSetupQuestionsObject.joinType = mGeneratedEvent.dataPublicEvent.join_type;
-        dataSetupQuestionsObject.privacy = mGeneratedEvent.display_settings.type;
+        try {
+            dataSetupQuestionsObject.isParticipating = mGeneratedEvent.dataPublicEvent.is_participating;
+            dataSetupQuestionsObject.joinType = mGeneratedEvent.dataPublicEvent.join_type;
+            dataSetupQuestionsObject.privacy = mGeneratedEvent.getDisplay_settings().type;
 
-        if (mGeneratedEvent.dataPublicEvent.spots > 0) {
-            dataSetupQuestionsObject.numberOfSpots = mGeneratedEvent.dataPublicEvent.spots;
+            if (mGeneratedEvent.dataPublicEvent.spots > 0) {
+                dataSetupQuestionsObject.numberOfSpots = mGeneratedEvent.dataPublicEvent.spots;
+            }
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
         }
+
 
         request_type = RequestCreateEvent.REQUEST_TYPE.UPDATE_EVENT;
         mHeader.getBackButton().setVisibility(View.GONE);
@@ -1073,4 +1068,9 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
     public void onViewAllUsersClick(DataPeopleHolder holder) {
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IS_VIEW_MODE = false;
+    }
 }

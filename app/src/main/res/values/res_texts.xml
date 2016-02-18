@@ -174,5 +174,6 @@
     <string name="Edit_Event_Location">Edit_Event_Location</string>
     <string name="Edit_Event_Schedule">Edit_Event_Schedule</string>
     <string name="Edit_Event_Participants">Edit_Event_Participants</string>
+    <string name="Start">Start</string>
 
 </resources>

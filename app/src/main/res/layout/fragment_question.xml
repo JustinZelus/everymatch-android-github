@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:clickable="true"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     app:bg_color="white_color">
 
     <com.everymatch.saas.view.EventHeader
@@ -36,5 +36,6 @@
         android:layout_marginTop="@dimen/margin_m"
         android:gravity="top"
         android:orientation="vertical" />
+
 
 </com.everymatch.saas.view.BaseRelativeLayout>
