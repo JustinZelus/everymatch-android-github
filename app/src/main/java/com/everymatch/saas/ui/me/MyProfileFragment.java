@@ -28,6 +28,7 @@ import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.me.settings.SettingsFragment;
+import com.everymatch.saas.ui.sign.UpdateMobileNumberFragment;
 import com.everymatch.saas.util.QuestionUtils;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
@@ -142,11 +143,6 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         mMyUser = DataStore.getInstance().getUser();
 
         /* update static questions */
-        //fetFirstName.getEtValue().setText(mMyUser.first_name);
-        //fetLastName.getEtValue().setText(mMyUser.last_name);
-
-        //etFirstName.setText(ds.getUser().first_name);
-        //etLastName.setText(ds.getUser().last_name);
         //***************************************
 
         //add static questions
@@ -194,6 +190,27 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
         mStaticQuestionsHolder.addView(edrLastName);
         mStaticQuestionsHolder.addView(new ViewSeperator(getActivity(), null));
 
+
+        //Phone
+        EventDataRow edrPhone = new EventDataRow(getActivity());
+        edrPhone.setTitle(dm.getResourceText(R.string.Phone));
+        edrPhone.setDetails(ds.getUser().phone);
+        edrPhone.getLeftMediaContainer().setVisibility(View.GONE);
+        edrPhone.setRightIconText(Consts.Icons.icon_Next);
+        edrPhone.setLargePaddingTopBottom();
+        edrPhone.setRightText("verified");
+        edrPhone.getRightText().setTextColor(ds.getIntColor(EMColor.PRIMARY));
+        edrPhone.getRightText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, new UpdateMobileNumberFragment(),
+                        SettingsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
+                        R.anim.enter_from_left, R.anim.exit_to_right);
+            }
+        });
+
+        mStaticQuestionsHolder.addView(edrPhone);
+        mStaticQuestionsHolder.addView(new ViewSeperator(getActivity(), null));
 
     }
 
@@ -293,7 +310,6 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
     public void onClick(View v) {
         if (v.getTag() != null) {
             //need to set first or last name
-
             String type = (String) v.getTag();
             Fragment fragment = null;
             if (!Utils.isEmpty(type) && type.equals("first")) {
@@ -327,7 +343,7 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
             }
 
             showDialog(dm.getResourceText(R.string.Loading));
-            ProfileManager.UpdateProfile(new GenericCallback() {
+            ProfileManager.UpdateProfile(false, null, null, new GenericCallback() {
                 @Override
                 public void onDone(boolean success, Object data) {
                     stopDialog();

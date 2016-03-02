@@ -75,8 +75,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
     }
 
     private void onLoginButtonClick() {
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_up_animation, 0)
-                .replace(R.id.activity_sign_main_layout, LoginFragment.newInstance(), LoginFragment.TAG).commit();
+        // getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_up_animation, 0).replace(R.id.activity_sign_main_layout, LoginFragment.newInstance(), LoginFragment.TAG).commit();
     }
 
     private void onRegisterButtonClick() {
@@ -85,7 +84,8 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
     }
 
     private void onStartClick() {
-
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_up_animation, 0)
+                .add(R.id.activity_sign_main_layout, new SMSFragment(), SMSFragment.TAG).addToBackStack("").commit();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
     public void onActionClick(boolean isLoginClick) {
 
         if (isLoginClick) {
-            replaceFragment(R.id.activity_sign_main_layout, LoginFragment.newInstance(), LoginFragment.TAG);
+            // replaceFragment(R.id.activity_sign_main_layout, LoginFragment.newInstance(), LoginFragment.TAG);
         } else {
             replaceFragment(R.id.activity_sign_main_layout, RegistrationFragment.newInstance(), RegistrationFragment.TAG);
         }
@@ -120,7 +120,7 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
 
     @Override
     public void onRegistrationComplete(String loginEmail) {
-        replaceFragment(R.id.activity_sign_main_layout, LoginFragment.newInstance(loginEmail, true, false), LoginFragment.TAG);
+        replaceFragment(R.id.activity_sign_main_layout, LoginFragment.newInstance(null, null, null), LoginFragment.TAG);
     }
 
     @Override
@@ -152,10 +152,8 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
 
     @Override
     public void onLoginCompleted() {
-
         // Remove timestamp in order to fetch new application object
         Preferences.getInstance().setTimestamp(null);
-
         fetchApplicationData();
     }
 
@@ -167,6 +165,6 @@ public class SignActivity extends BaseLoginActivity implements BaseSignFragment.
 
     @Override
     public void onPasswordSent(String email) {
-        replaceFragment(R.id.activity_sign_main_layout, LoginFragment.newInstance(email, false, true), LoginFragment.TAG);
+        replaceFragment(R.id.activity_sign_main_layout, LoginFragment.newInstance(null, null, null), LoginFragment.TAG);
     }
 }

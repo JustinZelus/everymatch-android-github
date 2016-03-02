@@ -12,25 +12,26 @@ import com.everymatch.saas.client.data.DataStore;
 /**
  * Created by dors on 10/26/15.
  */
-public class BaseLinearLayout extends LinearLayout{
+public class BaseLinearLayout extends LinearLayout {
 
     public BaseLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initAttributes(attrs);
+        if (!isInEditMode())
+            initAttributes(attrs);
     }
 
     private void initAttributes(AttributeSet attributeSet) {
 
-        if (attributeSet == null){
+        if (attributeSet == null) {
             return;
         }
 
         TypedArray typedArray = getContext().obtainStyledAttributes(attributeSet, R.styleable.ResourceColor);
 
-        if (typedArray != null){
+        if (typedArray != null) {
             int bgColor = typedArray.getInt(R.styleable.ResourceColor_bg_color, -1);
 
-            if (bgColor != -1){
+            if (bgColor != -1) {
                 setBackgroundColor(Color.parseColor(DataStore.getInstance().getColor(bgColor)));
             }
 

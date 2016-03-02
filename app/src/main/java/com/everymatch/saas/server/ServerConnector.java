@@ -97,10 +97,6 @@ public class ServerConnector {
             case Request.Method.GET:
             case Request.Method.DELETE:
             case Request.Method.PATCH:
-                // my patch here (idan) - did it because unsave event base on delete with body
-                /*if (!Utils.isEmpty(baseRequest.getEncodedBody())) {
-                    body = "=" + baseRequest.getEncodedBody();
-                } else*/
             {
                 url = url.replaceAll(" ", "%20");
             }
@@ -124,7 +120,7 @@ public class ServerConnector {
 
                 if (errorResponse.getStatusCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                     Log.i(TAG, "Unauthorized - going to refresh token");
-//                    TokenRefresher.doTokenRefresh();
+                    //TokenRefresher.doTokenRefresh();
                 }
 
                 EMLog.e(TAG, "onErrorResponse " + error.toString());

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/margin_xs"
+    android:layout_marginRight="@dimen/margin_xs"
+    android:layout_marginTop="@dimen/margin_xs"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/margin_xs"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/margin_s" >
+
+        <com.everymatch.saas.view.IconImageView
+            android:id="@+id/eventEmptyStateIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:text_color="night_color"
+            android:visibility="visible"
+            android:layout_gravity="center_vertical"
+            app:text_size="16dp" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/leftText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textSize="16dp"
+            tools:text="left"
+            app:text_color="night_color" />
+
+    </LinearLayout>
+
+    <com.everymatch.saas.view.BaseLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_xs"
+        app:bg_color="white_color">
+
+        <com.everymatch.saas.view.BaseTextView
+            style="@style/EmTextStyleMeta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_xs"
+            app:text_color="night_color"
+            app:text_key="@string/No_suggestion"
+            tools:text="@string/No_suggestion" />
+
+        <com.everymatch.saas.view.BaseTextView
+            style="@style/EmTextStyleMeta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:text_color="moon_color"
+            app:text_key="@string/No_suggestion_subtitle"
+            tools:text="@string/No_suggestion_subtitle" />
+
+    </com.everymatch.saas.view.BaseLinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.everymatch.saas.view.BaseRelativeLayout
+            android:id="@+id/rlEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:padding="@dimen/margin_xs"
+            app:bg_color="white_color">
+
+            <com.everymatch.saas.view.BaseTextView
+                style="@style/EmTextStyleMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                app:text_color="primary_color"
+                app:text_key="@string/ProfileEdit"
+                tools:text="@string/ProfileEdit" />
+        </com.everymatch.saas.view.BaseRelativeLayout>
+
+        <com.everymatch.saas.view.BaseRelativeLayout
+            android:id="@+id/rlCreateEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_weight="1"
+            android:padding="@dimen/margin_xs"
+            app:bg_color="white_color">
+
+            <com.everymatch.saas.view.BaseTextView
+                style="@style/EmTextStyleMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                app:text_color="primary_color"
+                app:text_key="@string/Create_Event"
+                tools:text="@string/Create_Event" />
+        </com.everymatch.saas.view.BaseRelativeLayout>
+    </LinearLayout>
+</LinearLayout>

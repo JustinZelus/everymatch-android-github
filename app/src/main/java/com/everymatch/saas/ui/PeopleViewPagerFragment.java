@@ -104,8 +104,15 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
             mHeader = (EventHeader) view.findViewById(R.id.participants_eventHeader);
         }
 
+        setHeader();
+        /*lets load some content into our adapter*/
+        getPeople(0);
+    }
+
+    private void setHeader() {
+        mHeader.setVisibility(View.VISIBLE);
         mHeader.setListener(this);
-        mHeader.getBackButton().setVisibility(View.GONE);
+        mHeader.getBackButton().setText(Consts.Icons.icon_New_Close);
         mHeader.getIconOne().setVisibility(View.GONE);
         mHeader.getIconTwo().setVisibility(View.GONE);
         mHeader.getIconThree().setText(Consts.Icons.icon_Search);
@@ -119,8 +126,6 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
         else if (pagerScreenType == DataStore.SCREEN_TYPE_INVITE_PARTICIPANTS)
             mHeader.setTitle(DataManager.getInstance().getResourceText(R.string.Invite_Participants));
 
-        /*lets load some content into our adapter*/
-        getPeople(0);
     }
 
     private void getPeople(final int pagePosition) {
@@ -137,7 +142,7 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
             //participating, invited, maybe, pending, bestmatch
             String status = mDataEvent.dataPublicEvent.user_event_status.status;
             if (status != null) {
-                mAdapter = new PeopleTabsPagerAdapter(pagerScreenType, getChildFragmentManager(), mDataEvent, mDataEvent.dataPublicEvent.participants);
+                mAdapter = new PeopleTabsPagerAdapter(pagerScreenType, getChildFragmentManager(), mDataEvent, mDataEvent.dataPublicEvent.getParticipants());
             }
 
         } else if (pagerScreenType == DataStore.SCREEN_TYPE_INVITE_PARTICIPANTS) {

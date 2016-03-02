@@ -139,7 +139,7 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
 
 
         // Participants
-        int size = mEvent.dataPublicEvent.getUsers().size();
+        int size = mEvent.dataPublicEvent.getAllUsers().size();
         mRowParticipants.setTitle(dm.getResourceText(R.string.Participants));
 
         if (mEvent.dataPublicEvent.spots == -1) {

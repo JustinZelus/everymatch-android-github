@@ -25,17 +25,20 @@ import com.everymatch.saas.Constants;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.ServerConnector;
+import com.everymatch.saas.server.request_manager.ProfileManager;
 import com.everymatch.saas.server.requests.RequestProviderLogin;
 import com.everymatch.saas.server.requests.RequestTNC;
 import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
+import com.everymatch.saas.server.responses.ResponseApplication;
 import com.everymatch.saas.server.responses.ResponseLoadProviders;
 import com.everymatch.saas.server.responses.ResponseSignIn;
 import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.singeltones.Preferences;
-import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.WebViewActivity;
+import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.NotifierPopup;
 import com.everymatch.saas.util.ShapeDrawableUtils;
@@ -51,26 +54,33 @@ import org.json.JSONObject;
  */
 public abstract class BaseSignFragment extends BaseFragment implements EventHeader.OnEventHeader, TextWatcher {
 
-    private final String TAG = this.getClass().getSimpleName();
-
     protected static final String EXTRA_ACCESS_TOKEN = "key";
     protected static final int REQUEST_CODE_GET_TOKEN = 1;
+    private final String TAG = this.getClass().getSimpleName();
+    //DATA
+    protected ResponseApplication.DataCountryPhoneCode countryPhoneCode;
+    protected String password;
+    protected boolean isUpdate;
 
+
+    protected Callbacks mCallbacks;
+    protected boolean mHideProviders;
+    //VIEWS
     private TextView mTextTitle;
     private TextView mTextOr;
     private View mOrContainer;
     private LinearLayout mProvidersContainer;
 
-    protected Callbacks mCallbacks;
-    protected boolean mHideProviders;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        if (context instanceof Callbacks){
+        isUpdate = !(ds.getUser()==null);
+        if (isUpdate)
+            return;
+        if (context instanceof Callbacks) {
             mCallbacks = (Callbacks) context;
-        } else{
+        } else {
             throw new IllegalStateException(context + " must implements " + Callbacks.class.getName());
         }
     }
@@ -78,23 +88,27 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        seatHeader((EventHeader) view.findViewById(R.id.fragment_base_sign_header));
+        if (this instanceof FragmentEnterCode)
+            return;
+
+        setHeader((EventHeader) view.findViewById(R.id.fragment_base_sign_header));
 
         mProvidersContainer = (LinearLayout) view.findViewById(R.id.fragment_base_sign_provider_button_container);
         mTextOr = (TextView) view.findViewById(R.id.fragment_base_sign_text_or);
         mOrContainer = view.findViewById(R.id.fragment_sign_base_or_container);
         mTextTitle = (TextView) view.findViewById(R.id.fragment_base_sign_text_title);
 
-        if (mHideProviders){
+
+        if (mHideProviders) {
             mTextTitle.setVisibility(View.GONE);
             mOrContainer.setVisibility(View.GONE);
-        } else{
+        } else {
             setProviders();
             setOrButton();
         }
     }
 
-    protected void showError(int resource){
+    protected void showError(int resource) {
         NotifierPopup.Builder builder = new NotifierPopup.Builder(getActivity());
         builder.setMessage(resource);
         builder.setType(NotifierPopup.TYPE_ERROR);
@@ -102,16 +116,16 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
         builder.show();
     }
 
-    private void setOrButton(){
+    private void setOrButton() {
 
         Drawable drawable = getResources().getDrawable(R.drawable.or_background);
 
-        if (drawable instanceof ShapeDrawable){
+        if (drawable instanceof ShapeDrawable) {
             ShapeDrawable shapeDrawable = (ShapeDrawable) drawable;
             shapeDrawable.getPaint().setColor(ds.getIntColor(EMColor.BACKGROUND));
             shapeDrawable.setColorFilter(ds.getIntColor(EMColor.FOG), PorterDuff.Mode.SRC_ATOP);
 
-        } else{
+        } else {
             GradientDrawable gradientDrawable = (GradientDrawable) drawable;
             gradientDrawable.setColor(ds.getIntColor(EMColor.BACKGROUND));
             gradientDrawable.setStroke(Utils.dpToPx(1), ds.getIntColor(EMColor.FOG));
@@ -177,8 +191,9 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
         text.setText(strBuilder);
     }
 
-    private void setProviders(){
-
+    private void setProviders() {
+        if (ds.responseLoadProviders == null)
+            return;
         final ResponseLoadProviders.Provider[] providers = ds.responseLoadProviders.getProviders();
         for (int i = 0; i < providers.length; ++i) {
             BaseButton button = new BaseButton(getActivity());
@@ -208,11 +223,12 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), WebViewActivity.class);
                     intent.putExtra(WebViewActivity.EXTRA_VIEW_URL, providers[providerIndex].client_url.
-                            replace("[culture_name]",ds.getCulture()).
+                            replace("[culture_name]", ds.getCulture()).
                             //replace("[culture_name]", getString(R.string.host_language)).
-                            replace("[app_host]", "/").
+                                    //replace("[app_host]", "/").
+                                    replace("[app_code]", password).
                             replace("[app_id]", getString(R.string.app_id)));
-                    intent.putExtra(WebViewActivity.EXTRA_RETURN_URL, Constants.AUTH2_SERVICE_URL + "?");
+                    intent.putExtra(WebViewActivity.EXTRA_RETURN_URL, Constants.getOAUTH2_SERVICE_URL() + "?");
                     intent.putExtra(WebViewActivity.EXTRA_RETURN_DATA_NAME, EXTRA_ACCESS_TOKEN);
                     startActivityForResult(intent, REQUEST_CODE_GET_TOKEN);
                 }
@@ -220,7 +236,7 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
         }
     }
 
-    public void seatHeader(EventHeader header) {
+    public void setHeader(EventHeader header) {
         header.setListener(this);
         header.getBackButton().setText(Consts.Icons.icon_Arrowdown);
         header.getIconOne().setVisibility(View.GONE);
@@ -238,6 +254,27 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
     public void onOneIconClicked() {
     }
 
+    protected void getToken(String userName, String password) {
+        showDialog(dm.getResourceText(R.string.Loading));
+        ProfileManager.Login(userName, password, new GenericCallback() {
+            @Override
+            public void onDone(boolean success, Object data) {
+                if (!success) {
+                    stopDialog();
+                    return;
+                }
+                ResponseSignIn responseSignIn = (ResponseSignIn) data;
+                Preferences.getInstance().setAccessToken(responseSignIn.getAccess_token());
+                Preferences.getInstance().setTokenType(responseSignIn.getToken_type());
+                Preferences.getInstance().setExpireIn(responseSignIn.getExpires_in());
+                Preferences.getInstance().setUsername(responseSignIn.getUserName());
+                Preferences.getInstance().setExpires(responseSignIn.getExpires());
+
+                mCallbacks.onLoginCompleted();
+            }
+        });
+    }
+
     @Override
     public void onTwoIconClicked() {
     }
@@ -250,7 +287,7 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
         mDialog = new ProgressDialog(getActivity());
         mDialog.setCancelable(false);
         mDialog.setCanceledOnTouchOutside(false);
-        ((ProgressDialog)mDialog).setMessage("Loading...");
+        ((ProgressDialog) mDialog).setMessage("Loading...");
         mDialog.show();
     }
 
@@ -300,18 +337,21 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
         }
     }
 
-    public interface Callbacks {
-        void onActionClick(boolean isLoginClick);
-        void onRegistrationComplete(String email);
-        void onLoginCompleted();
-        void onForgotPasswordClick();
-    }
-
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    public interface Callbacks {
+        void onActionClick(boolean isLoginClick);
+
+        void onRegistrationComplete(String email);
+
+        void onLoginCompleted();
+
+        void onForgotPasswordClick();
     }
 }

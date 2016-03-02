@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/holder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:bg_color="white_color"
+    android:padding="@dimen/margin_xs">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvTrendingEventsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_xs"
+            android:text="Trending Events"
+            app:text_color="night_color"
+            app:text_key="@string/Trending_Events" />
+
+        <cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager
+            android:id="@+id/trendingEventViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="320dp" />
+    </LinearLayout>
+</com.everymatch.saas.view.BaseLinearLayout>

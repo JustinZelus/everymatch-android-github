@@ -82,6 +82,13 @@ public class ResponseApplication extends BaseResponse {
 
     public Event event;
 
+    private ArrayList<DataCountryPhoneCode> country_phone_codes;
+
+    public ArrayList<DataCountryPhoneCode> getCountry_phone_codes() {
+        if (country_phone_codes == null)
+            country_phone_codes = new ArrayList<>();
+        return country_phone_codes;
+    }
 
     public DataQuestion[] getUser_profile_questions() {
         if (user_profile_questions == null)
@@ -147,10 +154,14 @@ public class ResponseApplication extends BaseResponse {
 
     public DataEvent_Activity getDataEventActivityByEventClientId(String eventClientId) {
         for (DataActivity activity : getActivities()) {
-            for (DataEvent_Activity dataEventActivity : activity.getEvents()) {
-                if (dataEventActivity.client_id.equals(eventClientId)) {
-                    return dataEventActivity;
+            try {
+                for (DataEvent_Activity dataEventActivity : activity.getEvents()) {
+                    if (dataEventActivity.client_id != null && dataEventActivity.client_id.equals(eventClientId)) {
+                        return dataEventActivity;
+                    }
                 }
+            } catch (Exception ex) {
+                continue;
             }
         }
         return null;
@@ -170,6 +181,14 @@ public class ResponseApplication extends BaseResponse {
             i++;
         }
         return 0;
+    }
+
+    public String[] getCountryPhoneCodes() {
+        String[] answer = new String[getCountry_phone_codes().size()];
+        for (int i = 0; i < getCountry_phone_codes().size(); ++i)
+            answer[i++] = getCountry_phone_codes().get(i).country;
+
+        return answer;
     }
 
     public class Start {
@@ -192,7 +211,7 @@ public class ResponseApplication extends BaseResponse {
 
     }
 
-    public class Event {
+    public class Event implements Serializable {
         public ArrayList<DataQuestion> publish_questions;
         public ArrayList<DataQuestion> setup_questions;
     }
@@ -206,7 +225,7 @@ public class ResponseApplication extends BaseResponse {
         public boolean is_enabled;
     }
 
-    public class DataCulture {
+    public class DataCulture implements Serializable {
         public String culture_name;
         public boolean is_enabled;
         public boolean is_right_to_left;
@@ -214,4 +233,8 @@ public class ResponseApplication extends BaseResponse {
         public String text_title;
     }
 
+    public class DataCountryPhoneCode implements Serializable {
+        public String country = "";
+        public String code = "";
+    }
 }

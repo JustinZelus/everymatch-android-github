@@ -27,7 +27,7 @@ public class RequestSignInWithEmail extends BaseRequest {
 
     @Override
     public String getServiceUrl(){
-        return Constants.AUTH2_SERVICE_URL;
+        return Constants.getOAUTH2_SERVICE_URL();
     }
 
     @Override
@@ -39,6 +39,11 @@ public class RequestSignInWithEmail extends BaseRequest {
     @Override
     public Class getResponseClass() {
         return ResponseSignIn.class;
+    }
+
+    @Override
+    public String getBodyContentType() {
+        return GsonRequest.CONTENT_TYPE_X_URL_ENCODED;
     }
 
     @Override

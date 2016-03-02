@@ -24,7 +24,7 @@ public class RequestLoadProviders extends BaseRequest {
 
     @Override
     public String getServiceUrl() {
-        return Constants.AUTH2_SERVICE_URL;
+        return Constants.getOAUTH2_SERVICE_URL();
     }
 
     @Override

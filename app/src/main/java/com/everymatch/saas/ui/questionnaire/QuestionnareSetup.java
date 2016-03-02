@@ -96,14 +96,6 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
         setHeader();
     }
 
-    /*@Override
-    public void onOneIconClicked() {
-        if (mActivity.isInEditMode()) {
-            mActivity.sendAnswersToServer();
-            return;
-        }
-        super.onOneIconClicked();
-    }*/
 
     @Override
     public void recoverDefaultAnswer() {

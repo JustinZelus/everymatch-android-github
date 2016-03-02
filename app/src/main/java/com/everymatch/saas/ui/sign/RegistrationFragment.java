@@ -141,8 +141,8 @@ public class RegistrationFragment extends BaseSignFragment implements View.OnCli
     }
 
     @Override
-    public void seatHeader(EventHeader header) {
-        super.seatHeader(header);
+    public void setHeader(EventHeader header) {
+        super.setHeader(header);
         header.setTitle(DataManager.getInstance().getResourceText(R.string.Em2_register_title));
         header.getIconThree().setText(DataManager.getInstance().getResourceText(R.string.Em2_login_title).toUpperCase());
     }

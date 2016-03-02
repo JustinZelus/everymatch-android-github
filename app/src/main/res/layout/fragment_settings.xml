@@ -198,6 +198,7 @@
                     android:id="@+id/btnSettingsChangePassword"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
+                    android:visibility="gone"
                     android:layout_marginBottom="20dip"
                     android:layout_weight="1"
                     android:textSize="14sp"
@@ -215,17 +216,6 @@
                     app:text_color="negative_color"
                     app:text_key="@string/Logout"
                     tools:text="Logout" />
-
-                <ToggleButton
-                    android:id="@+id/btnNetworkToggle"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginBottom="20dip"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:textOn="Air"
-                    android:textOff="Local"
-                    tools:text="Local" />
 
             </LinearLayout>
 

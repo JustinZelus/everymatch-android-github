@@ -25,6 +25,7 @@ import com.everymatch.saas.client.data.DataHelper;
 import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
+import com.everymatch.saas.client.data.Participation_Type;
 import com.everymatch.saas.client.data.PopupMenuItem;
 import com.everymatch.saas.server.Data.DataDate;
 import com.everymatch.saas.server.Data.DataEvent;
@@ -197,15 +198,17 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         mPeopleRow.getTitleView().setMaxLines(1);
 
         mToolbar1Button = (BaseIconTextView) view.findViewById(R.id.event_toolbar_1_icon);
-        mToolbar1Button.setOnClickListener(this);
+        ((LinearLayout) mToolbar1Button.getParent()).setOnClickListener(this);
         mToolbar1Text = (BaseTextView) view.findViewById(R.id.event_toolbar_1_text);
 
         mToolbar2Button = (BaseIconTextView) view.findViewById(R.id.event_toolbar_2_icon);
         mToolbar2Button.setOnClickListener(this);
+        ((LinearLayout) mToolbar2Button.getParent()).setOnClickListener(this);
         mToolbar2Text = (BaseTextView) view.findViewById(R.id.event_toolbar_2_text);
 
         mToolbar3Button = (BaseIconTextView) view.findViewById(R.id.event_toolbar_3_icon);
         mToolbar3Button.setOnClickListener(this);
+        ((LinearLayout) mToolbar3Button.getParent()).setOnClickListener(this);
         mToolbar3Text = (BaseTextView) view.findViewById(R.id.event_toolbar_3_text);
 
         mPeopleList = (LinearLayout) view.findViewById(R.id.event_people_list);
@@ -258,25 +261,17 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         mDetailsRow.setTitle(dm.getResourceText(R.string.Details));
 
         // LOCATION
-        if (TextUtils.isEmpty(mEvent.dataPublicEvent.getLocation().place_name)) {
-            mLocationRow.setTitle(mEvent.dataPublicEvent.getLocation().text_address);
-            mLocationRow.setDetails(mEvent.dataPublicEvent.getLocation().text_address);
-        } else {
-            mLocationRow.setTitle(mEvent.dataPublicEvent.getLocation().text_address);
-            mLocationRow.setDetails(mEvent.dataPublicEvent.getLocation().text_address);
-        }
+        mLocationRow.setTitle(mEvent.getLocationText());
+        mLocationRow.setDetails(mEvent.getLocationText());
 
         // SCHEDULE
         if (mEvent.dataPublicEvent.schedule.from.isSameDay(mEvent.dataPublicEvent.schedule.to)) {
-
             mDateRow.setTitle(Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "EEE, MMM d, yyyy"));
-
             if (mEvent.dataPublicEvent.schedule.to.hasEndTime()) {
                 mDateRow.setDetails(mEvent.dataPublicEvent.schedule.from.getHourString() + " - " + mEvent.dataPublicEvent.schedule.to.getHourString());
             } else {
                 mDateRow.setDetails(mEvent.dataPublicEvent.schedule.from.getHourString());
             }
-
         } else {
             mDateRow.setTitle(Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "MMM d") + " - " +
                     Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, "MMM d"));
@@ -288,7 +283,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         }
 
         // PARTICIPANTS
-        mPeopleRow.setTitle(String.valueOf(mEvent.dataPublicEvent.getUsers().size()) + " " + getString(R.string.Participants));
+        mPeopleRow.setTitle(String.valueOf(mEvent.dataPublicEvent.getAllUsers().size()) + " " + getString(R.string.Participants));
         if (mEvent.dataPublicEvent.spots == -1) {
             mPeopleRow.setDetails(dm.getResourceText(R.string.Unlimited));
         } else {
@@ -455,13 +450,19 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
     @Override
     public void onClick(final View v) {
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+
         switch (v.getId()) {
+            case R.id.action_1:
             case R.id.event_toolbar_1_icon:
                 eventToolbarAction(0);
                 break;
+            case R.id.action_2:
             case R.id.event_toolbar_2_icon:
                 eventToolbarAction(1);
                 break;
+            case R.id.action_3:
             case R.id.event_toolbar_3_icon:
                 if (mEvent.getEvent_actions().size() == 3) {
                     eventToolbarAction(2);
@@ -495,9 +496,9 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                 bundle.putDouble(EventLocationFragment.LON, mEvent.dataPublicEvent.getLocation().coordinates.value[0][1]);
                 bundle.putString(EventLocationFragment.ADDRESS, mEvent.dataPublicEvent.getLocation().text_address);
                 eventLocationFragment.setArguments(bundle);
-                transaction
+                fragmentTransaction
                         .addToBackStack("myFragment")
-                        .replace(R.id.event_layout, eventLocationFragment)
+                        .add(R.id.event_layout, eventLocationFragment)
                         .commit();
                 break;
             case R.id.event_row_date:
@@ -519,9 +520,9 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                 startActivity(intent);
                 break;
             case R.id.event_row_people:
-                transaction.addToBackStack("myFragment")
-                        .replace(R.id.event_layout, PeopleViewPagerFragment.getInstance(DataStore.SCREEN_TYPE_EVENT_PARTICIPANTS, mEvent))
-                        .commit();
+                fragmentTransaction.addToBackStack("myFragment")
+                        .add(R.id.event_layout, PeopleViewPagerFragment.getInstance(DataStore.SCREEN_TYPE_EVENT_PARTICIPANTS, mEvent))
+                        .commitAllowingStateLoss();
                 break;
 
             case R.id.event_percent:
@@ -710,14 +711,13 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         PeopleCarouselFragment peopleCarouselFragment = (PeopleCarouselFragment) findFragment(PeopleCarouselFragment.TAG);
 
+        DataPeopleHolder dataPeopleHolder = new DataPeopleHolder();
+        dataPeopleHolder.setUsers(mEvent.dataPublicEvent.getAllUsers(Participation_Type.PARTICIPATING));
+
         if (peopleCarouselFragment != null) {
-            DataPeopleHolder dataPeopleHolder = new DataPeopleHolder();
-            dataPeopleHolder.setUsers(mEvent.dataPublicEvent.getUsers());
-            peopleCarouselFragment.refreshData(dataPeopleHolder, "Coming", "");
+            peopleCarouselFragment.refreshData(dataPeopleHolder, dm.getResourceText(R.string.Coming), "");
         } else {
-            DataPeopleHolder dataPeopleHolder = new DataPeopleHolder();
-            dataPeopleHolder.setUsers(mEvent.dataPublicEvent.getUsers());
-            peopleCarouselFragment = PeopleCarouselFragment.getInstance(dataPeopleHolder, "Coming", "");
+            peopleCarouselFragment = PeopleCarouselFragment.getInstance(dataPeopleHolder, dm.getResourceText(R.string.Coming), "");
             fragmentTransaction.add(mPeopleList.getId(), peopleCarouselFragment, PeopleCarouselFragment.TAG).commit();
         }
     }

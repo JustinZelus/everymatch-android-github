@@ -104,6 +104,13 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
             // mHeader.getIconOne().setText(dm.getResourceText(R.string.Save));
         }
 
+        if (mActivity.IS_VIEW_MODE) {
+            mHeader.getIconOne().setVisibility(View.GONE);
+            mHeader.getBackButton().setText(Consts.Icons.icon_New_Close);
+            mHeader.getCenterText().setText("");
+            mHeader.setTitle(mActivity.mGeneratedEvent.dataPublicEvent.event_title);
+        }
+
     }
 
     @Override

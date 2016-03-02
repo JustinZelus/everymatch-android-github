@@ -82,7 +82,7 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
 
         mDataTimeZone = ds.getUser().user_settings.getTime_zone();
         timeZoneIndex = ds.getApplicationData().getTimeZoneIndex(mDataTimeZone.country_code, mDataTimeZone.utc);
-        mDataTimeZone = ds.getApplicationData().getTime_zone().get(timeZoneIndex);
+        //mDataTimeZone = ds.getApplicationData().getTime_zone().get(timeZoneIndex);
     }
 
     @Override

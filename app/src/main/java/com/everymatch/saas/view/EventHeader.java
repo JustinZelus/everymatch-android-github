@@ -13,6 +13,7 @@ import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
+import com.everymatch.saas.util.Utils;
 
 
 /**
@@ -42,29 +43,32 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
 
     public EventHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
-        setOrientation(VERTICAL);
+        try {
+            mContext = context;
+            setOrientation(VERTICAL);
 
-        LayoutInflater.from(context).inflate(R.layout.view_event_header, this);
+            LayoutInflater.from(context).inflate(R.layout.view_event_header, this);
 
-        mBackButton = (BaseIconTextView) findViewById(R.id.event_header_back);
-        mTitle = (BaseTextView) findViewById(R.id.event_header_title);
-        mEditTitle = (BaseEditText) findViewById(R.id.event_header_title_edit);
-        icon1 = (BaseIconTextView) findViewById(R.id.event_header_icon_1);
-        icon2 = (BaseIconTextView) findViewById(R.id.event_header_icon_2);
-        icon3 = (BaseIconTextView) findViewById(R.id.event_header_icon_3);
-        mTextCenter = (TextView) findViewById(R.id.view_event_header_center_text);
-        tvArrowDown = (BaseIconTextView) findViewById(R.id.event_header_arrowDown);
-        tvArrowDown.setVisibility(GONE);
+            mBackButton = (BaseIconTextView) findViewById(R.id.event_header_back);
+            mTitle = (BaseTextView) findViewById(R.id.event_header_title);
+            mEditTitle = (BaseEditText) findViewById(R.id.event_header_title_edit);
+            icon1 = (BaseIconTextView) findViewById(R.id.event_header_icon_1);
+            icon2 = (BaseIconTextView) findViewById(R.id.event_header_icon_2);
+            icon3 = (BaseIconTextView) findViewById(R.id.event_header_icon_3);
+            mTextCenter = (BaseTextView) findViewById(R.id.view_event_header_center_text);
+            tvArrowDown = (BaseIconTextView) findViewById(R.id.event_header_arrowDown);
+            tvArrowDown.setVisibility(GONE);
 
-        mBackButton.setOnClickListener(this);
-        setArrowDownVisibility(false);
-        getTitle().setOnClickListener(null);
+            mBackButton.setOnClickListener(this);
+            setArrowDownVisibility(false);
+            getTitle().setOnClickListener(null);
 
+            icon1.setOnClickListener(this);
+            icon2.setOnClickListener(this);
+            icon3.setOnClickListener(this);
+        } catch (Exception ex) {
+        }
 
-        icon1.setOnClickListener(this);
-        icon2.setOnClickListener(this);
-        icon3.setOnClickListener(this);
     }
 
     public BaseTextView getTitle() {
@@ -76,10 +80,13 @@ public class EventHeader extends LinearLayout implements View.OnClickListener {
     }
 
     public void setTitle(String title) {
-        if (title == null)
-            mTitle.setText("");
-        else
-            mTitle.setText(title);
+        if (Utils.isEmpty(title)) {
+            getTitle().setVisibility(GONE);
+            return;
+        }
+
+        getTitle().setVisibility(VISIBLE);
+        mTitle.setText(title);
     }
 
     public void setTitle(int resId) {

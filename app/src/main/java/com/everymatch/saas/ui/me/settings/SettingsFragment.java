@@ -8,11 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.ToggleButton;
 
-import com.everymatch.saas.BuildConfig;
 import com.everymatch.saas.Constants;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
@@ -65,7 +62,6 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     private EventHeader mHeader;
     EventDataRow edrTimeZone, edrCurrencies, edrUnits, edrLanguage;
     LinearLayout llProviders;
-    ToggleButton toggleButton;
 
     //Data
     public static ResponseApplication.DataCulture userSelectedCulture;
@@ -144,26 +140,6 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
         (v.findViewById(R.id.btnSettingsChangePassword)).setBackgroundDrawable(ShapeDrawableUtils.getButtonStroked());
 
 
-        toggleButton = (ToggleButton) v.findViewById(R.id.btnNetworkToggle);
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Constants.API_SERVICE_URL = "https://api.everymatch.me/";
-                    Constants.AUTH2_SERVICE_URL = "https://oauth2.everymatch.me/";
-                } else {
-                    Constants.API_SERVICE_URL = "http://192.168.1.101:4434/";
-                    Constants.AUTH2_SERVICE_URL = "http://192.168.1.101:4432/";
-                }
-            }
-        });
-        if (Constants.API_SERVICE_URL.equals("https://api.everymatch.me/")) {
-            toggleButton.setChecked(true);
-        }
-
-        toggleButton.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
-        toggleButton.setVisibility(View.GONE);
-
         return v;
     }
 
@@ -173,8 +149,6 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
         setHeader(view);
         if (mProviders != null) addProviders();
         updateUi();
-
-        toggleButton.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
     }
 
     private void updateUi() {
@@ -302,7 +276,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                                 replace("[culture_name]", ds.getCulture()).
                                 replace("[app_host]", "/").
                                 replace("[app_id]", getString(R.string.app_id)));
-                        intent.putExtra(WebViewActivity.EXTRA_RETURN_URL, Constants.AUTH2_SERVICE_URL + "?");
+                        intent.putExtra(WebViewActivity.EXTRA_RETURN_URL, Constants.getOAUTH2_SERVICE_URL() + "?");
                         intent.putExtra(WebViewActivity.EXTRA_RETURN_DATA_NAME, EXTRA_ACCESS_TOKEN);
                         providerClickedPosition = finalI;
                         startActivityForResult(intent, REQUEST_CODE_GET_TOKEN);

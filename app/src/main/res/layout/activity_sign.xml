@@ -79,7 +79,7 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:textSize="14sp"
-                    app:text_key="@string/Start"
+                    app:text_key="@string/Enter"
                     app:text_color="white_color"/>
             </LinearLayout>
 

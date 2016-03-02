@@ -361,10 +361,8 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
             dataSetupQuestionsObject.isParticipating = mGeneratedEvent.dataPublicEvent.is_participating;
             dataSetupQuestionsObject.joinType = mGeneratedEvent.dataPublicEvent.join_type;
             dataSetupQuestionsObject.privacy = mGeneratedEvent.getDisplay_settings().type;
+            dataSetupQuestionsObject.numberOfSpots = mGeneratedEvent.dataPublicEvent.spots;
 
-            if (mGeneratedEvent.dataPublicEvent.spots > 0) {
-                dataSetupQuestionsObject.numberOfSpots = mGeneratedEvent.dataPublicEvent.spots;
-            }
         } catch (Exception ex) {
             EMLog.e(TAG, ex.getMessage());
         }

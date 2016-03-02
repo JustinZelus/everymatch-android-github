@@ -124,6 +124,7 @@ public class DiscoverActivity extends BaseActivity implements EventListener, Peo
     }
 
     private void updateBadge() {
+        if (ds.getUser() == null) return;
         int x = ds.getUser().getUnread();
         tvBadge.setVisibility(x == 0 ? View.INVISIBLE : View.VISIBLE);
         tvBadge.setText("" + x);

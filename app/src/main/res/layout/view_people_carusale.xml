@@ -5,6 +5,11 @@
     android:layout_height="@dimen/people_carousel_height"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#641a1a1a"></RelativeLayout>
+
     <com.everymatch.saas.view.SquareImageView
         android:id="@+id/imgMatch"
         android:layout_width="match_parent"

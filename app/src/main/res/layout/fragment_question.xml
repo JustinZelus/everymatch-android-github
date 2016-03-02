@@ -28,14 +28,28 @@
         app:text_color="night_color"
         tools:text="question" />
 
-    <LinearLayout
-        android:id="@+id/answers_container"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/title_textview"
-        android:layout_marginTop="@dimen/margin_m"
-        android:gravity="top"
-        android:orientation="vertical" />
+        android:layout_marginTop="@dimen/margin_m">
+
+        <LinearLayout
+            android:id="@+id/answers_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/blank"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:visibility="gone"></LinearLayout>
+
+    </RelativeLayout>
 
 
 </com.everymatch.saas.view.BaseRelativeLayout>

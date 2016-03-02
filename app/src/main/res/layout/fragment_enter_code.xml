@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:bg_color="background_color">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/tvEnterCodeTitle"
+        style="@style/EmTextStyleNormal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/margin_s"
+        app:text_color="night_color"
+        app:text_key="@string/Your_code_title"
+        tools:text="Your_code_title" />
+
+
+    <com.everymatch.saas.view.BaseRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_xs"
+        app:bg_color="white_color">
+
+        <com.everymatch.saas.view.BaseEditText
+            android:id="@+id/etCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="@drawable/input_area"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Code_tip"
+            android:inputType="number"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:singleLine="true"
+            android:textSize="13sp"
+            app:hint_key="@string/Code_tip"
+            app:text_color="moon_color" />
+
+    </com.everymatch.saas.view.BaseRelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/margin_m"
+        android:background="@color/fog"></LinearLayout>
+
+    <com.everymatch.saas.view.BaseTextView
+        style="@style/EmTextStyleService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_s"
+        android:gravity="center"
+        app:text_color="moon_color"
+        app:text_key="@string/Code_help"
+        tools:text="Code_help" />
+
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/tvNumberHelp"
+        style="@style/EmTextStyleNormal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_m"
+        android:gravity="center"
+        app:text_color="moon_color"
+        app:text_key="@string/Wrong_number"
+        tools:text="number" />
+
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/tvResendCode"
+        style="@style/EmTextStyleNormal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_xs"
+        android:gravity="center"
+        app:text_color="primary_color"
+        app:text_key="@string/Resend_code"
+        tools:text="number" />
+
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/tvWrongNumber"
+        style="@style/EmTextStyleNormal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_s"
+        android:gravity="center"
+        app:text_color="primary_color"
+        app:text_key="@string/Wrong_number"
+        tools:text="number" />
+
+
+</com.everymatch.saas.view.BaseLinearLayout>

@@ -90,7 +90,7 @@ public class ChangePasswordFragment extends BaseFragment implements EventHeader.
                 ServerConnector.getInstance().processRequest(new BaseRequest() {
                     @Override
                     public String getServiceUrl() {
-                        return Constants.AUTH2_SERVICE_URL;
+                        return Constants.getOAUTH2_SERVICE_URL();
                         //https://oauth2.everymatch.me/api/Account/ChangePassword?hl=en-US
 
                     }

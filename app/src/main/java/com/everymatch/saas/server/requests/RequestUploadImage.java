@@ -18,19 +18,17 @@ public class RequestUploadImage extends BaseRequest {
     String content;
 
     public RequestUploadImage(Bitmap bitmap) {
-//        this.AppID = EverymatchApplication.getContext().getResources().getString(R.string.app_id);
-//        hl = DataStore.getInstance().getCulture();
 
-        ByteArrayOutputStream baos = new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b = baos.toByteArray();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
         content = new String(b);
-//        content = Base64.encodeToString(b, Base64.DEFAULT);
+        //content = Base64.encodeToString(b, Base64.DEFAULT);
     }
 
     @Override
-    public String getServiceUrl(){
-        return Constants.API_SERVICE_URL;
+    public String getServiceUrl() {
+        return Constants.getAPI_SERVICE_URL();
     }
 
     @Override

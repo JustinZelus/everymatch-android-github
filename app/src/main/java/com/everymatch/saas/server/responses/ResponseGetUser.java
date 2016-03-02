@@ -43,7 +43,7 @@ public class ResponseGetUser extends BaseResponse {
     public String registered_app_id;
     public String gender;
     //public int time_zone;
-    //public String country_code;
+    public String country_code;
 
     private ArrayList<DataChannelName> channels;
 

@@ -24,11 +24,11 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         tools:text="Title"
+        android:layout_marginTop="@dimen/margin_l"
         android:textSize="30sp"
-        android:layout_marginTop="50dp"
         app:font="lato_font"
         app:text_color="white_color"
-        android:layout_above="@+id/icon_image"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <com.everymatch.saas.view.IconImageView

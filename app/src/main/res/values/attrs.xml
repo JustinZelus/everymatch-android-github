@@ -5,13 +5,16 @@
         <attr name="font" format="enum">
             <enum name="lato_font" value="0" />
             <enum name="lato_light" value="1" />
-
         </attr>
 
         <attr name="text_key" format="string" />
         <attr name="text_sub_key" format="string" />
         <attr name="first_letter_capitalize" format="boolean" />
 
+    </declare-styleable>
+
+    <declare-styleable name="BaseEditText">
+        <attr name="hint_key" format="string" />
     </declare-styleable>
 
     <declare-styleable name="BaseButton">
@@ -126,7 +129,7 @@
         <attr name="text_color" />
         <attr name="bg_color" />
         <attr name="divider_color" />
-        <attr name="text_size" format="dimension"/>
+        <attr name="text_size" format="dimension" />
 
     </declare-styleable>
 

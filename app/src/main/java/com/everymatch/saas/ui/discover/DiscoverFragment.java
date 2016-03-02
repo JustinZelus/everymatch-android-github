@@ -47,6 +47,7 @@ import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseIconTextView;
+import com.everymatch.saas.view.EventEmptyStateView;
 import com.everymatch.saas.view.EventHeader;
 import com.everymatch.saas.view.IconImageView;
 import com.everymatch.saas.view_controller.DiscoverActivitiesViewController;
@@ -70,7 +71,7 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     private ResponseGetUser user = DataStore.getInstance().getUser();
 
     // Views
-    private LinearLayout mFragmentContainer;
+    private LinearLayout mFragmentContainer, containerEvents, containerUsers, containerTrends, containerAd;
     private View mHeaderTmp, mActivityPopup;
     private EventHeader mHeader;
 
@@ -125,6 +126,10 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
         // Bind views
         mProgressBar.setVisibility(View.GONE);
         mFragmentContainer = (LinearLayout) view.findViewById(R.id.fragment_discover_container);
+        containerEvents = (LinearLayout) view.findViewById(R.id.events_recycler_holder);
+        containerUsers = (LinearLayout) view.findViewById(R.id.users_recycler_holder);
+        containerTrends = (LinearLayout) view.findViewById(R.id.trends_holder);
+        containerAd = (LinearLayout) view.findViewById(R.id.ad_holder);
         //here we get the header from the activity
         mHeaderTmp = (getActivity()).findViewById(R.id.fragment_discover_header);
         mHeaderTmp.setVisibility(View.GONE);
@@ -255,8 +260,6 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
     private void updateUiByActivity() {
         mIcon.setIconImage(mCurrentActivity.icon);
         mHeaderTitle.setText(mCurrentActivity.text_title);
-
-
         mHeader.setTitle(mCurrentActivity.text_title);
     }
 
@@ -335,32 +338,64 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
         // =================== EVENTS =================== //
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
-        EventCarouselFragment eventCarouselFragment = (EventCarouselFragment) findFragment(EventCarouselFragment.TAG);
 
+        containerEvents.removeAllViews();
 
-        String leftText = Utils.makeTextCamelCase(dm.getResourceText(R.string.Suggested_Events)
-                + " (" + responseDiscover.getEventHolder().count + ")");
-        String rightText = Utils.makeTextCamelCase(dm.getResourceText(R.string.View_All));
+        if (responseDiscover.getEventHolder().getEvents().size() == 0) {
+            //there is no events
+            String leftText = mCurrentActivity.text_title +" "+ dm.getResourceText(R.string.Events);
+            EventEmptyStateView eventEmptyStateView = new EventEmptyStateView(getActivity(), leftText, mCurrentActivity.icon);
+            containerEvents.addView(eventEmptyStateView);
+            eventEmptyStateView.setCallBack(new EventEmptyStateView.EventEmptyStateCallBack() {
+                @Override
+                public void onEditProfileClick() {
+                    onEmptyViewFirstButtonClick();
+                    //QuestionnaireActivity.create_mode = QuestionnaireActivity.CREATE_MODE.EDIT_ACTIVITY;
+                    //QuestionnaireActivity.editActivity(DiscoverFragment.this, Integer.valueOf(mCurrentActivity.client_id), REQUEST_CODE_EDIT_ACTIVITY);
+                }
 
-        if (eventCarouselFragment != null) {
-            eventCarouselFragment.refreshData(responseDiscover.getEventHolder(), leftText, rightText);
+                @Override
+                public void onCreateEventClick() {
+                    onEmptyViewSecondButtonClick();
+                }
+            });
         } else {
-            eventCarouselFragment = EventCarouselFragment.getInstance(responseDiscover.getEventHolder(), leftText, rightText);
-            fragmentTransaction.add(mFragmentContainer.getId(), eventCarouselFragment, EventCarouselFragment.TAG);
+            EventCarouselFragment eventCarouselFragment = (EventCarouselFragment) findFragment(EventCarouselFragment.TAG);
+            String leftText = Utils.makeTextCamelCase(dm.getResourceText(R.string.Suggested_Events) + " (" + responseDiscover.getEventHolder().count + ")");
+            String rightText = Utils.makeTextCamelCase(dm.getResourceText(R.string.View_All));
+            /*if (eventCarouselFragment != null) {
+                eventCarouselFragment.refreshData(responseDiscover.getEventHolder(), leftText, rightText);
+            } else*/
+            {
+                eventCarouselFragment = EventCarouselFragment.getInstance(responseDiscover.getEventHolder(), leftText, rightText);
+                fragmentTransaction.add(containerEvents.getId(), eventCarouselFragment, EventCarouselFragment.TAG);
+            }
         }
-
         // =================== PEOPLE =================== //
+
         PeopleCarouselFragment peopleCarouselFragment = (PeopleCarouselFragment) findFragment(PeopleCarouselFragment.TAG);
-        leftText = Utils.makeTextCamelCase(dm.getResourceText(R.string.People_Matches) + "" +
+        String leftText = Utils.makeTextCamelCase(dm.getResourceText(R.string.People_Matches) + "" +
                 " (" + responseDiscover.getPeopleHolder().count + ")");
-        rightText = Utils.makeTextCamelCase(dm.getResourceText(R.string.View_All));
+        String rightText = Utils.makeTextCamelCase(dm.getResourceText(R.string.View_All));
 
         if (peopleCarouselFragment != null) {
             peopleCarouselFragment.refreshData(responseDiscover.getPeopleHolder(), leftText, rightText);
         } else {
             peopleCarouselFragment = PeopleCarouselFragment.getInstance(responseDiscover.getPeopleHolder(), leftText, rightText);
-            fragmentTransaction.add(mFragmentContainer.getId(), peopleCarouselFragment, PeopleCarouselFragment.TAG);
+            //fragmentTransaction.add(mFragmentContainer.getId(), peopleCarouselFragment, PeopleCarouselFragment.TAG);
+            fragmentTransaction.add(containerUsers.getId(), peopleCarouselFragment, PeopleCarouselFragment.TAG);
         }
+
+        // =================== TRENDS =================== //
+        TrendEventHolderFragment trendEventHolderFragment = (TrendEventHolderFragment) findFragment(TrendEventHolderFragment.TAG);
+
+        if (trendEventHolderFragment != null) {
+            trendEventHolderFragment.fetchEvents();
+        } else {
+            trendEventHolderFragment = TrendEventHolderFragment.getInstance(mCurrentActivity.client_id, "events");
+            fragmentTransaction.add(containerTrends.getId(), trendEventHolderFragment, TrendEventHolderFragment.TAG);
+        }
+
 
         // =================== COMMERCIAL =================== //
         FragmentDiscoverAd fragmentDiscoverAd = (FragmentDiscoverAd) findFragment(FragmentDiscoverAd.TAG);
@@ -369,17 +404,21 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
             fragmentDiscoverAd.refreshData();
         } else {
             fragmentDiscoverAd = new FragmentDiscoverAd();
-            fragmentTransaction.add(mFragmentContainer.getId(), fragmentDiscoverAd, FragmentDiscoverAd.TAG);
+            //fragmentTransaction.add(mFragmentContainer.getId(), fragmentDiscoverAd, FragmentDiscoverAd.TAG);
+            fragmentTransaction.add(containerAd.getId(), fragmentDiscoverAd, FragmentDiscoverAd.TAG);
         }
 
         if (!fragmentTransaction.isEmpty()) {
             fragmentTransaction.commitAllowingStateLoss();
         }
 
+
         // Show empty view if this activity has no events
-        if (Utils.isArrayListEmpty(responseDiscover.getEventHolder().getEvents())) {
+
+        //not anymore
+        /*if (Utils.isArrayListEmpty(responseDiscover.getEventHolder().getEvents())) {
             mViewNoDataContainer.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     @Override
@@ -600,10 +639,6 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
         ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, MyEventsFragment.getInstance(true),
                 MyEventsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
                 R.anim.enter_from_left, R.anim.exit_to_right);
-
-        /*QuestionnaireActivity.create_mode = QuestionnaireActivity.CREATE_MODE.CREATE_EVENT;
-        final Intent intent = new Intent(getActivity(), QuestionnaireActivity.class);
-        getActivity().start(intent);*/
     }
 
     public interface DiscoverCallbacks {

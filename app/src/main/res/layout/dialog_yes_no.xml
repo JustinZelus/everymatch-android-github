@@ -32,7 +32,7 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:textSize="24sp"
-                app:text_color="maybe_color"
+                app:text_color="primary_color"
                 tools:text="title" />
 
             <com.everymatch.saas.view.BaseTextView

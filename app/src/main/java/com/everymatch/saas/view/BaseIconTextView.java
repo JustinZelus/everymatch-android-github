@@ -56,7 +56,7 @@ public class BaseIconTextView extends TextView {
     }
 
     public BaseIconTextView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public BaseIconTextView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -64,11 +64,8 @@ public class BaseIconTextView extends TextView {
 
         this.mContext = context;
 
-        if (isInEditMode()) {
-            return;
-        } else {
+        if (!isInEditMode())
             initAttributes(attrs);
-        }
     }
 
     private void initAttributes(AttributeSet attributeSet) {
@@ -79,16 +76,16 @@ public class BaseIconTextView extends TextView {
 
         typedArray = mContext.obtainStyledAttributes(attributeSet, R.styleable.ResourceColor);
 
-        if (typedArray != null){
+        if (typedArray != null) {
             int bgColor = typedArray.getInt(R.styleable.ResourceColor_bg_color, -1);
 
-            if (bgColor != -1){
+            if (bgColor != -1) {
                 setBackgroundColor(Color.parseColor(DataStore.getInstance().getColor(bgColor)));
             }
 
             int textColor = typedArray.getInt(R.styleable.ResourceColor_text_color, -1);
 
-            if (textColor != -1){
+            if (textColor != -1) {
                 setTextColor(Color.parseColor(DataStore.getInstance().getColor(textColor)));
             }
 
@@ -97,7 +94,7 @@ public class BaseIconTextView extends TextView {
 
         typedArray = mContext.obtainStyledAttributes(attributeSet, R.styleable.IconFont);
 
-        if (typedArray != null){
+        if (typedArray != null) {
             String text = typedArray.getString(R.styleable.IconFont_iconText);
             typedArray.recycle();
             setText(IconManager.getInstance(mContext).getIconString(text));

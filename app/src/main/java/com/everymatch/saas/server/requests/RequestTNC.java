@@ -16,7 +16,7 @@ public class RequestTNC extends BaseRequest {
 
     @Override
     public String getServiceUrl() {
-        return Constants.API_SERVICE_URL;
+        return Constants.getAPI_SERVICE_URL();
     }
 
     @Override

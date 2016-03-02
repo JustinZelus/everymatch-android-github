@@ -38,11 +38,15 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
     private static final String EXTRA_ACTION_POSITION = "extra.action.position";
     public static final String ACTION_INVITEES_SELECTED = "inviteesSelected";
 
-    private Button mButtonDone;
+    //Data
     private boolean makeActionInside;
     private String action;
     private DataEvent mEvent;
     private int dataActionPosition;
+
+    //VIEWS
+    private Button mButtonDone;
+   // private EventHeader mHeader;
 
 
     public static Fragment getInstance(DataEvent mGeneratedEvent, int dataActionPosition, boolean makeActionInside, String action) {
@@ -73,6 +77,8 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //mHeader = (EventHeader) view.findViewById(R.id.eventHeader);
+        //setHeader();
         mButtonDone = (Button) view.findViewById(R.id.fragment_invite_participants_button_done);
         mButtonDone.setOnClickListener(this);
         mButtonDone.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton());
@@ -89,6 +95,10 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
                     PeopleViewPagerFragment.TAG, false, null, R.anim.enter_from_right, R.anim.exit_to_left,
                     R.anim.enter_from_left, R.anim.exit_to_right);
         }
+    }
+
+    private void setHeader() {
+
     }
 
     @Override

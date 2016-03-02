@@ -21,7 +21,7 @@ public class RequestSaveUploadedImage extends BaseRequest {
 
     @Override
     public String getServiceUrl() {
-        return Constants.API_SERVICE_URL;
+        return Constants.getAPI_SERVICE_URL();
     }
 
     @Override
@@ -44,6 +44,16 @@ public class RequestSaveUploadedImage extends BaseRequest {
     @Override
     public int getType() {
         return Request.Method.PUT;
+    }
+
+    @Override
+    public int getConnectionTimeout() {
+        return 1000 * 40;
+    }
+
+    @Override
+    public int getNumberOfRetries() {
+        return super.getNumberOfRetries();
     }
 
     @Override

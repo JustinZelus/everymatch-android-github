@@ -32,7 +32,13 @@ public class BaseActivity extends AppCompatActivity {
 
     protected DataStore ds = DataStore.getInstance();
     protected DataManager dm = DataManager.getInstance();
-    private ProgressDialog mDialog;
+    protected ProgressDialog mDialog;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDialog = new ProgressDialog(BaseActivity.this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
@@ -43,7 +49,6 @@ public class BaseActivity extends AppCompatActivity {
             window.setStatusBarColor(ds.getIntColor(EMColor.PRIMARY));
         }
 
-        mDialog = new ProgressDialog(BaseActivity.this);
     }
 
     @Override
@@ -166,6 +171,13 @@ public class BaseActivity extends AppCompatActivity {
 
 
     public void showDialog(String title) {
+        if (mDialog == null)
+            return;
+
+        if (mDialog.isShowing()) {
+            mDialog.setTitle(title);
+            return;
+        }
         if (mDialog != null && !mDialog.isShowing()) {
             mDialog.setTitle(title);
             mDialog.show();

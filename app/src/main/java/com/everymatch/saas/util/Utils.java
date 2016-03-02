@@ -21,9 +21,10 @@ import android.widget.ScrollView;
 
 import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.R;
+import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
-import com.everymatch.saas.client.data.EventPeopleStatus;
+import com.everymatch.saas.client.data.Participation_Type;
 import com.everymatch.saas.server.Data.DataActivity;
 import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataDate;
@@ -253,6 +254,30 @@ public class Utils {
         return finalValue;
     }
 
+    public static String getEventSchedule(DataEvent mEvent) {
+        String title = "";
+        String details = "";
+        if (mEvent.dataPublicEvent.schedule.from.isSameDay(mEvent.dataPublicEvent.schedule.to)) {
+            title = getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "EEE, MMM d, yyyy");
+            if (mEvent.dataPublicEvent.schedule.to.hasEndTime()) {
+                details = mEvent.dataPublicEvent.schedule.from.getHourString() + " - " + mEvent.dataPublicEvent.schedule.to.getHourString();
+            } else {
+                details = mEvent.dataPublicEvent.schedule.from.getHourString();
+            }
+        } else {
+            title = getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "MMM d") + " - " +
+                    getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, "MMM d");
+
+            String at = DataManager.getInstance().getResourceText(R.string.At) + " ";
+            String from = getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "MMM d ") + at + mEvent.dataPublicEvent.schedule.from.getHourString();
+            String to = getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, "MMM d ") + at + mEvent.dataPublicEvent.schedule.to.getHourString();
+            details = (from + " - " + to);
+        }
+
+        return details;
+    }
+
+
     /**
      * Takes int color witch defined in xml and convert to its
      * corresponding name which comes from server settings
@@ -291,7 +316,6 @@ public class Utils {
                 return "info_color";
             case EMColor.SILVER:
                 return "silver_color";
-
             default:
                 return "primary_color";
 
@@ -359,23 +383,23 @@ public class Utils {
     public static String participantsTabPositionToType(int position) {
         switch (position) {
             case 0:
-                return EventPeopleStatus.TYPE_PARTICIPATING;
+                return Participation_Type.PARTICIPATING;
             case 1:
-                return EventPeopleStatus.TYPE_MAYBE;
+                return Participation_Type.MAYBE;
             case 2:
-                return EventPeopleStatus.TYPE_INVITED;
+                return Participation_Type.INVITED;
             case 3:
-                return EventPeopleStatus.TYPE_PENDING;
+                return Participation_Type.PENDING;
 
             default:
-                return EventPeopleStatus.TYPE_PARTICIPATING;
+                return Participation_Type.PARTICIPATING;
         }
     }
 
     public static String participantsTypeToTabTitle(String type) {
         switch (type) {
-            case EventPeopleStatus.TYPE_PARTICIPATING:
-                return EventPeopleStatus.TYPE_COMING;
+            case Participation_Type.PARTICIPATING:
+                return Participation_Type.COMING;
 
             default:
                 return type;

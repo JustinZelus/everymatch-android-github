@@ -26,7 +26,7 @@ public class RequestGetInvitees extends BaseRequest{
 
     @Override
     public String getServiceUrl() {
-        return Constants.API_SERVICE_URL;
+        return Constants.getAPI_SERVICE_URL();
     }
 
     public RequestGetInvitees(String eventId, String type, int start, int count) {

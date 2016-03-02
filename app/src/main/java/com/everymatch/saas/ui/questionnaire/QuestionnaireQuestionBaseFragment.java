@@ -60,6 +60,7 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
     protected EventHeader mHeader;
     protected TextView tvTitle;
     private LinearLayout answersContainer;
+    protected LinearLayout blank;
 
     public QuestionnaireQuestionBaseFragment() {
     }
@@ -89,6 +90,7 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
         super.onViewCreated(view, savedInstanceState);
 
         answersContainer = (LinearLayout) view.findViewById(R.id.answers_container);
+        blank = (LinearLayout) view.findViewById(R.id.blank);
         /* init QuestionAndAnswer object it can be sub-QuestionAndAnswer;*/
         getSubQuestionAndAnswerIfNeeded();
 
@@ -454,8 +456,6 @@ public abstract class QuestionnaireQuestionBaseFragment extends BaseFragment imp
 
 
     public void blockUI() {
-        for (int i = 0; i < answersContainer.getChildCount(); i++) {
-            answersContainer.getChildAt(i).setClickable(false);
-        }
+        blank.setVisibility(View.VISIBLE);
     }
 }

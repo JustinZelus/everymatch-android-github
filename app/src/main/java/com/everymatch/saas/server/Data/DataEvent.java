@@ -1,5 +1,7 @@
 package com.everymatch.saas.server.Data;
 
+import android.text.TextUtils;
+
 import com.everymatch.saas.server.responses.ResponseEvent;
 import com.google.gson.annotations.SerializedName;
 
@@ -20,16 +22,25 @@ public class DataEvent implements Serializable {
     public String owner_user_id;
     public String activity_client_id;
     public String client_id;
+    public String map_image_url;
+    private DataDisplaySettings display_settings;
+    public DataPrivacySettings privacy_settings;
+    public DataEntity entity;
+
 
     public DataDisplaySettings getDisplay_settings() {
         if (display_settings == null)
             display_settings = new DataDisplaySettings();
         return display_settings;
     }
+    @SerializedName("users")
+    private ArrayList<DataPeople> trend_users;
 
-    private DataDisplaySettings display_settings;
-    public DataPrivacySettings privacy_settings;
-    public DataEntity entity;
+    public ArrayList<DataPeople> getTrend_users() {
+        if (trend_users == null)
+            trend_users = new ArrayList<>();
+        return trend_users;
+    }
 
     public DataEvent() {
     }
@@ -91,4 +102,11 @@ public class DataEvent implements Serializable {
         return false;
     }
 
+    public String getLocationText() {
+        if (TextUtils.isEmpty(dataPublicEvent.getLocation().place_name)) {
+            return (dataPublicEvent.getLocation().text_address);
+        } else {
+            return (dataPublicEvent.getLocation().text_address);
+        }
+    }
 }

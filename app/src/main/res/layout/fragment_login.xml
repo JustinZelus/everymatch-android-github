@@ -24,39 +24,84 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/margin_m"
-            android:paddingRight="@dimen/margin_m">
+          >
 
             <com.everymatch.saas.view.BaseTextView
                 android:id="@+id/fragment_base_sign_text_title"
                 style="@style/EmTextStyleNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_s"
+                android:layout_marginTop="@dimen/margin_m"
+                android:layout_marginBottom="@dimen/margin_m"
                 app:first_letter_capitalize="true"
                 app:text_color="night_color"
-                app:text_key="@string/Login.title" />
+                tools:text="Complete_setup"
+                app:text_key="@string/Complete_setup" />
+
+            <com.everymatch.saas.view.BaseRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_xs"
+                app:bg_color="white_color">
+
+                <com.everymatch.saas.view.BaseEditText
+                    android:id="@+id/etFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:inputType="textPersonName"
+                    android:background="@drawable/input_area"
+                    android:ems="10"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="true"
+                    android:textSize="13sp"
+                    app:hint_key="@string/FirstName"
+                    app:text_color="moon_color" />
+
+            </com.everymatch.saas.view.BaseRelativeLayout>
 
             <LinearLayout
-                android:id="@+id/fragment_base_sign_provider_button_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" />
+                android:layout_height="1dp"
+                android:background="@color/fog"></LinearLayout>
 
-            <com.everymatch.saas.view.BaseTextView
-                android:id="@+id/fragment_login_terms_of_use"
-                style="@style/EmTextStyleMeta"
-                android:layout_width="wrap_content"
+            <com.everymatch.saas.view.BaseRelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_s"
-                android:gravity="center"
-                app:text_color="night_color"
-                app:text_key="@string/RegisterTnc" />
+                android:padding="@dimen/margin_xs"
+                app:bg_color="white_color">
 
+                <com.everymatch.saas.view.BaseEditText
+                    android:id="@+id/etLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:inputType="textPersonName"
+                    android:background="@drawable/input_area"
+                    android:ems="10"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="true"
+                    android:textSize="13sp"
+                    app:hint_key="@string/LastName"
+                    app:text_color="moon_color" />
+
+            </com.everymatch.saas.view.BaseRelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/margin_m"
+                android:background="@color/fog"></LinearLayout>
             <FrameLayout
                 android:id="@+id/fragment_sign_base_or_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_m"
+                android:layout_marginRight="@dimen/margin_m"
                 android:paddingTop="@dimen/margin_s">
 
                 <com.everymatch.saas.view.BaseView
@@ -79,6 +124,14 @@
 
             </FrameLayout>
 
+            <LinearLayout
+                android:id="@+id/fragment_base_sign_provider_button_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_m"
+                android:layout_marginRight="@dimen/margin_m"
+                android:orientation="vertical" />
+
             <com.everymatch.saas.view.BaseTextView
                 style="@style/EmTextStyleNormal"
                 android:layout_width="wrap_content"
@@ -87,20 +140,11 @@
                 android:paddingTop="@dimen/margin_s"
                 app:first_letter_capitalize="true"
                 app:text_color="night_color"
-                app:text_key="@string/LoginByEmailSubtitle" />
-
-            <com.everymatch.saas.view.BaseEditText
-                android:id="@+id/fragment_login_edit_text_email"
-                style="@style/EmTextStyleNormal"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginBottom="@dimen/margin_s"
+                tools:text="Connect_subtitle"
                 android:gravity="center"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:padding="0dp"
-                android:singleLine="true"
-                app:text_color="night_color" />
+                android:layout_marginLeft="@dimen/margin_s"
+                android:layout_marginRight="@dimen/margin_s"
+                app:text_key="@string/Connect_subtitle" />
 
             <com.everymatch.saas.view.BaseEditText
                 android:id="@+id/fragment_login_edit_text_password"
@@ -114,6 +158,7 @@
                 android:maxLines="1"
                 android:padding="0dp"
                 android:singleLine="true"
+                android:visibility="gone"
                 app:text_color="night_color" />
 
             <RelativeLayout
@@ -136,6 +181,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:visibility="gone"
                         app:text_color="white_color"
                         app:text_key="@string/SignIn.Login" />
                 </RelativeLayout>
@@ -174,17 +220,6 @@
                         tools:text="loading" />
                 </RelativeLayout>
             </RelativeLayout>
-
-            <com.everymatch.saas.view.BaseTextView
-                android:id="@+id/fragment_login_text_forgot_password"
-                style="@style/EmTextStyleNormal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_s"
-                android:gravity="center"
-                app:first_letter_capitalize="true"
-                app:text_color="primary_color"
-                app:text_key="@string/Forgot_Password" />
 
         </LinearLayout>
     </ScrollView>

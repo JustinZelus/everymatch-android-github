@@ -10,9 +10,14 @@
     <string name="See_Your_Match">See_Your_Match</string>
     <string name="My_Profile">My_Profile</string>
     <string name="Change_Picture">Change_Picture</string>
+    <string name="Wrong_number">Wrong_number</string>
+    <string name="Resend_code">Resend_code</string>
     <string name="Unanswered">Unanswered</string>
+    <string name="Connect_subtitle">Connect_subtitle</string>
+    <string name="Complete_setup">Complete_setup</string>
     <string name="Edit_Activity">Edit_Activity</string>
     <string name="Save">Save</string>
+    <string name="Code_help">Code_help</string>
     <string name="No_Events">no_events</string>
     <string name="No_Events_Subtitle">no_events_subtitle</string>
     <string name="Create_Event">Create_Event</string>
@@ -175,5 +180,24 @@
     <string name="Edit_Event_Schedule">Edit_Event_Schedule</string>
     <string name="Edit_Event_Participants">Edit_Event_Participants</string>
     <string name="Start">Start</string>
+    <string name="Account_setup_title">Account_setup_title</string>
+    <string name="Mobile_num_tip">Mobile_num_tip</string>
+    <string name="Account_setup_help">Account_setup_help</string>
+    <string name="Continue_btn">Continue_btn</string>
+    <string name="Account_setup">Account_setup</string>
+    <string name="Sms_number_alert_title">Sms_number_alert_title</string>
+    <string name="Sms_number_alert_subtitle">Sms_number_alert_subtitle</string>
+    <string name="Edit_btn">Edit_btn</string>
+    <string name="Your_code_title">Your_code_title</string>
+    <string name="Code_tip">Code_tip</string>
+    <string name="Change_Number_Text">Change_Number_Text</string>
+    <string name="Change_Number_Title">Change_Number_Title</string>
+    <string name="Enter">Enter</string>
+    <string name="Select_Country_Code">Select_Country_Code</string>
+    <string name="Phone">Phone</string>
+    <string name="ChangesSavedSuccessfully">ChangesSavedSuccessfully</string>
+    <string name="Trending_Events">Trending_Events</string>
+    <string name="Coming">Coming</string>
+    <string name="Reject_Invitation">Reject_Invitation</string>
 
 </resources>

@@ -18,7 +18,6 @@ public class UserSettings implements Serializable {
     public DataTimeZone getTime_zone() {
         if (time_zone == null) {
             time_zone = DataStore.getInstance().getApplicationData().getSettings().default_timezone;
-            // time_zone = new DataTimeZone();
         }
         return time_zone;
     }

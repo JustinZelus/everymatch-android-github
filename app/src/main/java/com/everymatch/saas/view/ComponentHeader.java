@@ -18,12 +18,14 @@ public class ComponentHeader extends LinearLayout {
 
     private TextView mTextLeft;
     private TextView mTextRight;
+    private IconImageView mIcon;
 
     public ComponentHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_component_header, this);
         mTextLeft = (TextView) findViewById(R.id.view_component_header_text_left);
         mTextRight = (TextView) findViewById(R.id.view_component_header_text_right);
+        mIcon = (IconImageView) findViewById(R.id.icon);
         setTexts(context, attrs);
     }
 
@@ -48,6 +50,7 @@ public class ComponentHeader extends LinearLayout {
             }
         }
     }
+
     public void setTexts(String leftText, String rightText) {
         mTextLeft.setText(leftText);
         mTextRight.setText(rightText);

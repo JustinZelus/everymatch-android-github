@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:bg_color="background_color">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/tvSmsSubTtile"
+        style="@style/EmTextStyleMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/margin_s"
+        app:text_color="night_color"
+        app:text_key="@string/Account_setup_title"
+        tools:text="Account_setup_title" />
+
+    <com.everymatch.saas.view.BaseRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_xs"
+        app:bg_color="white_color">
+
+        <AutoCompleteTextView
+            android:id="@+id/etCountryPhoneCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_toStartOf="@+id/view"
+            android:background="@drawable/input_area"
+            android:ems="10"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textSize="13sp"
+            />
+
+        <com.everymatch.saas.view.BaseIconTextView
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="\@"
+            android:textSize="20sp"
+            app:iconText="icon-Arrowright"
+            app:text_color="fog_color" />
+    </com.everymatch.saas.view.BaseRelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/fog"></LinearLayout>
+
+    <com.everymatch.saas.view.BaseRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_xs"
+        app:bg_color="white_color">
+
+        <com.everymatch.saas.view.BaseEditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:inputType="phone"
+            android:layout_toStartOf="@+id/view"
+            android:background="@drawable/input_area"
+            android:ems="10"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:singleLine="true"
+            android:textSize="13sp"
+            app:hint_key="@string/Mobile_num_tip"
+            app:text_color="moon_color" />
+
+    </com.everymatch.saas.view.BaseRelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/margin_m"
+        android:background="@color/fog"></LinearLayout>
+
+    <com.everymatch.saas.view.BaseTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:text_color="moon_color"
+        app:text_key="@string/Account_setup_help"
+        android:layout_marginBottom="@dimen/margin_s"
+        tools:text="Account_setup_help" />
+
+    <com.everymatch.saas.view.BaseButton
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:bg="rounded"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="@dimen/margin_m"
+        android:textSize="14sp"
+        app:text_key="@string/Continue_btn"
+        app:text_color="white_color"/>
+
+    <com.everymatch.saas.view.BaseTextView
+        android:id="@+id/fragment_login_terms_of_use"
+        style="@style/EmTextStyleMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="@dimen/margin_s"
+        android:gravity="center"
+        android:layout_gravity="center"
+        tools:text="policy"
+        app:text_color="night_color"
+        app:text_key="@string/RegisterTnc" />
+
+</com.everymatch.saas.view.BaseLinearLayout>

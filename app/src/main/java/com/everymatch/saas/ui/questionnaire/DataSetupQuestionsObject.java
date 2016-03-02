@@ -31,7 +31,7 @@ public class DataSetupQuestionsObject {
         try {
             entity.put("status", "draft");
             entity.put("is_participating", isParticipating);
-            entity.put("spots", numberOfSpots);
+            entity.put("spots", numberOfSpots == -2 ? -1 : numberOfSpots);
             entity.put("join_type", joinType);
             entity.put("privacy_settings", new JSONObject().put("type", privacy));
             entity.put("display_settings", new JSONObject().put("type", "public"));

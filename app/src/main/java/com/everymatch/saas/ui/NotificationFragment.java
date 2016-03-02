@@ -21,7 +21,7 @@ import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.base.BaseListFragment;
 import com.everymatch.saas.ui.discover.DiscoverActivity;
-import com.everymatch.saas.ui.event.EventFragment;
+import com.everymatch.saas.ui.event.EventActivity;
 import com.everymatch.saas.ui.inbox.InboxActivity;
 import com.everymatch.saas.util.EmptyViewFactory;
 import com.everymatch.saas.util.Utils;
@@ -190,11 +190,13 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
                 /*lets create an event and set it's id to sent it to event fragment*/
                 DataEvent dataEvent = new DataEvent();
                 dataEvent._id = dataNotification.object_id;
-                ((BaseActivity) getActivity())
+                EventActivity.startActivity(getActivity(),dataEvent);
+
+                /*((BaseActivity) getActivity())
                         .replaceFragment(R.id.fragment_container,
                                 EventFragment.getInstance(dataEvent), NotificationFragment.TAG, true, null,
                                 R.anim.enter_from_right, R.anim.exit_to_left,
-                                R.anim.enter_from_left, R.anim.exit_to_right);
+                                R.anim.enter_from_left, R.anim.exit_to_right);*/
                 break;
         }
     }

@@ -48,34 +48,17 @@ public class RequestEventActions extends BaseRequest {
 
     @Override
     public String getServiceUrl() {
-        return Constants.API_SERVICE_URL;
+        return Constants.getAPI_SERVICE_URL();
     }
 
     @Override
     public String getUrlFunction() {
-        /*if (action.equals("save") || action.equals("unsave"))
-            return "api/watchlater?app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id)
-                    + "&hl=" + DataStore.getInstance().getCulture() +
-                    "&collection_name=events" +
-                    "&object_id=" + object_id;
-        */
-       /* if (action.equals("join")) {
-            return "api/eventactions/join?app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id)
-                   + "&hl=" + DataStore.getInstance().getCulture();
-        }*/
-        /*if (action.equals("add_participant") || action.equals("invite"))
-            return "api/eventactions?app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id)
-                    + "&hl=" + DataStore.getInstance().getCulture();
-        //+ "&object_id=" + object_id
-        //+ "&participant_id=" + data.trim()
-        //+"&invitation_note=";
-        */
         if (dataEventActions.action.equals("unsave")) {
             return "api/" + dataEventActions.api_access + "?app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id)
                     + "&hl=" + DataStore.getInstance().getCulture()
-                    + "&collection_name="+ dataEventActions.parameters.get("collection_name")
-                    + "&action="+ dataEventActions.parameters.get("action")
-                    + "&object_id="+ dataEventActions.parameters.get("object_id") ;
+                    + "&collection_name=" + dataEventActions.parameters.get("collection_name")
+                    + "&action=" + dataEventActions.parameters.get("action")
+                    + "&object_id=" + dataEventActions.parameters.get("object_id");
         }
         return "api/" + dataEventActions.api_access + "?app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id)
                 + "&hl=" + DataStore.getInstance().getCulture();

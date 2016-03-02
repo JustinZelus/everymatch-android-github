@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.everymatch.saas.view.BaseLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:bg_color="background_color">
+
+    <com.everymatch.saas.view.EventHeader
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_s"
+        android:layout_marginRight="@dimen/margin_s"
+        android:orientation="vertical">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvEnterCodeTitle"
+            style="@style/EmTextStyleNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/margin_s"
+            app:text_color="night_color"
+            app:text_key="@string/Change_Number_Title"
+            tools:text="Your_code_title" />
+
+
+        <com.everymatch.saas.view.BaseTextView
+            style="@style/EmTextStyleService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_s"
+            android:gravity="center"
+            app:text_color="moon_color"
+            app:text_key="@string/Change_Number_Text"
+            tools:text="Code_help" />
+
+
+        <com.everymatch.saas.view.BaseButton
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_m"
+            android:gravity="center"
+            app:bg="rounded"
+            app:text_color="white_color"
+            app:text_key="@string/Continue_btn"
+            tools:text="Continue" />
+
+    </LinearLayout>
+
+
+</com.everymatch.saas.view.BaseLinearLayout>

@@ -10,7 +10,7 @@ import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.R;
 import com.everymatch.saas.adapter.PeopleUsersAdapter;
 import com.everymatch.saas.client.data.DataStore;
-import com.everymatch.saas.client.data.EventPeopleStatus;
+import com.everymatch.saas.client.data.Participation_Type;
 import com.everymatch.saas.client.data.RoleType;
 import com.everymatch.saas.client.data.UserEventStatus;
 import com.everymatch.saas.server.Data.DataEvent;
@@ -68,12 +68,12 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
     private void setUsers() {
 
         switch (mParticipantType) {
-            case EventPeopleStatus.TYPE_PARTICIPATING:
-            case EventPeopleStatus.TYPE_MAYBE:
-            case EventPeopleStatus.TYPE_INVITED:
-            case EventPeopleStatus.TYPE_PENDING:
+            case Participation_Type.PARTICIPATING:
+            case Participation_Type.MAYBE:
+            case Participation_Type.INVITED:
+            case Participation_Type.PENDING:
 
-                mPeopleHolder = mDataEvent.dataPublicEvent.participants.get(mParticipantType);
+                mPeopleHolder = mDataEvent.dataPublicEvent.getParticipants().get(mParticipantType);
                 break;
 
             default:
@@ -122,16 +122,16 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
 
             // Indicates the type of the column
             switch (mParticipantType) {
-                case EventPeopleStatus.TYPE_PARTICIPATING:
-                    mActionButtonPrimary.setText("REJECT");
+                case Participation_Type.PARTICIPATING:
+                    mActionButtonPrimary.setText("Reject_Invitation");
                     break;
-                case EventPeopleStatus.TYPE_MAYBE:
+                case Participation_Type.MAYBE:
                     mActionButtonPrimary.setText("REMOVE");
                     break;
-                case EventPeopleStatus.TYPE_INVITED:
-                    mActionButtonPrimary.setText("CANCEL");
+                case Participation_Type.INVITED:
+                    mActionButtonPrimary.setText(dm.getResourceText(R.string.Reject_Invitation));
                     break;
-                case EventPeopleStatus.TYPE_PENDING:
+                case Participation_Type.PENDING:
                     mActionButtonPrimary.setText("ACCEPT");
                     mActionButtonSecondary.setText("CANCEL");
                     mActionButtonSecondary.setVisibility(View.VISIBLE);
@@ -169,15 +169,15 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
      */
     private String getAction(boolean isPrimaryButton) {
         switch (mParticipantType) {
-            case EventPeopleStatus.TYPE_PARTICIPATING:
+            case Participation_Type.PARTICIPATING:
                 return "remove";
-            case EventPeopleStatus.TYPE_MAYBE:
+            case Participation_Type.MAYBE:
                 // TODO - ask michel about it.
                 return "remove_maybe";
             // break;
-            case EventPeopleStatus.TYPE_INVITED:
+            case Participation_Type.INVITED:
                 return "cancel_invitation";
-            case EventPeopleStatus.TYPE_PENDING:
+            case Participation_Type.PENDING:
                 // TODO - ask michel/stephan
                 return isPrimaryButton ? "" : "";
         }
@@ -209,7 +209,7 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
         ServerConnector.getInstance().processRequest(new BaseRequest() {
             @Override
             public String getServiceUrl() {
-                return Constants.API_SERVICE_URL;
+                return Constants.getAPI_SERVICE_URL();
             }
 
             @Override

@@ -83,17 +83,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
-                android:padding="2dp"
-                android:layout_margin="3dp"
+                android:padding="1dp"
                 android:gravity="center"
                 android:id="@+id/tvBadge"
-                android:textSize="11sp"
+                android:textSize="9sp"
                 android:textColor="#FFFFFF"
                 android:background="@drawable/bg_badge"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
                 app:text_color="white_color"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="13dp" />
         </RelativeLayout>
 
         <com.everymatch.saas.view.DiscoverMenuItem

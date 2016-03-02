@@ -184,7 +184,7 @@ public class QuestionUtils {
 
                         break;
                     case FormType.TIME:
-                        int sec = Integer.parseInt(answer.value.toString());
+                        int sec = (int) (Double.parseDouble(answer.value.toString()));
                         value = Utils.getHourMinSecFromSeconds(sec);
                         break;
 
@@ -203,6 +203,7 @@ public class QuestionUtils {
                 }
             } catch (Exception e) {
                 EMLog.e("Parse error", e.getMessage());
+                return TextUtils.isEmpty(value) ? dm.getResourceText(R.string.Unanswered) : value;
             }
         }
 

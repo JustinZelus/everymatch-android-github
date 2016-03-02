@@ -33,6 +33,7 @@ public abstract class BaseLoginActivity extends BaseActivity {
         ServerConnector.getInstance().processRequest(new RequestApplication(), new ServerConnector.OnResultListener() {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
+                stopDialog();
                 Log.i(TAG, "RequestApplication onSuccess");
                 ResponseApplication responseApplication = (ResponseApplication) baseResponse;
                 if (responseApplication.timestamp != null) {

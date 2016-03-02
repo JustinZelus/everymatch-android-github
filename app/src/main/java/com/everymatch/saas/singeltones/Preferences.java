@@ -36,6 +36,7 @@ public class Preferences {
     }
 
     public static Preferences getInstance() {
+
         if (sInstance == null) {
             synchronized (Preferences.class) {
                 if (sInstance == null) {

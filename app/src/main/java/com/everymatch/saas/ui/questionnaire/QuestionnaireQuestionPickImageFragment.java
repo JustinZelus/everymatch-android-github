@@ -264,15 +264,15 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
 
         Rect bitmapRect = new Rect(0, 0, capturedImage.getWidth(), capturedImage.getHeight());
 
-        int top = cropRect.top;
-        int left = cropRect.left;
+        int top = cropRect.left;
+        int left = cropRect.top;
         int bottom = -(bitmapRect.height() - cropRect.bottom);
         int right = -(bitmapRect.width() - cropRect.right);
 
         JSONObject output = new JSONObject();
         try {
             output.put("image_url", tmpUrl);
-            output.put("crop", "" + top + "," + left + "," + bottom + "," + right);
+            output.put("crop", "" + top + "," + left + "," + right + "," + bottom);
             output.put("rotate", "0");
             output.put("id", mActivity.mGeneratedEvent._id);
             output.put("is_upload_to_temp", false);

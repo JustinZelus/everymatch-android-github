@@ -1,8 +1,8 @@
 <com.everymatch.saas.view.BaseFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     app:bg_color="background_color"
     tools:context=".ui.discover.DiscoverActivity">
 
@@ -25,7 +25,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/margin_s"/>
+                android:paddingBottom="@dimen/margin_s">
+
+                <LinearLayout
+                    android:id="@+id/events_recycler_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/users_recycler_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_xs"
+                    android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/trends_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ad_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"></LinearLayout>
+
+            </LinearLayout>
         </ScrollView>
 
         <FrameLayout
@@ -45,15 +72,17 @@
         <FrameLayout
             android:id="@+id/fragment_discover_view_no_data_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" >
+
+            <include
+                android:id="@+id/fragment_discover_activities_popup"
+                layout="@layout/view_activities_popup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|bottom" />
+        </FrameLayout>
 
 
     </FrameLayout>
-
-    <include
-        android:id="@+id/fragment_discover_activities_popup"
-        layout="@layout/view_activities_popup"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </com.everymatch.saas.view.BaseFrameLayout>

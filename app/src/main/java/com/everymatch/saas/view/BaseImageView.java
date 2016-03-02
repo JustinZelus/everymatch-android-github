@@ -20,7 +20,8 @@ public class BaseImageView extends ImageView {
 
     public BaseImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initAttributes(attrs);
+        if (!isInEditMode())
+            initAttributes(attrs);
     }
 
     private void initAttributes(AttributeSet attributeSet) {
