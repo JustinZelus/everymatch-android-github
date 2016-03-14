@@ -6,25 +6,40 @@
     android:layout_gravity="center"
     android:gravity="top|center_horizontal"
     android:orientation="vertical"
-    android:paddingLeft="20dip"
-    android:paddingRight="20dip">
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
 
     <com.everymatch.saas.view.BaseTextView
         android:id="@+id/value_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textSize="35sp"
+        android:gravity="center"
+        android:textSize="25sp"
         app:text_color="primary_color" />
 
-    <com.everymatch.saas.view.BaseSeekBar
-        android:id="@+id/seekbar"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        app:text_color="primary_color" />
+        android:layout_margin="20dp">
+
+        <com.everymatch.saas.view.BaseSeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            app:text_color="primary_color" />
+
+        <LinearLayout
+            android:id="@+id/fakeLayout"
+            android:layout_width="300dp"
+            android:layout_height="4dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="#616161"
+            android:gravity="center"
+            android:orientation="vertical"></LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

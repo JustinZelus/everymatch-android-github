@@ -26,6 +26,8 @@ public abstract class BasePeopleListFragment extends BaseListFragment {
 
 
     // Data
+    protected int totalCount;
+    public int numOfSelectedPeople;
     protected PeopleUsersAdapter mAdapter;
     protected DataPeopleHolder mPeopleHolder;
     protected PeopleListener mPeopleListener;
@@ -76,7 +78,7 @@ public abstract class BasePeopleListFragment extends BaseListFragment {
 
         refreshAdapter();
 
-        if (currentCount > 0){
+        if (currentCount > 0) {
             mAdapter.setAnimatedPosition(currentCount);
         }
     }
@@ -95,7 +97,7 @@ public abstract class BasePeopleListFragment extends BaseListFragment {
 
     @Override
     public void performSearch(String s) {
-        if (mAdapter != null){
+        if (mAdapter != null) {
             mAdapter.getFilter().filter(s);
         }
     }

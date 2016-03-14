@@ -49,6 +49,8 @@ import com.everymatch.saas.view.EventHeader;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by dors on 11/23/15.
  */
@@ -194,16 +196,16 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
     private void setProviders() {
         if (ds.responseLoadProviders == null)
             return;
-        final ResponseLoadProviders.Provider[] providers = ds.responseLoadProviders.getProviders();
-        for (int i = 0; i < providers.length; ++i) {
+        final ArrayList<ResponseLoadProviders.Provider> providers = ds.responseLoadProviders.getProviders();
+        for (int i = 0; i < providers.size(); ++i) {
             BaseButton button = new BaseButton(getActivity());
-            button.setText(providers[i].text_title.toUpperCase());
+            button.setText(providers.get(i).text_title.toUpperCase());
             button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, Utils.pxToDp((int) getResources().getDimension(R.dimen.text_size_normal)));
             button.setTextColor(ds.getIntColor(EMColor.WHITE));
             button.setTypeface(TypeFaceProvider.getTypeFace(TypeFaceProvider.FONT_LATO));
             int color;
             try {
-                color = Color.parseColor(providers[i].background_color);
+                color = Color.parseColor(providers.get(i).background_color);
             } catch (Exception e) {
                 e.printStackTrace();
                 continue;
@@ -222,13 +224,13 @@ public abstract class BaseSignFragment extends BaseFragment implements EventHead
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                    intent.putExtra(WebViewActivity.EXTRA_VIEW_URL, providers[providerIndex].client_url.
+                    intent.putExtra(WebViewActivity.EXTRA_VIEW_URL, providers.get(providerIndex).client_url.
                             replace("[culture_name]", ds.getCulture()).
                             //replace("[culture_name]", getString(R.string.host_language)).
                                     //replace("[app_host]", "/").
                                     replace("[app_code]", password).
                             replace("[app_id]", getString(R.string.app_id)));
-                    intent.putExtra(WebViewActivity.EXTRA_RETURN_URL, Constants.getOAUTH2_SERVICE_URL() + "?");
+                    //intent.putExtra(WebViewActivity.EXTRA_RETURN_URL, Constants.getOAUTH2_SERVICE_URL() + "?");
                     intent.putExtra(WebViewActivity.EXTRA_RETURN_DATA_NAME, EXTRA_ACCESS_TOKEN);
                     startActivityForResult(intent, REQUEST_CODE_GET_TOKEN);
                 }

@@ -66,7 +66,11 @@ public abstract class BaseFragment extends Fragment implements NoConnectionView.
     }
 
     public void showDialog(String title) {
-        ((BaseActivity) getActivity()).showDialog(title);
+        showDialog(title, true);
+    }
+
+    public void showDialog(String title, boolean isCancelable) {
+        ((BaseActivity) getActivity()).showDialog(title, isCancelable);
     }
 
     public void stopDialog() {

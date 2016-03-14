@@ -4,22 +4,24 @@ package com.everymatch.saas.server.responses;
 import com.everymatch.saas.server.Data.DataIcon;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 public class ResponseLoadProviders extends BaseResponse {
 
-    private Provider[] array;
+    private ArrayList<Provider> array;
 
-    public Provider[] getProviders() {
+    public ArrayList<Provider> getProviders() {
+        if (array == null)
+            array = new ArrayList<>();
         return array;
     }
 
-    public void setArray(Provider[] array) {
+    public void setArray(ArrayList<Provider> array) {
         this.array = array;
     }
 
     public class Provider {
-        //public JSONObject icon;
-        //public JSONObject Icon;
-        //public Dictionary<String,Object> Icon;
         @SerializedName("Icon")
         public DataIcon Icon;
         public String name;
@@ -30,11 +32,11 @@ public class ResponseLoadProviders extends BaseResponse {
         public String auth_type;
         public boolean is_manages_identities;
         public String client_url;
-        public DataUserLogin user_login;
+        public UserLoginObject user_login;
 
     }
 
-    public class DataUserLogin {
+    public class UserLoginObject implements Serializable {
         public String LoginProvider;
         public String ProviderKey;
     }

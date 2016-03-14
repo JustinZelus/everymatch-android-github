@@ -28,6 +28,8 @@ import com.everymatch.saas.view.EventHeader;
 public class FragmentTimeZones extends BaseFragment implements View.OnClickListener, EventHeader.OnEventHeader, AdapterTimeZone.TimeZoneCallback {
     public static final String TAG = "FragmentTimeZones";
     public static final String EXTRA_TIME_ZONE_INDEX = "extra.time.zone.index";
+    public static final String ARG_TIME_ZONE = "arg.time.zone";
+    public static final String ARG_TIME_ZONE_INDEX = "arg.time.zone.index";
 
 
     ListView mListView;
@@ -35,11 +37,26 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
     //Button btnSelect;
     private EventHeader mHeader;
     private boolean isClicked = false;
+    private DataTimeZone dataTimeZone;
+    private int index;
 
+
+    public static FragmentTimeZones getInstance(DataTimeZone dataTimeZone, int index) {
+        FragmentTimeZones answer = new FragmentTimeZones();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARG_TIME_ZONE, dataTimeZone);
+        bundle.putInt(ARG_TIME_ZONE_INDEX, index);
+        answer.setArguments(bundle);
+        return answer;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null && getArguments().containsKey(ARG_TIME_ZONE)) {
+            dataTimeZone = (DataTimeZone) getArguments().getSerializable(ARG_TIME_ZONE);
+            index = getArguments().getInt(ARG_TIME_ZONE_INDEX);
+        }
         mAdapter = new AdapterTimeZone(DataStore.getInstance().getApplicationData().getTime_zone(), getActivity(), this);
 
     }
@@ -68,7 +85,10 @@ public class FragmentTimeZones extends BaseFragment implements View.OnClickListe
 
         //simulate search click and insert text
         onTwoIconClicked();
-        mHeader.getEditTitle().setText(ds.getUser().user_settings.getTime_zone().title);
+        if (dataTimeZone != null) {
+            mHeader.getEditTitle().setText(dataTimeZone.title);
+        } else
+            mHeader.getEditTitle().setText(ds.getUser().user_settings.getTime_zone().title);
 
     }
 

@@ -7,6 +7,7 @@
     android:orientation="horizontal"
     app:bg_color="white_color">
 
+
     <com.everymatch.saas.view.BaseImageView
         android:id="@+id/people_list_item_image"
         android:layout_width="70dp"
@@ -50,10 +51,12 @@
 
     <LinearLayout
         android:id="@+id/line"
-        android:layout_width="1dp"
+        android:layout_width="0.5dp"
         android:layout_height="70dp"
+        android:layout_marginBottom="@dimen/margin_xxs"
+        android:layout_marginTop="@dimen/margin_xxs"
         android:layout_toLeftOf="@+id/rightPart"
-        android:background="@color/moon"
+        android:background="@color/fog"
         android:orientation="horizontal">
 
     </LinearLayout>
@@ -67,25 +70,57 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.everymatch.saas.view.BaseIconTextView
-            android:id="@+id/people_list_item_right_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="25sp"
-            app:text_color="moon_color"
-            tools:text="A" />
-
         <com.everymatch.saas.view.BaseTextView
             android:id="@+id/people_list_item_right_text"
             style="@style/EmTextStyleMeta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
             android:visibility="gone"
             app:text_color="primary_color"
             tools:text="A" />
 
+        <LinearLayout
+            android:id="@+id/rightPartHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.everymatch.saas.view.BaseIconTextView
+                android:id="@+id/people_list_item_right_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="25sp"
+                app:text_color="moon_color"
+                tools:text="A" />
+
+            <com.everymatch.saas.view.BaseTextView
+                android:id="@+id/people_list_item_bottom_text"
+                style="@style/EmTextStyleMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"
+                app:text_color="primary_color"
+                tools:text="A" />
+        </LinearLayout>
+
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/userLoader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#6b1a1a1a"
+        android:clickable="true"
+        android:visibility="gone" >
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center" />
+    </RelativeLayout>
 </com.everymatch.saas.view.BaseRelativeLayout>

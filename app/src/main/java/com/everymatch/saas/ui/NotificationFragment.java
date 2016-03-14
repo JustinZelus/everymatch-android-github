@@ -163,13 +163,16 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        DataNotifications dataNotification = notifications.get(position);
+        final DataNotifications dataNotification = notifications.get(position);
         dataNotification.read = true;
         adapter.notifyDataSetChanged();
         NotificationManager.markNotificationsAsReadOrSeen("read", dataNotification._id, new GenericCallback() {
             @Override
             public void onDone(boolean success, Object data) {
-
+                try {
+                    dataNotification.read = true;
+                } catch (Exception ex) {
+                }
             }
         });
         switch (dataNotification.notification_type) {
@@ -190,13 +193,9 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
                 /*lets create an event and set it's id to sent it to event fragment*/
                 DataEvent dataEvent = new DataEvent();
                 dataEvent._id = dataNotification.object_id;
-                EventActivity.startActivity(getActivity(),dataEvent);
 
-                /*((BaseActivity) getActivity())
-                        .replaceFragment(R.id.fragment_container,
-                                EventFragment.getInstance(dataEvent), NotificationFragment.TAG, true, null,
-                                R.anim.enter_from_right, R.anim.exit_to_left,
-                                R.anim.enter_from_left, R.anim.exit_to_right);*/
+                EventActivity.startActivity(getActivity(), dataEvent);
+
                 break;
         }
     }

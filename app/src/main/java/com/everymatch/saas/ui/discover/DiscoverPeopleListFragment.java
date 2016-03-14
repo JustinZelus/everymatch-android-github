@@ -104,7 +104,8 @@ public class DiscoverPeopleListFragment extends BasePeopleListFragment {
 
     @Override
     public PeopleUsersAdapter createAdapter() {
-        return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), mMode);
+
+        return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), mMode, null/*no need to send event*/,null);
     }
 
     @Override

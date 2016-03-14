@@ -181,6 +181,7 @@ public class Consts {
         public static final String icon_emLogo = String.valueOf((char) 0xe679);
         public static final String icon_selectEmpty = String.valueOf((char) 0xe6B0);
         public static final String icon_MenuMore = String.valueOf((char) 0xe901);
+        public static final String icon_MenuMore2 = String.valueOf((char) 0xe911);
 
     }
 }

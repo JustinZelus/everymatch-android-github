@@ -18,6 +18,12 @@ public class RequestLoadProviders extends BaseRequest {
     public RequestLoadProviders(boolean withToken) {
         this.withToken = withToken;
     }
+
+    @Override
+    public boolean parseResponseAsJson() {
+        return false;
+    }
+
     public RequestLoadProviders( ) {
 
     }

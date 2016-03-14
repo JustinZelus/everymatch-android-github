@@ -92,7 +92,6 @@
                             app:bg_color="white_color"
                             app:left_icon_visible="false"
                             app:left_media_container_visible="false"
-                            app:row_details="About,Status,Location,Personality,recommendations..."
                             app:row_title="Profile" />
 
                         <com.everymatch.saas.view.EventDataRow
@@ -106,7 +105,6 @@
                             app:bg_color="white_color"
                             app:left_icon_visible="false"
                             app:left_media_container_visible="false"
-                            app:row_details="Account,notifications,Units,Privacy"
                             app:row_title="Settings" />
                     </RelativeLayout>
 

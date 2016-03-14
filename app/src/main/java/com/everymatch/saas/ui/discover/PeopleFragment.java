@@ -184,7 +184,7 @@ public class PeopleFragment extends BaseFragment implements EventHeader.OnEventH
      * Set user data once object fetched from the server
      */
     private void setUserData() {
-
+        if (!isAdded()) return;
         // User image
         if (!TextUtils.isEmpty(mUserFullObject.image_url)) {
             Picasso.with(getActivity())

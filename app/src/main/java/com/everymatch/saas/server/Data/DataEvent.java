@@ -33,6 +33,7 @@ public class DataEvent implements Serializable {
             display_settings = new DataDisplaySettings();
         return display_settings;
     }
+
     @SerializedName("users")
     private ArrayList<DataPeople> trend_users;
 
@@ -89,6 +90,7 @@ public class DataEvent implements Serializable {
         this.privacy_settings = event.privacy_settings;
         this.role_name = event.role_name;
         this._id = event._id;
+        client_id = event.client_id;
     }
 
     public boolean showPrecentage() {

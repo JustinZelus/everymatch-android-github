@@ -128,20 +128,20 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
                     int l = intent.getIntExtra("l", 0);
                     int t = intent.getIntExtra("t", 0);
                     int r = intent.getIntExtra("r", 0);
-                    int b = intent.getIntExtra("b", 0);
+                    final int b = intent.getIntExtra("b", 0);
                     Rect cropRect = new Rect(l, t, r, b);
 
                     Rect bitmapRect = new Rect(0, 0, capturedImage.getWidth(), capturedImage.getHeight());
 
-                    int top = cropRect.left;
-                    int left = cropRect.top;
-                    int bottom = -(bitmapRect.height() - cropRect.bottom);
-                    int right = -(bitmapRect.width() - cropRect.right);
+                    int left = cropRect.left;
+                    int top = cropRect.top;
+                    int right = -(capturedImage.getWidth() - cropRect.right);
+                    int bottom = -(capturedImage.getHeight() - cropRect.bottom);
 
                     JSONObject output = new JSONObject();
                     try {
                         output.put("image_url", tmpUrl);
-                        output.put("crop", "" + top + "," + left + "," + right + "," + bottom);
+                        output.put("crop", "" + left + "," + top + "," + right + "," + bottom);
                         output.put("rotate", "0");
                         output.put("id", mActivity.mGeneratedEvent._id);
                         output.put("is_upload_to_temp", false);
@@ -183,7 +183,6 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
         btnPublish = (BaseButton) v.findViewById(R.id.btnPublish);
         btnPublish.setOnClickListener(this);
 
-        v.findViewById(R.id.uploadImageLayout).setOnClickListener(this);
         mTextImage = (TextView) v.findViewById(R.id.fragment_questionaire_publish_text_image);
 
         etEventName = (EditText) v.findViewById(R.id.etEventtName);
@@ -193,6 +192,7 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
 
         mTextTitle = (TextView) v.findViewById(R.id.event_data_row_details);
         mImageHolder = v.findViewById(R.id.fragment_questionaire_publish_image_holder);
+        mImageHolder.setOnClickListener(this);
         mButtonHolder = v.findViewById(R.id.fragment_questionaire_publish_button_holder);
 
         img = (ImageView) v.findViewById(R.id.imgPublishEventImage);
@@ -320,7 +320,7 @@ public class QuestionnarePublishFragment extends BaseFragment implements EventHe
             case R.id.btnPublish:
                 publishEvent();
                 break;
-            case R.id.uploadImageLayout:
+            case R.id.fragment_questionaire_publish_image_holder:
                 //EasyImage.openChooser(QuestionnarePublishFragment.this, "Pick Image", true);
                 Intent chooseImageIntent = ImagePicker.getPickImageIntent(getActivity());
                 startActivityForResult(chooseImageIntent, REQUEST_CODE_SELECT_IMAGE);

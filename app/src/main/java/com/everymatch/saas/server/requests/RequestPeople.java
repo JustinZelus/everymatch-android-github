@@ -35,14 +35,16 @@ public class RequestPeople extends BaseRequest {
     public String getUrlFunction() {
         StringBuilder request = new StringBuilder();
 
+        //https://api.everymatch.me/api/friends?
+        // start=10&count=10&search_phrase=&collection_name=&object_id=&app_id=20150208103953&hl=en-US&_=1457277752282
         if (type.equals(MyPeopleListFragment.TYPE_MY_FRIENDS)){
             request.append("api/friends?hl=" + DataStore.getInstance().getCulture() +
                     "&app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id) +
                     "&search_phrase=&collection_name=&object_id=");
         } else{
-            request.append("api/recently_viewed?hl=" + DataStore.getInstance().getCulture() +
+            request.append("api/recentlyviewed?hl=" + DataStore.getInstance().getCulture() +
                     "&app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id) +
-                    "&search_phrase=&collection_name=&object_id=");
+                    "&search_phrase=&collection_name=users&object_id=");
         }
 
         request.append("&start=" + start + "&count=" + count);

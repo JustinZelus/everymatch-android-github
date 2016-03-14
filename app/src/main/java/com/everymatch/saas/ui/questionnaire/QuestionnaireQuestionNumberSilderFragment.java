@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.view.BaseSeekBar;
 
@@ -22,6 +24,7 @@ public class QuestionnaireQuestionNumberSilderFragment extends QuestionnaireQues
     TextView mValueTextView;
     BaseSeekBar mSeekBar;
     boolean isTouched = false;
+    LinearLayout fakeLayout;
 
     int mMin, mMax;
     float mStep;
@@ -40,9 +43,15 @@ public class QuestionnaireQuestionNumberSilderFragment extends QuestionnaireQues
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         mValueTextView = (TextView) view.findViewById(R.id.value_textview);
         mSeekBar = (BaseSeekBar) view.findViewById(R.id.seekbar);
+        mSeekBar.measure(0, 0);
 
+        fakeLayout = (LinearLayout) view.findViewById(R.id.fakeLayout);
+        //ViewGroup.LayoutParams params = fakeLayout.getLayoutParams();
+        //params.width = mSeekBar.getMeasuredWidth();
+        //fakeLayout.setLayoutParams(params);
         mSeekBar.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(DataStore.getInstance().getIntColor(EMColor.PRIMARY), PorterDuff.Mode.MULTIPLY));
 
         mStep = mQuestionAndAnswer.question.step == 0 ? 1 : mQuestionAndAnswer.question.step;
@@ -73,17 +82,14 @@ public class QuestionnaireQuestionNumberSilderFragment extends QuestionnaireQues
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (!isTouched) {
                     isTouched = true;
+                    fakeLayout.setVisibility(View.GONE);
                     mSeekBar.setThumbEnabled(true);
                 }
             }
         });
 
         //add units
-        if (mQuestion.units != null && mQuestion.units.containsKey("value") && mQuestion.units.get("value") != null) {
-            units = "(" + mQuestion.units.get("value").toString() + ")";
-            units = mQuestion.getUnits();
-            tvTitle.setText(mQuestion.text_title + "\n" + units);
-        }
+        tvTitle.setText(mQuestion.text_title + "\n" + mQuestion.getUnits());
     }
 
     @Override
@@ -97,6 +103,7 @@ public class QuestionnaireQuestionNumberSilderFragment extends QuestionnaireQues
                 isTouched = true;
                 final String markedAnswer = mQuestionAndAnswer.userAnswerData.getString("value").trim();
                 currentValue = Integer.parseInt(markedAnswer);
+                fakeLayout.setVisibility(View.GONE);
                 mSeekBar.setThumbEnabled(true);
             } catch (Exception ex) {
                 currentValue = (mMax - mMin) / 2;
@@ -104,6 +111,7 @@ public class QuestionnaireQuestionNumberSilderFragment extends QuestionnaireQues
             }
         } else {
             currentValue = (mMax - mMin) / 2;
+            fakeLayout.setVisibility(View.VISIBLE);
             mSeekBar.setThumbEnabled(false);
             mValueTextView.setText("");
         }

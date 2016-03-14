@@ -23,11 +23,11 @@ import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.base.BaseEventListFragment;
 import com.everymatch.saas.ui.dialog.EventTypeSelectionDialog;
 import com.everymatch.saas.ui.dialog.menus.MenuCreateEvent;
+import com.everymatch.saas.ui.dialog.menus.MenuMyEvents;
 import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.EmptyViewFactory;
-import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventHeader;
 
 import java.io.Serializable;
@@ -194,10 +194,15 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
         mTextEventType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDialog = EventTypeSelectionDialog.create(mEventMap, mCurrentEventKey, Utils.dpToPx(3),
+
+               /* mDialog = EventTypeSelectionDialog.create(mEventMap, mCurrentEventKey, Utils.dpToPx(3),
                         mEventHeader.getMeasuredHeight() + mTopContainer.getMeasuredHeight(), Utils.dpToPx(220));
                 mDialog.setTargetFragment(MyEventsFragment.this, CODE_EVENT_SELECTION);
-                mDialog.show(getFragmentManager(), EventTypeSelectionDialog.class.getSimpleName());
+                mDialog.show(getFragmentManager(), EventTypeSelectionDialog.class.getSimpleName());*/
+
+                MenuMyEvents menuMyEvents = new MenuMyEvents();
+                menuMyEvents.setTargetFragment(MyEventsFragment.this, MenuMyEvents.REQUEST_CODE_MY_EVENTS);
+                menuMyEvents.show(getChildFragmentManager(), "");
             }
         });
 
@@ -262,7 +267,7 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
     }
 
     private void setEventTypeTitle(DataEventHolder dataEventHolder) {
-        String text = String.format(Consts.EVENT_TYPE_FORMAT, dataEventHolder.text_title, dataEventHolder.count);
+        String text = String.format(Consts.EVENT_TYPE_FORMAT, dataEventHolder.text_title, dataEventHolder.getEvents().size());
         mTextEventType.setText(text);
     }
 
@@ -287,6 +292,15 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
             int activityId = data.getIntExtra(QuestionnaireActivity.EXTRA_ACTIVITY_ID, 0);
             String eventId = data.getStringExtra(QuestionnaireActivity.EXTRA_SELECTED_EVENT_ID);
             QuestionnaireActivity.createEvent(getActivity(), activityId, eventId);
+        } else if (requestCode == MenuMyEvents.REQUEST_CODE_MY_EVENTS) {
+            DataEventHolder eventHolder = (DataEventHolder) data.getSerializableExtra(MenuMyEvents.EXTRA_EVENT_HOLDER);
+            mCurrentEventKey = eventHolder.filter;
+            EMLog.i(TAG, "Selected event type - " + mCurrentEventKey);
+            setEventTypeTitle(mEventMap.get(mCurrentEventKey));
+            mAdapter.refreshData(mEventMap.get(mCurrentEventKey).getEvents());
+
+            // Initialize pagination data for the next type
+            mIsNoMoreResults = false;
         }
     }
 
@@ -295,9 +309,6 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
         // super.handleBroadcast(eventObject, eventName);
         if (PusherManager.PUSHER_EVENT_MY_EVENT_UPDATE.equals(eventName)) {
 
-            if (ds.getUser().getTotalEventsCount() > 0)
-                mTopContainer.setVisibility(View.VISIBLE);
-
             //check if event
             if (mCurrentEventKey != getCurrentEventKey()) {
                 mCurrentEventKey = getCurrentEventKey();
@@ -305,6 +316,11 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
             }
 
             mAdapter.refreshData(mEventMap.get(mCurrentEventKey).getEvents());
+
+            if (ds.getUser().getTotalEventsCount() > 0) {
+                mTopContainer.setVisibility(View.VISIBLE);
+                setEventTypeTitle(mEventMap.get(mCurrentEventKey));
+            }
 
         }
     }

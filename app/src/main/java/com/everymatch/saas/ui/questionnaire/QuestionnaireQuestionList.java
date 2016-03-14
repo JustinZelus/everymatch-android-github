@@ -206,6 +206,9 @@ public class QuestionnaireQuestionList extends BaseIdsQuestion {
 
                     addAnswersRows();
                     setAnswer(mQuestionAndAnswer.question.getAnswerValuesByAnswerIds(getConcatedList()));
+
+                    //if we are editing...we would like to save
+                    setTitleEnabled(mActivity.isInEditMode());
                 }
 
                 @Override

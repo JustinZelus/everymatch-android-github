@@ -2,6 +2,7 @@ package com.everymatch.saas.ui.dialog.menus;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -11,6 +12,7 @@ import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.Data.DataActivity;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.discover.DiscoverFragment;
+import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.ViewSeperator;
 
@@ -62,6 +64,9 @@ public class MenuChangeActivity extends BaseMenuDialogFragment implements View.O
             edr.setLeftIconOrImage(activity.icon);
             edr.getLeftIcon().setTextColor(white);
             edr.setRightIconText(Consts.Icons.icon_Details);
+            edr.getRightIcon().setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+            int padding = Utils.dpToPx(7);
+            edr.getRightIcon().setPadding(padding, padding, padding, padding);
             edr.getRightIcon().setTextColor(white);
             edr.getRightIcon().setTag(activity);
             edr.getRightIcon().setOnClickListener(onEditClick);

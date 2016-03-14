@@ -31,6 +31,7 @@ public class DataStore {
     public static final int ADAPTER_MODE_COUNTER = 12;
     public static final int ADAPTER_MODE_NONE = 13;
     public static final int ADAPTER_MODE_MATCH = 14;
+    public static final int ADAPTER_MODE_COUNTER_WITH_PERCENT = 15;
 
     // people (pager) screen type
     public static final int SCREEN_TYPE_INVITE_PARTICIPANTS = 15;
@@ -158,4 +159,5 @@ public class DataStore {
         String hexColor = dataSettings.defaultDesign.get(Utils.intToStringColor(color));
         return android.graphics.Color.parseColor(hexColor);
     }
+
 }

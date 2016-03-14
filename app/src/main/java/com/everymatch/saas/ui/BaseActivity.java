@@ -171,8 +171,14 @@ public class BaseActivity extends AppCompatActivity {
 
 
     public void showDialog(String title) {
+        showDialog(title, true);
+    }
+
+    public void showDialog(String title, boolean cancelable) {
         if (mDialog == null)
             return;
+
+        mDialog.setCancelable(cancelable);
 
         if (mDialog.isShowing()) {
             mDialog.setTitle(title);

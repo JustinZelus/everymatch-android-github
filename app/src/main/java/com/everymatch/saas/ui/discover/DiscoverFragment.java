@@ -335,17 +335,27 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
             return;
         }
 
-        // =================== EVENTS =================== //
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
-
+        // =================== EVENTS =================== //
         containerEvents.removeAllViews();
+        //remove events carucell
+        EventCarouselFragment eventCarouselFragment = (EventCarouselFragment) findFragment(EventCarouselFragment.TAG);
+        if (eventCarouselFragment != null) {
+            fragmentTransaction.remove(eventCarouselFragment);
+        }
+        //remove empty event
+        EventEmptyStateView eventEmptyStateView = (EventEmptyStateView) findFragment(EventEmptyStateView.TAG);
+        if (eventEmptyStateView != null) {
+            fragmentTransaction.remove(eventEmptyStateView);
+        }
 
         if (responseDiscover.getEventHolder().getEvents().size() == 0) {
-            //there is no events
-            String leftText = mCurrentActivity.text_title +" "+ dm.getResourceText(R.string.Events);
-            EventEmptyStateView eventEmptyStateView = new EventEmptyStateView(getActivity(), leftText, mCurrentActivity.icon);
-            containerEvents.addView(eventEmptyStateView);
+            //there are no events
+            String leftText = dm.getResourceText(R.string.Suggested_Events);
+            eventEmptyStateView = EventEmptyStateView.getInstance(mCurrentActivity.icon, leftText);
+            //fragmentTransaction.replace(containerEvents.getId(), eventEmptyStateView);
+            fragmentTransaction.add(containerEvents.getId(), eventEmptyStateView, EventEmptyStateView.TAG);
             eventEmptyStateView.setCallBack(new EventEmptyStateView.EventEmptyStateCallBack() {
                 @Override
                 public void onEditProfileClick() {
@@ -360,7 +370,6 @@ public class DiscoverFragment extends BaseFragment implements DiscoverActivities
                 }
             });
         } else {
-            EventCarouselFragment eventCarouselFragment = (EventCarouselFragment) findFragment(EventCarouselFragment.TAG);
             String leftText = Utils.makeTextCamelCase(dm.getResourceText(R.string.Suggested_Events) + " (" + responseDiscover.getEventHolder().count + ")");
             String rightText = Utils.makeTextCamelCase(dm.getResourceText(R.string.View_All));
             /*if (eventCarouselFragment != null) {

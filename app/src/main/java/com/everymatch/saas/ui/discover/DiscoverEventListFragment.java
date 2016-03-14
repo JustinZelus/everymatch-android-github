@@ -75,7 +75,7 @@ public class DiscoverEventListFragment extends BaseEventListFragment {
 
     @Override
     public EventsAdapter createAdapter() {
-        return mAdapter = new EventsAdapter(mEventMap.get(DISCOVER_EVENTS).getEvents(), getActivity(), EventsAdapter.TYPE_MATCH);
+        return mAdapter = new EventsAdapter(mEventMap.get(DISCOVER_EVENTS).getEvents(), getActivity(), EventsAdapter.TYPE_NONE);
     }
 
     @Override

@@ -7,15 +7,16 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingLeft="20dip"
-    android:paddingRight="20dip">
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
 
     <com.everymatch.saas.view.BaseTextView
         android:id="@+id/value_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
-        android:textSize="32sp"
+        android:textSize="25sp"
+        android:gravity="center"
         app:text_color="primary_color" />
 
     <!--
@@ -29,9 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        rsb:barHeight="1dip"
-        rsb:barHeightInRange="3dip"
+        android:layout_marginTop="10dp"
+        rsb:barHeight="1dp"
+        rsb:barHeightInRange="3dp"
         rsb:showLabels="false"
         rsb:valuesAboveThumbs="false" />
     <!--

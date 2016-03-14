@@ -5,25 +5,27 @@
     android:layout_height="@dimen/people_carousel_height"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#641a1a1a"></RelativeLayout>
-
     <com.everymatch.saas.view.SquareImageView
         android:id="@+id/imgMatch"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.everymatch.saas.view.BaseTextView
-        android:id="@+id/tvPeopleMatch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="5dp"
-        android:text="Match"
-        app:text_color="white_color" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#501a1a1a">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvPeopleMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Match"
+            app:text_color="white_color"
+            android:padding="@dimen/margin_xxs"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -19,6 +19,14 @@ android {
             storePassword 'gibson1212'
         }
     }*/
+    signingConfigs {
+        release {
+            keyAlias 'pass'
+            keyPassword 'Em2!003id'
+            storeFile file('C:/Users/PopApp_laptop/Desktop/EveryMatchKeyStore.jks')
+            storePassword 'Em2!003id'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
     defaultConfig {
@@ -38,34 +46,33 @@ android {
         abortOnError false
     }
     buildTypes {
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
-
         productFlavors {
             wigan {
                 applicationId "com.everymatch.wigan"
                 //versionName "wigan 1.0"
             }
-
             ucpa {
                 applicationId "com.everymatch.ucpa"
                 //versionName "ucpa 0.0.0.1"
             }
-
             activo {
                 applicationId "com.everymatch.activo"
                 //versionName "activo 1.0"
             }
-
             activo_demo {
                 applicationId "com.everymatch.activo_demo"
                 //versionName "activo 1.0"
+
             }
-        }
-        debug {
-            debuggable true
         }
     }
     packagingOptions {
@@ -110,7 +117,7 @@ dependencies {
     compile 'com.wang.avi:library:1.0.1'
     compile 'com.github.tajchert:nammu:1.1.1'
     compile 'com.github.jkwiecien:EasyImage:1.1.2'
-    compile ('cn.trinea.android.view.autoscrollviewpager:android-auto-scroll-view-pager:1.1.2') {
+    compile('cn.trinea.android.view.autoscrollviewpager:android-auto-scroll-view-pager:1.1.2') {
         exclude module: 'support-v4'
     }
 }

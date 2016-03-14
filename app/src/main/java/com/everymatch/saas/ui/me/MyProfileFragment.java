@@ -58,8 +58,6 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
     private ScrollView mScrollView;
     private View mImageContainer;
     private View mTextChangeImage;
-    // private FloatingEditTextLayout fetFirstName, fetLastName;
-    //private EditText etFirstName, etLastName;
 
     // Data
     private ResponseGetUser mMyUser;
@@ -120,8 +118,7 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
             }
         });
 
-        //fetFirstName = (FloatingEditTextLayout) view.findViewById(R.id.fetFirstName);
-        //fetLastName = (FloatingEditTextLayout) view.findViewById(R.id.fetLastName);
+
     }
 
     /**
@@ -266,14 +263,13 @@ public class MyProfileFragment extends BaseFragment implements EventHeader.OnEve
 
         EventDataRow eventDataRow = new EventDataRow(getActivity());
         eventDataRow.setTitle(dataQuestion.text_title);
-        eventDataRow.getDetailsView().setVisibility(View.VISIBLE);
+        eventDataRow.setDetails(QuestionUtils.getAnsweredTitle(dataQuestion, requiredAnswer));
         eventDataRow.setLargePaddingTopBottom();
         eventDataRow.getLeftIcon().setVisibility(View.GONE);
         eventDataRow.getRightIcon().setVisibility(View.VISIBLE);
         eventDataRow.getRightIcon().setText(Consts.Icons.icon_Next);
         eventDataRow.getLeftMediaContainer().setVisibility(View.GONE);
         eventDataRow.setOnClickListener(this);
-        eventDataRow.getDetailsView().setText(QuestionUtils.getAnsweredTitle(dataQuestion, requiredAnswer));
 
         eventDataRow.setTag(R.id.TAG_1, dataQuestion);
         eventDataRow.setTag(R.id.TAG_2, requiredAnswer);

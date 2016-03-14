@@ -1,6 +1,9 @@
 package com.everymatch.saas.ui.event;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,18 +21,28 @@ import com.everymatch.saas.server.Data.DataPeople;
 import com.everymatch.saas.server.Data.DataPeopleHolder;
 import com.everymatch.saas.server.ServerConnector;
 import com.everymatch.saas.server.requests.BaseRequest;
+import com.everymatch.saas.server.requests.GsonRequest;
 import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseEvent;
 import com.everymatch.saas.singeltones.PeopleListener;
+import com.everymatch.saas.singeltones.Preferences;
+import com.everymatch.saas.ui.PeopleViewPagerFragment;
 import com.everymatch.saas.ui.base.BasePeopleListFragment;
 import com.everymatch.saas.ui.user.UserActivity;
 import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.NotifierPopup;
+import com.everymatch.saas.util.Utils;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by dors on 10/28/15.
  */
-public class ParticipantsListFragment extends BasePeopleListFragment implements View.OnClickListener, PeopleListener {
+public class ParticipantsListFragment extends BasePeopleListFragment implements View.OnClickListener, PeopleListener, PeopleUsersAdapter.PeopleUsersAdapterCallback {
     public final String TAG = getClass().getName();
 
     private static final String EXTRA_EVENT = "extra.event";
@@ -57,6 +70,12 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
         mDataEvent = (DataEvent) getArguments().getSerializable(EXTRA_EVENT);
         mParticipantType = getArguments().getString(EXTRA_PARTICIPANT_TYPE);
         setUsers();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        onSelectionMade(0);
     }
 
     @Override
@@ -102,9 +121,9 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
         EMLog.d(TAG, "Role is: " + role);
 
         if (RoleType.TYPE_HOST.equals(role) || RoleType.TYPE_MANAGER.equals(role) || RoleType.TYPE_OWNER.equals(role))
-            return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), DataStore.ADAPTER_MODE_COUNTER);
+            return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), DataStore.ADAPTER_MODE_COUNTER, mDataEvent, this);
         else
-            return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), DataStore.ADAPTER_MODE_NONE, this);
+            return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), DataStore.ADAPTER_MODE_NONE, this, mDataEvent, this);
 
     }
 
@@ -118,22 +137,25 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
 
         if (UserEventStatus.TYPE_HOSTING.equals(status) || UserEventStatus.TYPE_MANAGER.equals(status)) {
 
+            //we want to show emptyFooterView at the bottom so we can select the last user
+            mShowEmptyFooterView = true;
+
             mActionButtonPrimary.setVisibility(View.VISIBLE);
 
             // Indicates the type of the column
             switch (mParticipantType) {
                 case Participation_Type.PARTICIPATING:
-                    mActionButtonPrimary.setText("Reject_Invitation");
+                    mActionButtonPrimary.setText(dm.getResourceText(R.string.Remove));
                     break;
                 case Participation_Type.MAYBE:
-                    mActionButtonPrimary.setText("REMOVE");
+                    mActionButtonPrimary.setText(dm.getResourceText(R.string.Remove));
                     break;
                 case Participation_Type.INVITED:
-                    mActionButtonPrimary.setText(dm.getResourceText(R.string.Reject_Invitation));
+                    mActionButtonPrimary.setText(dm.getResourceText(R.string.Cancel));
                     break;
                 case Participation_Type.PENDING:
-                    mActionButtonPrimary.setText("ACCEPT");
-                    mActionButtonSecondary.setText("CANCEL");
+                    mActionButtonPrimary.setText(dm.getResourceText(R.string.Accept_Invitation));
+                    mActionButtonSecondary.setText(dm.getResourceText(R.string.Reject_Invitation));
                     mActionButtonSecondary.setVisibility(View.VISIBLE);
                     break;
             }
@@ -145,7 +167,7 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
         String action = "";
         switch (v.getId()) {
             case R.id.fragment_list_action_button_primary:
-                if (mAdapter.mSelectedIds.size() == 0) {
+                if (mAdapter.getSelectedCount() == 0) {
                     Toast.makeText(getActivity(), "No user was selected", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -153,7 +175,7 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
                 callServer(action);
                 break;
             case R.id.fragment_list_action_button_secondary:
-                if (mAdapter.mSelectedIds.size() == 0) {
+                if (mAdapter.getSelectedCount() == 0) {
                     Toast.makeText(getActivity(), "No user was selected", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -178,34 +200,14 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
             case Participation_Type.INVITED:
                 return "cancel_invitation";
             case Participation_Type.PENDING:
-                // TODO - ask michel/stephan
-                return isPrimaryButton ? "" : "";
+                return isPrimaryButton ? "accept_request" : "reject_request";
         }
         return null;
     }
 
-    private void callServer(String action) {
+    private void callServer(final String action) {
         final String ids = mAdapter.getSelectedIds();
-        /*
-        ServerConnector.getInstance().processRequest(new RequestEventActions(ids, mDataEvent._id, action), new ServerConnector.OnResultListener() {
-            @Override
-            public void onSuccess(BaseResponse baseResponse) {
-                Toast.makeText(getActivity(), "RequestLeaveEvent success", Toast.LENGTH_SHORT).show();
 
-                ResponseEvent responseEvent = (ResponseEvent) baseResponse;
-                if (responseEvent != null) {
-                    Toast.makeText(getActivity(), "reject Success", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "events = null", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(ErrorResponse errorResponse) {
-                Toast.makeText(getActivity(), errorResponse.getServerRawResponse(), Toast.LENGTH_SHORT).show();
-            }
-        });
-*/
         ServerConnector.getInstance().processRequest(new BaseRequest() {
             @Override
             public String getServiceUrl() {
@@ -215,10 +217,10 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
             @Override
             public String getUrlFunction() {
                 return "api/eventactions?app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id)
-                        + "&hl=" + DataStore.getInstance().getCulture()
-                        + "&object_id=" + mDataEvent._id
+                        + "&hl=" + DataStore.getInstance().getCulture();
+                       /* + "&object_id=" + mDataEvent._id
                         + "&participant_id=" + ids
-                        + "&invitation_note=";
+                        + "&invitation_note=";*/
             }
 
             @Override
@@ -230,22 +232,52 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
             public int getType() {
                 return Request.Method.PUT;
             }
+
+            @Override
+            public String getBodyContentType() {
+                return GsonRequest.CONTENT_TYPE_X_URL_ENCODED;
+            }
+
+            @Override
+            public String getEncodedBody() {
+                Map m = new HashMap<>();
+                m.put("action", action);
+                m.put("object_id", mDataEvent._id);
+                m.put("other_user_id", ids);
+                JSONObject obj = new JSONObject(m);
+                String str = obj.toString();
+                return str;
+            }
+
+            @Override
+            public Map<String, String> addExtraHeaders() {
+                Map<String, String> headers = new HashMap<String, String>();
+                String token = Preferences.getInstance().getTokenType();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
         }, new ServerConnector.OnResultListener() {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
-                Toast.makeText(getActivity(), "RequestLeaveEvent success", Toast.LENGTH_SHORT).show();
-
                 ResponseEvent responseEvent = (ResponseEvent) baseResponse;
                 if (responseEvent != null) {
-                    Toast.makeText(getActivity(), "reject Success", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "events = null", Toast.LENGTH_SHORT).show();
+                    //delete removed users
+                    for (String id : ids.split(",")) {
+                        if (mAdapter.mSelectedIds.contains(id))
+                            mAdapter.mSelectedIds.remove(id);
+                    }
+                    mDataEvent.setEvent(responseEvent);
+                    onSelectionMade(mAdapter.getSelectedCount());
+                    mAdapter.refreshData(mDataEvent.dataPublicEvent.getAllUsers(mParticipantType));
+
+                    ((PeopleViewPagerFragment)getParentFragment()).mDataEvent = mDataEvent;
+                    ((PeopleViewPagerFragment)getParentFragment()).update(mDataEvent);
                 }
             }
 
             @Override
             public void onFailure(ErrorResponse errorResponse) {
-                Toast.makeText(getActivity(), errorResponse.getServerRawResponse(), Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -259,4 +291,42 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
     public void onViewAllUsersClick(DataPeopleHolder holder) {
 
     }
+
+    /**
+     * called when user selects more users then spots
+     */
+    @Override
+    public void onLimitExeeded() {
+        NotifierPopup.Builder builder = new NotifierPopup.Builder(getActivity());
+        builder.setDuration(3000);
+        builder.setMessage(dm.getResourceText(R.string.MaxNumberOfPlaces));
+        builder.setGravity(Gravity.TOP);
+        builder.setType(NotifierPopup.TYPE_ERROR);
+        builder.setView(getView());
+        builder.setTopOffset(Utils.dpToPx(24));
+        builder.show();
+    }
+
+    @Override
+    public void onSelectionMade(int selectionCount) {
+        numOfSelectedPeople = selectionCount;
+        setTitle("" + numOfSelectedPeople + "/" + mDataEvent.dataPublicEvent.getAllUsers(mParticipantType).size() + " " + dm.getResourceText("Match.Selected"));
+        enableButtons(selectionCount != 0);
+    }
+
+    @Override
+    public boolean canProceed() {
+        return true;
+    }
+
+    private void enableButtons(boolean enabled) {
+        ObjectAnimator.ofFloat(mActionButtonPrimary, View.ALPHA.getName(), enabled ? 1.0f : 0.5f).start();
+        ObjectAnimator.ofFloat(mActionButtonSecondary, View.ALPHA.getName(), enabled ? 1.0f : 0.5f).start();
+
+        mActionButtonPrimary.setOnClickListener(enabled ? this : null);
+        mActionButtonSecondary.setOnClickListener(enabled ? this : null);
+
+
+    }
+
 }

@@ -82,7 +82,6 @@ public class GsonRequest<T extends BaseResponse> extends JsonRequest<BaseRespons
             Log.d("Response", json);
 
             BaseResponse baseResponse;
-
             if (clazz == null) {
                 baseResponse = new ResponseString(json);
                 baseResponse.setHttpStatus(response.statusCode);

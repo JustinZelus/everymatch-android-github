@@ -50,9 +50,15 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
 
         mActivity.getSupportActionBar().hide();
 
-        for (int i = 0; i < mActivity.mQuestionsAndAnswers.size(); ++i)
-            if (mActivity.mQuestionsAndAnswers.get(i).isAnsweredConfirmedByClickingNext) //mActivity.mQuestionsAndAnswers.get(i).userAnswerStr != null)
-                mQuestionsAndAnswers.add(mActivity.mQuestionsAndAnswers.get(i));
+
+        for (QuestionAndAnswer qaa : mActivity.mQuestionsAndAnswers) {
+            // if view mode-> add only important questions
+            if (QuestionnaireActivity.IS_VIEW_MODE && ( !qaa.isReadyToSend() || qaa.userAnswerStr.equals(dm.getResourceText(R.string.Unanswered)) || Utils.isEmpty(qaa.userAnswerStr)))
+                continue;
+
+            if (qaa.isAnsweredConfirmedByClickingNext)
+                mQuestionsAndAnswers.add(qaa);
+        }
     }
 
     @Override
@@ -120,7 +126,15 @@ public class QuestionnaireSummeryFragment extends ListFragment implements Adapte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mActivity.goToQuestion(position, true);
+        //get real position (because if it's view mode, we are showing only important questions)
+        int questionId = this.mQuestionsAndAnswers.get(position).question.questions_id;
+        int i = 0;
+        for (QuestionAndAnswer qaa : mActivity.mQuestionsAndAnswers) {
+            if (qaa.question.questions_id == questionId) break;
+            i++;
+        }
+
+        mActivity.goToQuestion(i, true);
     }
 
     @Override

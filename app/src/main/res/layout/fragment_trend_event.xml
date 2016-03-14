@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#471a1a1a" />
+            android:background="#501a1a1a" />
 
         <LinearLayout
             android:id="@+id/upper"
@@ -43,37 +43,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/icon"
-                android:layout_toEndOf="@+id/icon"
-                android:layout_toRightOf="@+id/icon"
                 android:orientation="vertical">
 
                 <com.everymatch.saas.view.BaseTextView
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xs"
+                    android:ellipsize="end"
+                    android:paddingRight="@dimen/margin_xxs"
                     android:text="title"
-                    android:textSize="22sp"
-                    app:font="lato_light"
+                    android:textSize="20sp"
+                    app:font="lato_font"
                     app:text_color="white_color" />
 
                 <com.everymatch.saas.view.BaseTextView
                     android:id="@+id/tvAddress"
-                    style="@style/EmTextStyleNormal"
+                    style="@style/EmTextStyleMeta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_xs"
                     android:ellipsize="end"
+                    android:paddingRight="@dimen/margin_xxs"
                     android:singleLine="true"
                     android:text="Address"
+
                     app:text_color="white_color" />
 
                 <com.everymatch.saas.view.BaseTextView
                     android:id="@+id/tvDate"
-                    style="@style/EmTextStyleNormal"
+                    style="@style/EmTextStyleMeta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/margin_xxs"
                     android:text="Date"
                     app:text_color="white_color" />
             </LinearLayout>

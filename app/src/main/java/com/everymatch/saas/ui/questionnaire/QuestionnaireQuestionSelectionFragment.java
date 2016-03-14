@@ -22,6 +22,7 @@ import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataLocation2;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.Utils;
 import com.google.gson.Gson;
@@ -208,9 +209,9 @@ public class QuestionnaireQuestionSelectionFragment extends QuestionnaireQuestio
     }
 
     @Override
-    public JSONObject createLocationJsonObject(String locationStr) {
+    public String createLocationJsonObject(String locationStr) {
 //        return super.createLocationJsonObject(locationStr);
-        return mAnswerJsonObject;
+        return mAnswerJsonObject.toString();
     }
 
     @Override
@@ -245,12 +246,12 @@ public class QuestionnaireQuestionSelectionFragment extends QuestionnaireQuestio
 
                         dataLocation.distance_value = Integer.parseInt(locationJson.get("distance_value").toString());
                         dataLocation.distance_units = locationJson.get("distance_units").toString();
-                        ;
+
                         dataLocation.country_code = locationJson.get("country_code").toString();
-                        ;
-//                        dataLocation.country_name = locationJson.get("country_name").toString();;
+
+                        //dataLocation.country_name = locationJson.get("country_name").toString();;
                         dataLocation.city_code = locationJson.get("city_code").toString();
-                        ;
+
                         dataLocation.text_address = new HashMap<>(); //JSONObject();
                         dataLocation.text_address.put(ds.getCulture(), locationJson.get("text_address").toString());
 

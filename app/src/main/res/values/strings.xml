@@ -100,5 +100,6 @@
     <item type="id" name="TAG_3"/>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="No">No</string>
+    <string name="Accept_Invitation">Accept_Invitation</string>
 
 </resources>

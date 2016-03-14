@@ -15,6 +15,7 @@ import com.everymatch.saas.server.Data.DataAnswer;
 import com.everymatch.saas.server.Data.DataQuestion;
 import com.everymatch.saas.singeltones.Consts;
 import com.everymatch.saas.ui.base.BaseFragment;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventDataRow;
@@ -127,10 +128,13 @@ public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment
         QuestionAndAnswer qaa = mQuestionAndAnswer.getQaaByQuestionId(mAnswer.answer_id, question.questions_id);
         if (qaa != null) {
             if (!Utils.isEmpty(qaa.userAnswerStr)) {
-                edr.setDetails(qaa.userAnswerStr);
+                edr.setDetails(qaa.isAllAnswersSelected() ? dm.getResourceText(R.string.All) : qaa.userAnswerStr);
                 edr.getDetailsView().setTextColor(ds.getIntColor(EMColor.PRIMARY));
             } else {
-                if (qaa.question.mandatory) {
+                edr.setDetails(qaa.getSummeryValue());
+                edr.getDetailsView().setTextColor(ds.getIntColor(EMColor.MOON));
+
+               /* if (qaa.question.mandatory) {
                     edr.setDetails(dm.getResourceText(R.string.Unanswered));
                 } else {
                     if (qaa.question.irrelevant_default_state.equals("all"))
@@ -138,7 +142,7 @@ public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment
                     else
                         edr.setDetails(dm.getResourceText(R.string.None));
                 }
-                edr.getDetailsView().setTextColor(ds.getIntColor(EMColor.MOON));
+                edr.getDetailsView().setTextColor(ds.getIntColor(EMColor.MOON));*/
             }
         }
     }
@@ -182,6 +186,14 @@ public class QuestionnaireQuestionRole extends QuestionnaireQuestionBaseFragment
         } catch (Exception ex) {
         }
 
+        getTargetFragment().onActivityResult(QuestionnaireQuestionList.REQUEST_CODE_GO_TO_ROLE, Activity.RESULT_OK, new Intent());
+        mActivity.getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onBackButtonClicked() {
+        //super.onBackButtonClicked();
+        restorePreviewsData();
         getTargetFragment().onActivityResult(QuestionnaireQuestionList.REQUEST_CODE_GO_TO_ROLE, Activity.RESULT_OK, new Intent());
         mActivity.getSupportFragmentManager().popBackStackImmediate();
     }

@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -28,12 +29,15 @@ import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.service.UploadImageService;
 import com.everymatch.saas.ui.BaseActivity;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.BitmapUtils;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.ImagePicker;
 import com.everymatch.saas.view.BaseIconTextView;
 import com.soundcloud.android.crop.Crop;
 import com.soundcloud.android.crop.CropImageActivity;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONObject;
 
@@ -97,6 +101,8 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
         super.onViewCreated(view, savedInstanceState);
         registerReceiverPrivate();
         mCameraButtonInPhoto = (BaseIconTextView) view.findViewById(R.id.camera_image2);
+        mCameraButtonInPhoto.setOnClickListener(QuestionnaireQuestionPickImageFragment.this);
+
         Nammu.askForPermission(getActivity(), Manifest.permission.CAMERA, new PermissionCallback() {
             @Override
             public void permissionGranted() {
@@ -207,7 +213,6 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
         }
 
         savedUri = Uri.fromFile(mFile);
-
         mActivity.progressDialog.setTitle(R.string.Uploading);
         mActivity.progressDialog.show();
 
@@ -242,16 +247,44 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
                     mActivity.progressDialog.dismiss();
                     tmpUrl = intent.getStringExtra(UploadImageService.EXTRA_UPLOAD_ID);
                     tmpUrl = intent.getStringExtra(UploadImageService.EXTRA_UPLOAD_IMAGE_URL);
-                    if (tmpUrl != null) {
+
+                    //we've got url from server -> download it
+                    Picasso.with(getActivity()).load(tmpUrl).into(target);
+
+
+                    /*if (tmpUrl != null) {
                         //Crop.of(savedUri, savedUri).asSquare().withMaxSize(1920, 1280).start(context, QuestionnaireQuestionPickImageFragment.this);
                         Crop.of(savedUri, savedUri).asSquare().withMaxSize(1280, 1280).start(context, QuestionnaireQuestionPickImageFragment.this);
-                    }
+                    }*/
                     break;
 
                 case CropImageActivity.ACTION_CROP:
                     handleCrop(intent);
                     break;
             }
+        }
+    };
+
+    private Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            {
+                String path = BitmapUtils.savePhoto(bitmap, getActivity());
+                savedUri = Uri.fromFile(new File(path));
+
+                //Crop.of(savedUri, savedUri).asSquare().withMaxSize(1920, 1280).start(context, QuestionnaireQuestionPickImageFragment.this);
+                Crop.of(savedUri, savedUri).asSquare().withMaxSize(1280, 1280).start(getActivity(), QuestionnaireQuestionPickImageFragment.this);
+            }
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
         }
     };
 
@@ -264,15 +297,15 @@ public class QuestionnaireQuestionPickImageFragment extends QuestionnaireQuestio
 
         Rect bitmapRect = new Rect(0, 0, capturedImage.getWidth(), capturedImage.getHeight());
 
-        int top = cropRect.left;
-        int left = cropRect.top;
-        int bottom = -(bitmapRect.height() - cropRect.bottom);
-        int right = -(bitmapRect.width() - cropRect.right);
+        int left = cropRect.left;
+        int top = cropRect.top;
+        int right = -(capturedImage.getWidth() - cropRect.right);
+        int bottom = -(capturedImage.getHeight() - cropRect.bottom);
 
         JSONObject output = new JSONObject();
         try {
             output.put("image_url", tmpUrl);
-            output.put("crop", "" + top + "," + left + "," + right + "," + bottom);
+            output.put("crop", "" + left + "," + top + "," + right + "," + bottom);
             output.put("rotate", "0");
             output.put("id", mActivity.mGeneratedEvent._id);
             output.put("is_upload_to_temp", false);

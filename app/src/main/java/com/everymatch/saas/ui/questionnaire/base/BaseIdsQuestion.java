@@ -4,7 +4,6 @@ import android.view.View;
 
 import com.everymatch.saas.client.data.QuestionType;
 import com.everymatch.saas.server.Data.DataAnswer;
-import com.everymatch.saas.ui.questionnaire.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
 
 import java.util.HashSet;

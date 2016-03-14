@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.everymatch.saas.EverymatchApplication;
 import com.everymatch.saas.server.Data.Resources;
 import com.everymatch.saas.server.responses.ResponseApplication;
+import com.everymatch.saas.util.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -30,6 +31,7 @@ public class Preferences {
     private final String TIMESTAMP = "timestamp";
     private final String LANGUAGE = "myLanguage";
     private final String LastActivityId = "last activity id";
+    private final String CountryPhoneCode = "CountryPhoneCode";
 
     private Preferences() {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(EverymatchApplication.getContext());
@@ -78,6 +80,24 @@ public class Preferences {
     public void setLastActivityId(String lastActivityId) {
         mPrefs.edit().putString(LastActivityId, lastActivityId).commit();
     }
+
+    public void setDataphoneCountryCode(ResponseApplication.DataCountryPhoneCode dataphoneCountryCode) {
+        String str = "" + new Gson().toJson(dataphoneCountryCode);
+        mPrefs.edit().putString(CountryPhoneCode, str).commit();
+    }
+
+    public ResponseApplication.DataCountryPhoneCode getDataphoneCountryCode() {
+        String json = mPrefs.getString(CountryPhoneCode, "");
+        try {
+            if (!Utils.isEmpty(json)) {
+                ResponseApplication.DataCountryPhoneCode phoneCode = new Gson().fromJson(json, ResponseApplication.DataCountryPhoneCode.class);
+                return phoneCode;
+            }
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
 
     public String getLastActivityId() {
         return mPrefs.getString(LastActivityId, "");

@@ -20,7 +20,8 @@
             android:layout_marginBottom="@dimen/margin_xs"
             android:text="Trending Events"
             app:text_color="night_color"
-            app:text_key="@string/Trending_Events" />
+            app:text_key="@string/Trending_Events"
+            style="@style/EmTextStyleNormal" />
 
         <cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager
             android:id="@+id/trendingEventViewPager"

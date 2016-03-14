@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
-import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.RangeSeekBar;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -27,6 +29,8 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
     int mMin, mMax;
     float mStep;
     boolean sendAnswerOnChange;
+    ArrayList<String> values = new ArrayList<>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +42,18 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //load question values
+        mStep = mQuestionAndAnswer.question.step;
+        //if (mStep == 0) mStep = 1;
+
+        String[] rangeStr = mQuestionAndAnswer.question.range.split(",");
+        mMin = Integer.parseInt(rangeStr[0]);
+        mMax = Integer.parseInt(rangeStr[1]);
+
+        //create values array
+        for (float i = mMin; i <= mMax; i += mStep) {
+            values.add("" + String.format("%.1f", i));
+        }
 
         mValueTextView = (TextView) view.findViewById(R.id.value_textview);
         mRangeBar = (RangeSeekBar<Integer>) view.findViewById(R.id.seekbar);
@@ -45,23 +61,14 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
         mRangeBar.setOnRangeSeekBarChangeListener(listener);
         mRangeBar.setNotifyWhileDragging(true);
 
-        mStep = mQuestionAndAnswer.question.step;
-        if (mStep == 0)
-            mStep = 1;
 
-        String[] rangeStr = mQuestionAndAnswer.question.range.split(",");
-        mMin = Integer.parseInt(rangeStr[0]);
-        mMax = Integer.parseInt(rangeStr[1]);
-        mRangeBar.setRangeValues(mMin, mMax);
+        //mRangeBar.setRangeValues(mMin, mMax);
+        mRangeBar.setRangeValues(0, values.size());
 
-        listener.onRangeSeekBarValuesChanged(mRangeBar, mMin, mMax);
+        listener.onRangeSeekBarValuesChanged(mRangeBar, 0, values.size());
 
         //add units
-        if (mQuestion.units != null && mQuestion.units.containsKey("value") && !Utils.isEmpty(mQuestion.units.get("value").toString())) {
-            units = "(" + mQuestion.units.get("value").toString() + ")";
-            units = mQuestion.getUnits();
-            tvTitle.setText(mQuestion.text_title + "\n" + units);
-        }
+        tvTitle.setText(mQuestion.text_title + "\n" + mQuestion.getUnits());
 
         recoverAnswer();
     }
@@ -72,20 +79,18 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
 
             //input check
             if (low == high) {
-                if (high < mMax)
-                    high++;
-                else {
-                    low--;
-                }
+                if (low > mMin) low--;
+                else high++;
             }
-            mValueTextView.setText(isTouched ? low.toString() + " - " + high : "");
+
+            String fromValue = values.get(low);
+            String toValue = values.get(Math.min(values.size() - 1, high));
+            mValueTextView.setText(isTouched ? getValue("" + fromValue) + " - " + getValue("" + toValue) : "");
             isTouched = true;
             if (sendAnswerOnChange)
                 setAnswer(mValueTextView.getText().toString());
             sendAnswerOnChange = true;
-
         }
-
     };
 
     @Override
@@ -104,18 +109,35 @@ public class QuestionnaireQuestionRangeFragment extends QuestionnaireQuestionBas
         try {
             if (mQuestionAndAnswer.userAnswerData != null && mQuestionAndAnswer.userAnswerData.has("value")) {
                 String valuesStr[] = mQuestionAndAnswer.userAnswerData.getString("value").split(",");
-                int from = Integer.parseInt(valuesStr[0].trim());
-                int to = Integer.parseInt(valuesStr[1].trim());
-                mRangeBar.setSelectedMinValue(from);
-                mRangeBar.setSelectedMaxValue(to);
+                float from = Float.parseFloat(valuesStr[0].trim());
+                float to = Float.parseFloat(valuesStr[1].trim());
 
-                mValueTextView.setText("" + from + " - " + to);
+                //get real positions in values array
+                int fromPos = values.indexOf("" + from);
+                int toPos = values.indexOf("" + to);
+                mRangeBar.setSelectedMinValue(fromPos);
+                mRangeBar.setSelectedMaxValue(toPos);
+
+                mValueTextView.setText("" + getValue("" + from) + " - " + getValue("" + to));
                 setAnswer(mValueTextView.getText().toString());
             }
         } catch (Exception ex) {
             EMLog.e(TAG, ex.getMessage());
         }
 
+    }
+
+    public String getValue(String val) {
+        val = val.replaceAll("\\n", "");
+        boolean isInt;
+        try {
+            isInt = (mStep == Math.round(mStep));
+            if (!isInt) return val;
+            //need to show int value;
+            return "" + (int) Float.parseFloat(val);
+        } catch (Exception ex) {
+            return val;
+        }
     }
 
     @Override

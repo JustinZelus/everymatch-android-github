@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Template colors -->
+    <color name="night">#383838</color>
+    <color name="moon">#808080</color>
+    <color name="morning">#ADADAD</color>
+    <color name="fog">#CCCCCC</color>
+    <color name="silver">#E3E3E3</color>
+    <color name="error">#FF0000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="info">#FFF8A6</color>
+    <color name="font">#FFFFFF</color>
+
+
+    <!-- Brand colors -->
+    <color name="primary">#198FE8</color>
+    <color name="primary_alpha">#33198fe8</color>
+    <color name="secondary">#0A3E66</color>
+    <color name="tertiary">#52CDFE</color>
+    <color name="positive">#AADE0B</color>
+    <color name="negative">#F56578</color>
+    <color name="maybe">#FF9502</color>
+
+
+    <color name="map_circle_border">#198FE8</color>
+    <color name="map_circle_background">#198FE8</color>
+    <color name="background">#EEEEEE</color>
+
+</resources>

@@ -27,6 +27,7 @@ public class ResponseApplication extends BaseResponse {
     private ArrayList<DataTimeZone> time_zone;
     private ArrayList<DataCurrency> currencies;
     private ArrayList<DataCulture> cultures;
+    public String sms_phone_number;
 
     public ArrayList<DataCulture> getCultures() {
         if (cultures == null)
@@ -183,6 +184,16 @@ public class ResponseApplication extends BaseResponse {
         return 0;
     }
 
+    public int getTimeZoneIndex(DataTimeZone timeZone) {
+        int i = 0;
+        for (DataTimeZone dataTimeZone : getTime_zone()) {
+            if (timeZone.country_code.equals(dataTimeZone.country_code) && dataTimeZone.utc.equals(timeZone.utc) && dataTimeZone.title.equals(timeZone.title))
+                return i;
+            i++;
+        }
+        return 0;
+    }
+
     public String[] getCountryPhoneCodes() {
         String[] answer = new String[getCountry_phone_codes().size()];
         for (int i = 0; i < getCountry_phone_codes().size(); ++i)
@@ -236,5 +247,6 @@ public class ResponseApplication extends BaseResponse {
     public class DataCountryPhoneCode implements Serializable {
         public String country = "";
         public String code = "";
+        public String country_code = "";
     }
 }

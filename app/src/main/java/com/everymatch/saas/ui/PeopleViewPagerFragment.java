@@ -2,6 +2,7 @@ package com.everymatch.saas.ui;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -38,18 +39,20 @@ import java.util.HashMap;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PeopleViewPagerFragment extends BaseFragment implements EventHeader.OnEventHeader, TextWatcher, EmptyViewFactory.ButtonListener {
+public class PeopleViewPagerFragment extends BaseFragment implements EventHeader.OnEventHeader, TextWatcher, EmptyViewFactory.ButtonListener, InviteParticipantsListFragment.InviteParticipantCallBack {
     public static final String TAG = PeopleViewPagerFragment.class.getSimpleName();
 
     public static String ARG_SCREEN_TYPE = "arg_screen_type";
     public static String ARG_EVENT = "arg_event";
+    public static final String ACTION_CHECK_PARTICIPANTS = "action.check.participants";
+    public static final String EXTRA_EVENT = "extra.event";
 
     DataStore ds = DataStore.getInstance();
     /* tells me what type of screen to show (my friend / participants / invite participants) */
     private int pagerScreenType;
 
     /*data for participants mode*/
-    private DataEvent mDataEvent;
+    public DataEvent mDataEvent;
 
     /*Views*/
     private ViewPager viewPager;
@@ -173,7 +176,8 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
 
     @Override
     public void onBackButtonClicked() {
-        getActivity().onBackPressed();
+        //getActivity().onBackPressed();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override
@@ -251,5 +255,25 @@ public class PeopleViewPagerFragment extends BaseFragment implements EventHeader
     @Override
     public void onEmptyViewSecondButtonClick() {
         UserActivity.openMyProfileFragment(getActivity());
+    }
+
+    //when inviteParticipantsListFragment informs a click, we need to know
+    //about it and tell it if it's the max selection
+    @Override
+    public int giveMeTotalSelection() {
+        int bestMatchSelection = mAdapter.getItem(0).numOfSelectedPeople;
+        int likedSelection = mAdapter.getItem(1).numOfSelectedPeople;
+        return bestMatchSelection + likedSelection;
+    }
+
+    public void update(DataEvent dataEvent) {
+        //notify event fragment about new change
+        if (getTargetFragment() != null)
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent(ACTION_CHECK_PARTICIPANTS).putExtra(EXTRA_EVENT, mDataEvent));
+
+    }
+
+    public interface ParticipantsCallback {
+        void onParticipantsChanged(DataEvent dataEvent);
     }
 }

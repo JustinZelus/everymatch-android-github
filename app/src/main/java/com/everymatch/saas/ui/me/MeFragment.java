@@ -111,9 +111,11 @@ public class MeFragment extends BaseFragment implements EventHeader.OnEventHeade
         EventDataRow eventDataRowSettings = (EventDataRow) v.findViewById(R.id.event_row_me_settings);
         eventDataRowSettings.setOnClickListener(this);
         eventDataRowSettings.setTitle(dm.getResourceText(R.string.Settings));
+        eventDataRowSettings.setDetails(dm.getResourceText(R.string.Profile_Sublabel));
 
         v.findViewById(R.id.event_row_me_profile).setOnClickListener(this);
         ((EventDataRow) v.findViewById(R.id.event_row_me_profile)).setTitle(dm.getResourceText(R.string.Profile_Label));
+        ((EventDataRow) v.findViewById(R.id.event_row_me_profile)).setDetails(dm.getResourceText(R.string.List_Profile_Sublabel));
 
         btnAddProfile = (Button) v.findViewById(R.id.btnMeAddProfile);
     }

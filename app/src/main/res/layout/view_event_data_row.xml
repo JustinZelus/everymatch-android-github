@@ -15,7 +15,7 @@
         android:layout_marginTop="0dp"
         android:background="@color/white"
         android:gravity="center"
-        android:minHeight="55dp"
+        android:minHeight="60dp"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_xs"
         android:paddingRight="10dp"
@@ -113,7 +113,8 @@
                 android:layout_alignParentLeft="true"
                 android:gravity="center"
                 android:text="\@"
-                android:textSize="16sp"
+                android:textSize="15sp"
+                android:padding="2dp"
                 app:text_color="fog_color" />
 
         </LinearLayout>

@@ -41,7 +41,7 @@ public class RequestGetInvitees extends BaseRequest{
         StringBuilder request = new StringBuilder();
 
         if (type.equals(InviteParticipantsListFragment.TYPE_BEST_MATCH)){
-            request.append("api/bestmatch?hl=" + DataStore.getInstance().getCulture() +
+            request.append("api/bestmatchevent?hl=" + DataStore.getInstance().getCulture() +
                     "&events_id=" + eventId + "&app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id));
         } else{
             request.append("api/friends?hl=" + DataStore.getInstance().getCulture() +

@@ -161,7 +161,7 @@ public class QuestionUtils {
                             //value = (String) answer.value;
                             ArrayList<String> answered = new ArrayList<>();
                             for (DataAnswer answers : question.answers) {
-                                if (((String) answer.value).contains(answers.value + "")) {
+                                if (((String) answers.value).trim().equals(answers.value.toString().trim() + "")) {
                                     answered.add(answers.text_title);
                                 }
                             }
@@ -172,7 +172,7 @@ public class QuestionUtils {
                         } else {
                             ArrayList<String> answered = new ArrayList<>();
                             for (DataAnswer answers : question.answers) {
-                                if (((String) answer.value).contains(answers.answer_id + "")) {
+                                if ((answer.value.toString()).contains(answers.answer_id + "")) {
                                     answered.add(answers.text_title);
                                 }
                             }
@@ -208,10 +208,7 @@ public class QuestionUtils {
         }
 
         //add units
-        if (question.units != null && question.units.containsKey("value") && !Utils.isEmpty(question.units.get("value").toString())) {
-            String units = " (" + question.units.get("value").toString() + ")";
-            value += units;
-        }
+        value += " " + question.getUnits();
 
         return TextUtils.isEmpty(value) ? dm.getResourceText(R.string.Unanswered) : value;
     }

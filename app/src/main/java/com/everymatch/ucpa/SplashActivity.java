@@ -18,11 +18,13 @@ import android.widget.ImageView;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.server.ServerConnector;
+import com.everymatch.saas.server.requests.GsonRequest;
 import com.everymatch.saas.server.requests.RequestLoadProviders;
 import com.everymatch.saas.server.responses.BaseResponse;
 import com.everymatch.saas.server.responses.ErrorResponse;
 import com.everymatch.saas.server.responses.ResponseApplication;
 import com.everymatch.saas.server.responses.ResponseLoadProviders;
+import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.singeltones.Preferences;
 import com.everymatch.saas.ui.base.BaseLoginActivity;
 import com.everymatch.saas.ui.sign.SignActivity;
@@ -30,8 +32,12 @@ import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.FetchCallback;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseTextView;
+import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class SplashActivity extends BaseLoginActivity {
     public static final String TAG = "SplashActivity";
@@ -116,9 +122,19 @@ public class SplashActivity extends BaseLoginActivity {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
                 EMLog.i(TAG, "fetchProviders - onSuccess");
-                ResponseLoadProviders responseLoadProviders = (ResponseLoadProviders) baseResponse;
-                ds.responseLoadProviders = responseLoadProviders;
-                checkIfCanContinue();
+                try {
+                    Log.i(TAG, "RequestLoadProviders onSuccess");
+                    String json = ((ResponseString) baseResponse).responseStr;
+                    JSONObject jsonObject = new JSONObject();
+                    JSONArray jsonArray = new JSONArray(json);
+                    jsonObject.put(GsonRequest.JSON_ARRAY_RESPONSE, jsonArray);
+                    //json = jsonObject.toString();
+                    ResponseLoadProviders responseLoadProviders = new Gson().fromJson(jsonObject.toString(), ResponseLoadProviders.class);
+                    ds.responseLoadProviders = responseLoadProviders;
+                    checkIfCanContinue();
+                } catch (Exception ex) {
+                    EMLog.e(TAG, ex.getMessage());
+                }
             }
 
             @Override

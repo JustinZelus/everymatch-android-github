@@ -37,7 +37,7 @@
                     android:id="@+id/users_recycler_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_xs"
+                    android:layout_marginBottom="@dimen/margin_s"
                     android:orientation="vertical"></LinearLayout>
 
                 <LinearLayout

@@ -50,10 +50,11 @@ public class BaseSeekBar extends SeekBar {
 
     public void setThumbEnabled(boolean enable) {
         int primary = Color.parseColor(DataStore.getInstance().getColor(EMColor.PRIMARY));
-        int moon = Color.parseColor(DataStore.getInstance().getColor(EMColor.MOON));
+        int night = Color.parseColor(DataStore.getInstance().getColor(EMColor.NIGHT));
+        night = Color.parseColor("#616161");
 
         ShapeDrawable shape = new ShapeDrawable(new OvalShape());
-        shape.getPaint().setColor(enable ? primary : DataStore.getInstance().getIntColor(EMColor.FOG));
+        shape.getPaint().setColor(enable ? primary : night);
         shape.setIntrinsicHeight(Utils.dpToPx(25));
         shape.setIntrinsicWidth(Utils.dpToPx(25));
         shape.getPaint().setStyle(Paint.Style.FILL);
@@ -66,8 +67,8 @@ public class BaseSeekBar extends SeekBar {
             getIndeterminateDrawable().setColorFilter(primary, PorterDuff.Mode.SRC_IN);
             getProgressDrawable().setColorFilter(primary, PorterDuff.Mode.SRC_IN);
         } else {
-            getIndeterminateDrawable().setColorFilter(moon, PorterDuff.Mode.SRC_IN);
-            getProgressDrawable().setColorFilter(moon, PorterDuff.Mode.SRC_IN);
+            getIndeterminateDrawable().setColorFilter(night, PorterDuff.Mode.SRC_IN);
+            getProgressDrawable().setColorFilter(night, PorterDuff.Mode.SRC_IN);
         }
 
         //getIndeterminateDrawable().setColorFilter(moon, android.graphics.PorterDuff.Mode.MULTIPLY);

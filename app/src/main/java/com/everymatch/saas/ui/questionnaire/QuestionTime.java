@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.QuestionType;
 import com.everymatch.saas.client.data.Types;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.view.WheelView;
 
@@ -305,7 +306,10 @@ public class QuestionTime extends QuestionnaireQuestionBaseFragment {
 
         //update value in seconds
         mValue = sec + min * 60 + hour * 60 * 60;
-
+        if (mValue <= 0) {
+            setTitleEnabled(false);
+            return;
+        }
         if (isUnitMile)
             mValue = (int) ((double) mValue / 1.61);
 

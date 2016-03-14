@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.adapter.EmBaseAdapter;
@@ -20,6 +22,7 @@ import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.ShapeDrawableUtils;
+import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseButton;
 import com.everymatch.saas.view.BaseListView;
 import com.everymatch.saas.view.BaseRelativeLayout;
@@ -38,8 +41,10 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
 
     // Views
     protected BaseListView mAbsListView;
-    protected View mFooterWrapper;
+    protected View mFooterWrapper, emptyFooterView;
     protected EventHeader mEventHeader;
+    protected LinearLayout titleHolder;
+    protected TextView tvTitle;
 
     protected BaseRelativeLayout mEmptyViewContainer;
     /*belongs to people fragments*/
@@ -50,9 +55,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
     // A container for adding extra items above the list
     /*belongs to my events fragment*/
     protected FrameLayout mTopContainer;
+
     // Data
     protected boolean mLoading;
     protected boolean mIsNoMoreResults;
+    protected boolean mShowEmptyFooterView;
     protected boolean mIsSearching;
     protected int mMode = DataStore.ADAPTER_MODE_TEXT;
     private boolean mIsUserScrolled;
@@ -69,6 +76,8 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
         mTopContainer = (FrameLayout) view.findViewById(R.id.fragment_event_list_top_container);
         mEventHeader = (EventHeader) view.findViewById(R.id.fragment_list_header);
         mEmptyViewContainer = (BaseRelativeLayout) view.findViewById(R.id.emptyViewContainer);
+        titleHolder = (LinearLayout) view.findViewById(R.id.BaseListTitleHolder);
+        tvTitle = (TextView) view.findViewById(R.id.tvBaseListTitleText);
 
         /*belong to BaseListFragment*/
         mAbsListView = (BaseListView) view.findViewById(android.R.id.list);
@@ -91,6 +100,11 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
         mAbsListView.setOnScrollListener(this);
 
         mFooterWrapper = LayoutInflater.from(getActivity()).inflate(R.layout.view_footer_progress, mAbsListView, false);
+        //create empty footer View
+        emptyFooterView = new LinearLayout(getActivity());
+        //emptyFooterView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dpToPx(70)));
+        emptyFooterView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, Utils.dpToPx(70)));
+
         /*from base fragment*/
         mProgressBar = mFooterWrapper.findViewById(android.R.id.progress);
         /*adding footer view and hide it */
@@ -174,7 +188,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
     }
 
     /**
-     * Adds a footer view to the bottom of the list in order to represts loading
+     * Adds a footer view to the bottom of the list in order to represents loading
      */
     protected void addFooterView() {
 
@@ -191,6 +205,10 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
     protected void setNoMoreResults() {
         mIsNoMoreResults = true;
         mProgressBar.setVisibility(View.GONE);
+
+        if (mAbsListView.getFooterViewsCount() <= 2 && mShowEmptyFooterView) {
+            mAbsListView.addFooterView(emptyFooterView);
+        }
     }
 
     /*Methods from TextWatcher*/
@@ -208,6 +226,10 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
         performSearch(s.toString());
     }
 
+    protected void setTitle(String title) {
+        titleHolder.setVisibility(Utils.isEmpty(title) ? View.GONE : View.VISIBLE);
+        tvTitle.setText(title);
+    }
     // Unused callbacks
 
     @Override

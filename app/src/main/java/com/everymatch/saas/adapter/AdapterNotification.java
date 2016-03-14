@@ -52,9 +52,7 @@ public class AdapterNotification extends EmBaseAdapter<DataNotifications> {
         ImageView imgUser = (ImageView) v.findViewById(R.id.imgNotification);
         BaseIconTextView tvStatus = (BaseIconTextView) v.findViewById(R.id.tvNotificationStatus);
 
-        if (!item.read) {
-            rlHolder.setBackgroundColor(item.read ? Color.WHITE : ColorUtils.setAlphaComponent(DataStore.getInstance().getIntColor(EMColor.PRIMARY), (int) (255 * 0.3)));
-        }
+        rlHolder.setBackgroundColor(item.read ? Color.WHITE : ColorUtils.setAlphaComponent(DataStore.getInstance().getIntColor(EMColor.PRIMARY), (int) (255 * 0.3)));
 
         switch (item.status) {
             case "invited":

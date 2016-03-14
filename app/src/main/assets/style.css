@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'icomoon';
-    src:    url('fonts/icomoon.eot?yf9f2h');
-    src:    url('fonts/icomoon.eot?yf9f2h#iefix') format('embedded-opentype'),
-        url('fonts/icomoon.woff2?yf9f2h') format('woff2'),
-        url('fonts/icomoon.ttf?yf9f2h') format('truetype'),
-        url('fonts/icomoon.woff?yf9f2h') format('woff'),
-        url('fonts/icomoon.svg?yf9f2h#icomoon') format('svg');
+    src:    url('fonts/icomoon.eot?plnv13');
+    src:    url('fonts/icomoon.eot?plnv13#iefix') format('embedded-opentype'),
+        url('fonts/icomoon.woff2?plnv13') format('woff2'),
+        url('fonts/icomoon.ttf?plnv13') format('truetype'),
+        url('fonts/icomoon.woff?plnv13') format('woff'),
+        url('fonts/icomoon.svg?plnv13#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -25,6 +25,15 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-Gallery:before {
+    content: "\e929";
+}
+.icon-Switch:before {
+    content: "\e92a";
+}
+.icon-Feed:before {
+    content: "\e92b";
+}
 .icon-Fans:before {
     content: "\e928";
 }
@@ -627,9 +636,6 @@
 }
 .icon-FishingSport:before {
     content: "\e66a";
-}
-.icon-FanClub:before {
-    content: "\e66b";
 }
 .icon-Archery:before {
     content: "\e66c";

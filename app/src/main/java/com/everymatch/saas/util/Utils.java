@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -102,7 +103,9 @@ public class Utils {
 
     public static Locale getRealCulture() {
         try {
-            return Locale.forLanguageTag(DataStore.getInstance().getCulture().replace("he-", "iw-"));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                return Locale.forLanguageTag(DataStore.getInstance().getCulture().replace("he-", "iw-"));
+            return Locale.getDefault();
         } catch (Exception ex) {
             return Locale.getDefault();
         }
@@ -282,6 +285,85 @@ public class Utils {
      * Takes int color witch defined in xml and convert to its
      * corresponding name which comes from server settings
      */
+    public static int ViewModeIntToIntColor(int integerColor) {
+        Resources resources = EverymatchApplication.getContext().getResources();
+        switch (integerColor) {
+            case EMColor.PRIMARY:
+                return resources.getColor(R.color.primary);
+            case EMColor.SECONDARY:
+                return resources.getColor(R.color.secondary);
+            case EMColor.TERTIARY:
+                return resources.getColor(R.color.tertiary);
+            case EMColor.FONT:
+                return resources.getColor(R.color.font);
+            case EMColor.BACKGROUND:
+                return resources.getColor(R.color.background);
+            case EMColor.NIGHT:
+                return resources.getColor(R.color.night);
+            case EMColor.MOON:
+                return resources.getColor(R.color.moon);
+            case EMColor.MORNING:
+                return resources.getColor(R.color.morning);
+            case EMColor.FOG:
+                return resources.getColor(R.color.fog);
+            case EMColor.ERROR:
+                return resources.getColor(R.color.error);
+            case EMColor.POSITIVE:
+                return resources.getColor(R.color.positive);
+            case EMColor.NEGATIVE:
+                return resources.getColor(R.color.negative);
+            case EMColor.MAYBE:
+                return resources.getColor(R.color.maybe);
+            case EMColor.WHITE:
+                return resources.getColor(R.color.white);
+            case EMColor.INFO:
+                return resources.getColor(R.color.info);
+            case EMColor.SILVER:
+                return resources.getColor(R.color.silver);
+            default:
+                return resources.getColor(R.color.primary);
+        }
+    }
+
+    public static String ViewModeIntToStringColor(int integerColor) {
+        switch (integerColor) {
+            case EMColor.PRIMARY:
+                return "primary_color";
+            case EMColor.SECONDARY:
+                return "secondary_color";
+            case EMColor.TERTIARY:
+                return "tertiary_color";
+            case EMColor.FONT:
+                return "font_color";
+            case EMColor.BACKGROUND:
+                return "background_color";
+            case EMColor.NIGHT:
+                return "night_color";
+            case EMColor.MOON:
+                return "moon_color";
+            case EMColor.MORNING:
+                return "morning_color";
+            case EMColor.FOG:
+                return "fog_color";
+            case EMColor.ERROR:
+                return "error_color";
+            case EMColor.POSITIVE:
+                return "positive_color";
+            case EMColor.NEGATIVE:
+                return "negative_color";
+            case EMColor.MAYBE:
+                return "maybe_color";
+            case EMColor.WHITE:
+                return "white_color";
+            case EMColor.INFO:
+                return "info_color";
+            case EMColor.SILVER:
+                return "silver_color";
+            default:
+                return "primary_color";
+        }
+    }
+
     public static String intToStringColor(int integerColor) {
         switch (integerColor) {
             case EMColor.PRIMARY:
@@ -321,6 +403,7 @@ public class Utils {
 
         }
     }
+
 
     public static String getImageUrl(String imageUrl, int requiredWidth, int requiredHeight) {
         return getImageUrl(imageUrl, requiredWidth, requiredWidth, null);

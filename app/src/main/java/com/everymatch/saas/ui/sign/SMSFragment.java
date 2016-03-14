@@ -35,6 +35,7 @@ import com.everymatch.saas.server.responses.ResponseApplication;
 import com.everymatch.saas.server.responses.ResponsePhoneNumberCheck;
 import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.singeltones.GenericCallback;
+import com.everymatch.saas.singeltones.Preferences;
 import com.everymatch.saas.singeltones.YesNoCallback;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.WebViewActivity;
@@ -62,6 +63,7 @@ public class SMSFragment extends BaseFragment implements View.OnClickListener {
     //Data
     String phone;
     boolean isUpdate;
+    boolean smsSendSuccess;
 
     ResponseApplication.DataCountryPhoneCode countryPhoneCode = null;
     //Views
@@ -108,13 +110,18 @@ public class SMSFragment extends BaseFragment implements View.OnClickListener {
         Nammu.askForPermission(getActivity(), Manifest.permission.READ_PHONE_STATE, new PermissionCallback() {
             @Override
             public void permissionGranted() {
-                Locale loc = Locale.getDefault();
-                String country = loc.getDisplayCountry(Locale.US).toLowerCase();
-                if (Utils.isEmpty(country))
+                Locale locale = Locale.getDefault();
+                String myCountry = locale.getCountry();
+
+                if (Utils.isEmpty(myCountry)) {
+                    countryPhoneCode = Preferences.getInstance().getDataphoneCountryCode();
+                    if (countryPhoneCode != null)
+                        etCountryPhoneCode.setText(countryPhoneCode.country);
                     return;
+                }
 
                 for (ResponseApplication.DataCountryPhoneCode phoneCode : ds.getApplicationData().getCountry_phone_codes()) {
-                    if (phoneCode.country.toLowerCase().startsWith(country)) {
+                    if (!Utils.isEmpty(phoneCode.country_code) && phoneCode.country_code.toLowerCase().equals(myCountry.toLowerCase())) {
                         countryPhoneCode = phoneCode;
                         etCountryPhoneCode.setText(countryPhoneCode.country);
                         return;
@@ -240,6 +247,7 @@ public class SMSFragment extends BaseFragment implements View.OnClickListener {
                     return;
                 }
 
+                Preferences.getInstance().setDataphoneCountryCode(countryPhoneCode);
                 String title = dm.getResourceText(R.string.Sms_number_alert_title);
                 String subTitle = dm.getResourceText(R.string.Sms_number_alert_subtitle) + "\n" + countryPhoneCode.code + " " + phone;
                 new DialogYesNo(getActivity(), title, subTitle, dm.getResourceText(R.string.Edit_btn), dm.getResourceText(R.string.Ok), new YesNoCallback() {
@@ -267,6 +275,7 @@ public class SMSFragment extends BaseFragment implements View.OnClickListener {
                         //call failed
                     }
 
+                    smsSendSuccess = success;
                     ResponsePhoneNumberCheck response = (ResponsePhoneNumberCheck) data;
                     if (!response.success) {
                         ((BaseActivity) getActivity()).showErrorDialog(response.getErrorMessage());

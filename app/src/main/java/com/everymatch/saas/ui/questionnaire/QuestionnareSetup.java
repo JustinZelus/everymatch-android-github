@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.JoinType;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseTextView;
 import com.rey.material.widget.Switch;
@@ -208,7 +209,6 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
         if (mActivity.dataSetupQuestionsObject.numberOfSpots != -2)
             setAnswer("setup");
     }
-
 
     @Override
     protected JSONObject createJsonObject() {

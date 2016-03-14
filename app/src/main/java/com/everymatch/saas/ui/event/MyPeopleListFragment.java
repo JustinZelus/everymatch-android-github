@@ -44,9 +44,7 @@ public class MyPeopleListFragment extends BasePeopleListFragment {
         }
     }
 
-    /**
-     * New instance
-     */
+
     public static BasePeopleListFragment getInstance(DataPeopleHolder holder, String peopleType) {
         MyPeopleListFragment myPeopleListFragment = new MyPeopleListFragment();
         Bundle args = new Bundle(2);
@@ -100,6 +98,7 @@ public class MyPeopleListFragment extends BasePeopleListFragment {
             @Override
             public void onIconClick(DataPeople user, int position) {
                 addOrCancelFriendship(user);
+                mAdapter.addLoader(user.users_id);
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -117,6 +116,9 @@ public class MyPeopleListFragment extends BasePeopleListFragment {
             ServerConnector.getInstance().processRequest(new RequestDeleteFriend(user.users_id), new ServerConnector.OnResultListener() {
                 @Override
                 public void onSuccess(BaseResponse baseResponse) {
+                    if (mAdapter != null) {
+                        mAdapter.removeLoader(user.users_id);
+                    }
                     EMLog.i(TAG, "addOrCancelFriendship::RequestDeleteFriend - onSuccess");
                 }
 
@@ -124,6 +126,9 @@ public class MyPeopleListFragment extends BasePeopleListFragment {
                 public void onFailure(ErrorResponse errorResponse) {
                     EMLog.i(TAG, "addOrCancelFriendship::RequestDeleteFriend - onFailure");
                     user.is_friend = true;
+                    if (mAdapter != null) {
+                        mAdapter.removeLoader(user.users_id);
+                    }
                     refreshAdapterAfterFriendshipRequest();
                 }
             }, TAG + RequestDeleteFriend.class.getName());
@@ -136,12 +141,18 @@ public class MyPeopleListFragment extends BasePeopleListFragment {
                 @Override
                 public void onSuccess(BaseResponse baseResponse) {
                     EMLog.i(TAG, "addOrCancelFriendship::RequestAddFriend - onSuccess");
+                    if (mAdapter != null) {
+                        mAdapter.removeLoader(user.users_id);
+                    }
                 }
 
                 @Override
                 public void onFailure(ErrorResponse errorResponse) {
                     EMLog.i(TAG, "addOrCancelFriendship::RequestAddFriend - onFailure");
                     user.is_friend = false;
+                    if (mAdapter != null) {
+                        mAdapter.removeLoader(user.users_id);
+                    }
                     refreshAdapterAfterFriendshipRequest();
                 }
             }, TAG + RequestAddFriend.class.getName());
@@ -171,7 +182,7 @@ public class MyPeopleListFragment extends BasePeopleListFragment {
 
     @Override
     public PeopleUsersAdapter createAdapter() {
-        return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), mMode);
+        return new PeopleUsersAdapter(getActivity(), mPeopleHolder.getUsers(), mMode, null/*no need to send event*/, null);
     }
 
     @Override

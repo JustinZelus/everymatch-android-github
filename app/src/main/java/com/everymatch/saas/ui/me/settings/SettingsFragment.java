@@ -10,13 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.everymatch.saas.Constants;
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.Data.DataTimeZone;
 import com.everymatch.saas.server.Data.UserSettings;
 import com.everymatch.saas.server.ServerConnector;
+import com.everymatch.saas.server.request_manager.ProfileManager;
+import com.everymatch.saas.server.requests.GsonRequest;
 import com.everymatch.saas.server.requests.RequestLoadProviders;
 import com.everymatch.saas.server.requests.RequestUpdateSettings;
 import com.everymatch.saas.server.responses.BaseResponse;
@@ -25,6 +26,7 @@ import com.everymatch.saas.server.responses.ResponseApplication;
 import com.everymatch.saas.server.responses.ResponseLoadProviders;
 import com.everymatch.saas.server.responses.ResponseString;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.singeltones.GenericCallback;
 import com.everymatch.saas.singeltones.Preferences;
 import com.everymatch.saas.singeltones.YesNoCallback;
 import com.everymatch.saas.ui.BaseActivity;
@@ -41,6 +43,11 @@ import com.everymatch.saas.view.EventDataRow;
 import com.everymatch.saas.view.EventHeader;
 import com.everymatch.ucpa.SplashActivity;
 import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by PopApp_laptop on 06/10/2015.
@@ -69,7 +76,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     private boolean canSave = false;
     private int providerClickedPosition = -1;
     private boolean isClicked = false;
-    private ResponseLoadProviders.Provider[] mProviders;
+    private ArrayList<ResponseLoadProviders.Provider> mProviders;
 
     /* first user data - for cancel click */
     String userSettingsOriginalJson;
@@ -218,16 +225,24 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
         ServerConnector.getInstance().processRequest(new RequestLoadProviders(true), new ServerConnector.OnResultListener() {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
-
                 if (!isAdded()) {
                     return;
                 }
-
-                Log.i(TAG, "RequestLoadProviders onSuccess");
-                ResponseLoadProviders responseLoadProviders = (ResponseLoadProviders) baseResponse;
-                mProviders = responseLoadProviders.getProviders();
-                Log.d(TAG, "responseLoadProviders number " + mProviders.length);
-                addProviders();
+                try {
+                    Log.i(TAG, "RequestLoadProviders onSuccess");
+                    String json = ((ResponseString) baseResponse).responseStr;
+                    JSONObject jsonObject = new JSONObject();
+                    JSONArray jsonArray = new JSONArray(json);
+                    jsonObject.put(GsonRequest.JSON_ARRAY_RESPONSE, jsonArray);
+                    //json = jsonObject.toString();
+                    ResponseLoadProviders responseLoadProviders = new Gson().fromJson(jsonObject.toString(), ResponseLoadProviders.class);
+                    ds.responseLoadProviders = responseLoadProviders;
+                    mProviders = responseLoadProviders.getProviders();
+                    Log.d(TAG, "responseLoadProviders number " + mProviders.size());
+                    addProviders();
+                } catch (Exception ex) {
+                    EMLog.e(TAG, ex.getMessage());
+                }
             }
 
             @Override
@@ -241,8 +256,8 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
     private void addProviders() {
         llProviders.removeAllViews();
         // show providers on UI
-        for (int i = 0; i < mProviders.length; ++i) {
-            final ResponseLoadProviders.Provider provider = mProviders[i];
+        for (int i = 0; i < mProviders.size(); ++i) {
+            final ResponseLoadProviders.Provider provider = mProviders.get(i);
             EventDataRow row = new EventDataRow(getActivity());
             row.setTitle(provider.text_title);
             row.getRightIcon().setVisibility(View.GONE);
@@ -266,7 +281,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
             if (provider.user_login.LoginProvider != null) {
                 row.getRightIcon().setVisibility(View.VISIBLE);
                 row.getRightIcon().setText(Consts.Icons.icon_StatusPositive);
-                row.getRightIcon().setTextColor(Color.parseColor("#AADE0B"));
+                row.getRightIcon().setTextColor(ds.getIntColor(EMColor.POSITIVE));
             } else {
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -276,7 +291,7 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                                 replace("[culture_name]", ds.getCulture()).
                                 replace("[app_host]", "/").
                                 replace("[app_id]", getString(R.string.app_id)));
-                        intent.putExtra(WebViewActivity.EXTRA_RETURN_URL, Constants.getOAUTH2_SERVICE_URL() + "?");
+                        //intent.putExtra(WebViewActivity.EXTRA_RETURN_URL, Constants.getOAUTH2_SERVICE_URL() + "?");
                         intent.putExtra(WebViewActivity.EXTRA_RETURN_DATA_NAME, EXTRA_ACCESS_TOKEN);
                         providerClickedPosition = finalI;
                         startActivityForResult(intent, REQUEST_CODE_GET_TOKEN);
@@ -295,12 +310,18 @@ public class SettingsFragment extends BaseFragment implements EventHeader.OnEven
                     String token = data.getStringExtra(EXTRA_ACCESS_TOKEN);
                     Log.d(TAG, "result token is: " + token);
                     if (token != null && token.length() > 0 && providerClickedPosition >= 0) {
-                        EventDataRow row = (EventDataRow) llProviders.getChildAt(providerClickedPosition);
+                        ProfileManager.providerLogin(token, "password", new GenericCallback() {
+                            @Override
+                            public void onDone(boolean success, Object data) {
+                                if (success) getProviders();
+                            }
+                        });
+                       /* EventDataRow row = (EventDataRow) llProviders.getChildAt(providerClickedPosition);
                         if (row != null) {
                             row.getRightIcon().setVisibility(View.VISIBLE);
                             row.getRightIcon().setText(Consts.Icons.icon_StatusPositive);
                             row.getRightIcon().setTextColor(Color.parseColor("#AADE0B"));
-                        }
+                        }*/
                     }
                 }
                 break;

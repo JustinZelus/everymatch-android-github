@@ -22,7 +22,7 @@ public class QuestionAndAnswer implements Serializable {
     public String userAnswerStr;
     public JSONObject userAnswerData;
     boolean isDependentsQuestion;
-    boolean isAnsweredConfirmedByClickingNext = false;
+    public boolean isAnsweredConfirmedByClickingNext = false;
     public HashMap<Integer, ArrayList<QuestionAndAnswer>> subQuestionsMap;
 
     //original values
@@ -30,6 +30,17 @@ public class QuestionAndAnswer implements Serializable {
     private String originalUserAnswerStr;
     private JSONObject originalUserAnswerData;
 
+    public QuestionAndAnswer(QuestionAndAnswer other) {
+        this.question = other.question;
+        this.userAnswerStr = other.userAnswerStr;
+        this.userAnswerData = other.userAnswerData;
+        this.isDependentsQuestion = other.isDependentsQuestion;
+        this.isAnsweredConfirmedByClickingNext = other.isAnsweredConfirmedByClickingNext;
+        this.subQuestionsMap = other.subQuestionsMap;
+        this.originalSubQuestionsMap = other.originalSubQuestionsMap;
+        this.originalUserAnswerStr = other.originalUserAnswerStr;
+        this.originalUserAnswerData = other.originalUserAnswerData;
+    }
 
     public QuestionAndAnswer(DataQuestion dataQuestion) {
         this.question = dataQuestion;
@@ -181,6 +192,7 @@ public class QuestionAndAnswer implements Serializable {
         //question = originalQuestion;
         subQuestionsMap.clear();
         //subQuestionsMap = new HashMap<>(originalSubQuestionsMap);
+
     }
 
     // this method tell's if user selected all available answers he could
@@ -210,6 +222,15 @@ public class QuestionAndAnswer implements Serializable {
         return userAnswerStr;
 
 
+    }
+
+    public boolean isReadyToSend() {
+        try {
+            return userAnswerData != null && userAnswerData.has("value") && !Utils.isEmpty(userAnswerData.get("value").toString());
+        } catch (Exception ex) {
+            EMLog.d(TAG, "question " + question.questions_id + " is not ready to be sent");
+            return false;
+        }
     }
 
     // in order to know if answer is selected (in list question or button selector)

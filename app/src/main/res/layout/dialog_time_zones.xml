@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:clickable="true"
     android:orientation="vertical">
 
     <com.everymatch.saas.view.EventHeader
@@ -34,8 +36,8 @@
             android:id="@+id/btnSelect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:text_color="white_color"
             android:visibility="gone"
+            app:text_color="white_color"
             app:text_key="@string/Save"
             tools:text="Save" />
     </LinearLayout>

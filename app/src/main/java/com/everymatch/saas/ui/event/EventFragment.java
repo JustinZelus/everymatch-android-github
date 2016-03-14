@@ -1,6 +1,7 @@
 package com.everymatch.saas.ui.event;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -50,6 +51,7 @@ import com.everymatch.saas.ui.inbox.InboxActivity;
 import com.everymatch.saas.ui.match.MatchActivity;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.ui.user.UserActivity;
+import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseIconTextView;
@@ -66,14 +68,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventFragment extends BaseFragment implements EventHeader.OnEventHeader, View.OnClickListener {
+public class EventFragment extends BaseFragment implements EventHeader.OnEventHeader, View.OnClickListener, PeopleViewPagerFragment.ParticipantsCallback {
 
     public static final String TAG = EventFragment.class.getSimpleName();
     public static final String EVENT = "event";
     private static final int REQUEST_CODE_ADD_PARTICIPANTS = 100;
+    private static final int REQUEST_CHECK_PARTICIPANTS = 101;
+
     private DataEvent mEvent;
     private EventHeader mHeader;
     private BaseImageView mImageTitle;
@@ -226,6 +233,10 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
     }
 
     private void setData(View view) {
+        //fix crash when fragment is no longer attached to activity
+        if (!isAdded()) {
+            return;
+        }
         mHeader.setTitle(mEvent.dataPublicEvent.event_title);
         if (!TextUtils.isEmpty(mEvent.dataPublicEvent.image_url)) {
             Picasso.with(getContext()).load(mEvent.dataPublicEvent.image_url).into(mImageTitle, new Callback.EmptyCallback() {
@@ -259,6 +270,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
         // DETAILS
         mDetailsRow.setTitle(dm.getResourceText(R.string.Details));
+        mDetailsRow.setDetails(Utils.getEventImportantAnswersText(mEvent));
 
         // LOCATION
         mLocationRow.setTitle(mEvent.getLocationText());
@@ -266,19 +278,19 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
         // SCHEDULE
         if (mEvent.dataPublicEvent.schedule.from.isSameDay(mEvent.dataPublicEvent.schedule.to)) {
-            mDateRow.setTitle(Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "EEE, MMM d, yyyy"));
+            mDateRow.setTitle(Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, EditEventFragment.DATE_FORMAT_LONG));
             if (mEvent.dataPublicEvent.schedule.to.hasEndTime()) {
                 mDateRow.setDetails(mEvent.dataPublicEvent.schedule.from.getHourString() + " - " + mEvent.dataPublicEvent.schedule.to.getHourString());
             } else {
                 mDateRow.setDetails(mEvent.dataPublicEvent.schedule.from.getHourString());
             }
         } else {
-            mDateRow.setTitle(Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "MMM d") + " - " +
-                    Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, "MMM d"));
+            mDateRow.setTitle(Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, EditEventFragment.DATE_FORMAT_LONG + " ") + " - " +
+                    Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, EditEventFragment.DATE_FORMAT_LONG));
 
             String at = dm.getResourceText(getString(R.string.At)) + " ";
-            String from = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "MMM d ") + at + mEvent.dataPublicEvent.schedule.from.getHourString();
-            String to = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, "MMM d ") + at + mEvent.dataPublicEvent.schedule.to.getHourString();
+            String from = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, EditEventFragment.DATE_FORMAT_SHORT) + at + mEvent.dataPublicEvent.schedule.from.getHourString();
+            String to = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, EditEventFragment.DATE_FORMAT_SHORT) + at + mEvent.dataPublicEvent.schedule.to.getHourString();
             mDateRow.setDetails(from + " - " + to);
         }
 
@@ -372,7 +384,6 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
             mAboutTitle.setVisibility(View.GONE);
         }
 
-        mDetailsRow.setDetails(Utils.getEventImportantAnswersText(mEvent));
 
     }
 
@@ -420,7 +431,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                 mToolbar3Button.setText(IconManager.getInstance(getActivity()).getIconString(eventActions.get(2).icon));
             } else {
                 mToolbar3Text.setText(dm.getResourceText(R.string.More));
-                mToolbar3Button.setText(Consts.Icons.icon_MenuMore);
+                mToolbar3Button.setText(Consts.Icons.icon_MenuMore2);
             }
 
         } else {
@@ -450,7 +461,7 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
     @Override
     public void onClick(final View v) {
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
 
         switch (v.getId()) {
@@ -489,17 +500,29 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
                 break;
             case R.id.event_row_location:
-                EventLocationFragment eventLocationFragment = new EventLocationFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString(EventLocationFragment.EVENT_TITLE, mEvent.dataPublicEvent.event_title);
-                bundle.putDouble(EventLocationFragment.LAT, mEvent.dataPublicEvent.getLocation().coordinates.value[0][0]);
-                bundle.putDouble(EventLocationFragment.LON, mEvent.dataPublicEvent.getLocation().coordinates.value[0][1]);
-                bundle.putString(EventLocationFragment.ADDRESS, mEvent.dataPublicEvent.getLocation().text_address);
-                eventLocationFragment.setArguments(bundle);
-                fragmentTransaction
-                        .addToBackStack("myFragment")
-                        .add(R.id.event_layout, eventLocationFragment)
-                        .commit();
+                Nammu.askForPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION, new PermissionCallback() {
+                    @Override
+                    public void permissionGranted() {
+                        EventLocationFragment eventLocationFragment = new EventLocationFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(EventLocationFragment.EVENT_TITLE, mEvent.dataPublicEvent.event_title);
+                        bundle.putDouble(EventLocationFragment.LAT, mEvent.dataPublicEvent.getLocation().coordinates.value[0][0]);
+                        bundle.putDouble(EventLocationFragment.LON, mEvent.dataPublicEvent.getLocation().coordinates.value[0][1]);
+                        bundle.putString(EventLocationFragment.ADDRESS, mEvent.dataPublicEvent.getLocation().text_address);
+                        eventLocationFragment.setArguments(bundle);
+                        fragmentTransaction
+                                .addToBackStack("myFragment")
+                                .add(R.id.event_layout, eventLocationFragment)
+                                .commit();
+                    }
+
+                    @Override
+                    public void permissionRefused() {
+                        EMLog.d(TAG, " permissionRefused ACCESS_COARSE_LOCATION");
+                        getActivity().getSupportFragmentManager().popBackStackImmediate();
+                    }
+                });
+
                 break;
             case R.id.event_row_date:
                 Calendar beginTime = Calendar.getInstance();
@@ -520,8 +543,11 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
                 startActivity(intent);
                 break;
             case R.id.event_row_people:
+                PeopleViewPagerFragment peopleViewPagerFragment = PeopleViewPagerFragment.getInstance(DataStore.SCREEN_TYPE_EVENT_PARTICIPANTS, mEvent);
+                peopleViewPagerFragment.setTargetFragment(EventFragment.this, REQUEST_CHECK_PARTICIPANTS);
+
                 fragmentTransaction.addToBackStack("myFragment")
-                        .add(R.id.event_layout, PeopleViewPagerFragment.getInstance(DataStore.SCREEN_TYPE_EVENT_PARTICIPANTS, mEvent))
+                        .add(R.id.event_layout, peopleViewPagerFragment)
                         .commitAllowingStateLoss();
                 break;
 
@@ -625,23 +651,14 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
         }
 
         if (action.equals("message_host")) { // chat with host
-            /*transaction.addToBackStack("myFragment")
-                    .replace(R.id.event_layout, ChatFragment.getInstance(null, id, ChatFragment.CHAT_TYPE_USER))
-                    .commit();*/
             String id = mEvent.getEvent_actions().get(position).parameters.get("other_user_id");
             InboxActivity.startChat(getActivity(), null, id, ChatFragment.CHAT_TYPE_USER);
             return;
         }
         if (action.equals("chat")) {
             // event chat
-
-           /* transaction.addToBackStack("myFragment")
-                    .replace(R.id.event_layout, ChatFragment.getInstance(null, mEvent.getEvent_actions().get(position).parameters.get("other_user_id"), ChatFragment.CHAT_TYPE_GROUP))
-                    .commit();*/
-
-            String id = mEvent.getEvent_actions().get(position).parameters.get("other_user_id");
+            String id = mEvent.getEvent_actions().get(position).parameters.get("object_id");
             InboxActivity.startChat(getActivity(), null, id, ChatFragment.CHAT_TYPE_GROUP);
-
             return;
         }
         if (action.equals("share")) {
@@ -725,4 +742,28 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
     public void setEvent(DataEvent event) {
         mEvent = event;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CHECK_PARTICIPANTS) {
+            mEvent = (DataEvent) data.getSerializableExtra(PeopleViewPagerFragment.EXTRA_EVENT);
+            setData(mView);
+        }
+    }
+
+    @Override
+    public void onParticipantsChanged(DataEvent dataEvent) {
+        if (dataEvent != null) {
+            mEvent = dataEvent;
+            setData(mView);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 }

@@ -43,6 +43,7 @@ import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.ui.dialog.DialogYesNo;
 import com.everymatch.saas.ui.dialog.FragmentTimeZones;
 import com.everymatch.saas.ui.discover.DiscoverActivity;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.QuestionUtils;
 import com.everymatch.saas.util.Utils;
@@ -106,6 +107,42 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
     RelativeLayout mFragmentsContainer;
     ProgressDialog progressDialog;
 
+
+    public static void answerSingleQuestion(Activity activity, DataQuestion dataQuestion, DataAnswer answer, String answerStr, int requestCode) {
+        QuestionnaireActivity.create_mode = CREATE_MODE.ANSWER_SINGLE_QUESTION;
+        Intent intent = new Intent(activity, QuestionnaireActivity.class);
+        intent.putExtra(QuestionnaireActivity.EXTRA_QUESTIONS, dataQuestion);
+        intent.putExtra(QuestionnaireActivity.EXTRA_ANSWERS, answer);
+        intent.putExtra(QuestionnaireActivity.EXTRA_ANSWER_STR, answerStr);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    /*call this method to edit activity this one will return a results to the caller*/
+    public static void editActivity(android.support.v4.app.Fragment fragment, int activityId, int requestCode) {
+        QuestionnaireActivity.create_mode = CREATE_MODE.EDIT_ACTIVITY;
+        Intent intent = new Intent(fragment.getActivity(), QuestionnaireActivity.class);
+        intent.putExtra(QuestionnaireActivity.EXTRA_ACTIVITY_ID, activityId);
+        fragment.startActivityForResult(intent, requestCode);
+    }
+
+    public static void editEvent(android.support.v4.app.Fragment fragment, DataEvent dataEvent, DataQuestion question, EDIT_EVENT_TYPE type, int requestCode) {
+        QuestionnaireActivity.create_mode = CREATE_MODE.EDIT_EVENT;
+        Intent intent = new Intent(fragment.getActivity(), QuestionnaireActivity.class);
+        intent.putExtra(QuestionnaireActivity.EXTRA_EVENT, dataEvent);
+        intent.putExtra(QuestionnaireActivity.EXTRA_QUESTIONS, question);
+        intent.putExtra(QuestionnaireActivity.EXTRA_EVENT_EDIT_TYPE, type);
+        fragment.startActivityForResult(intent, requestCode);
+    }
+
+    public static void createEvent(Activity activity, int activityId, String eventId) {
+        QuestionnaireActivity.create_mode = CREATE_MODE.CREATE_EVENT;
+        Intent intent = new Intent(activity, QuestionnaireActivity.class);
+        intent.putExtra(QuestionnaireActivity.EXTRA_ACTIVITY_ID, activityId);
+        intent.putExtra(QuestionnaireActivity.EXTRA_SELECTED_EVENT_ID, eventId);
+        activity.startActivity(intent);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,39 +204,6 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
     }
 
-    public static void answerSingleQuestion(Activity activity, DataQuestion dataQuestion, DataAnswer answer, String answerStr, int requestCode) {
-        QuestionnaireActivity.create_mode = CREATE_MODE.ANSWER_SINGLE_QUESTION;
-        Intent intent = new Intent(activity, QuestionnaireActivity.class);
-        intent.putExtra(QuestionnaireActivity.EXTRA_QUESTIONS, dataQuestion);
-        intent.putExtra(QuestionnaireActivity.EXTRA_ANSWERS, answer);
-        intent.putExtra(QuestionnaireActivity.EXTRA_ANSWER_STR, answerStr);
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    /*call this method to edit activity this one will return a results to the caller*/
-    public static void editActivity(android.support.v4.app.Fragment fragment, int activityId, int requestCode) {
-        QuestionnaireActivity.create_mode = CREATE_MODE.EDIT_ACTIVITY;
-        Intent intent = new Intent(fragment.getActivity(), QuestionnaireActivity.class);
-        intent.putExtra(QuestionnaireActivity.EXTRA_ACTIVITY_ID, activityId);
-        fragment.startActivityForResult(intent, requestCode);
-    }
-
-    public static void editEvent(android.support.v4.app.Fragment fragment, DataEvent dataEvent, DataQuestion question, EDIT_EVENT_TYPE type, int requestCode) {
-        QuestionnaireActivity.create_mode = CREATE_MODE.EDIT_EVENT;
-        Intent intent = new Intent(fragment.getActivity(), QuestionnaireActivity.class);
-        intent.putExtra(QuestionnaireActivity.EXTRA_EVENT, dataEvent);
-        intent.putExtra(QuestionnaireActivity.EXTRA_QUESTIONS, question);
-        intent.putExtra(QuestionnaireActivity.EXTRA_EVENT_EDIT_TYPE, type);
-        fragment.startActivityForResult(intent, requestCode);
-    }
-
-    public static void createEvent(Activity activity, int activityId, String eventId) {
-        QuestionnaireActivity.create_mode = CREATE_MODE.CREATE_EVENT;
-        Intent intent = new Intent(activity, QuestionnaireActivity.class);
-        intent.putExtra(QuestionnaireActivity.EXTRA_ACTIVITY_ID, activityId);
-        intent.putExtra(QuestionnaireActivity.EXTRA_SELECTED_EVENT_ID, eventId);
-        activity.startActivity(intent);
-    }
 
     /**
      * Use this method in order to create a process for answering a single question
@@ -276,6 +280,11 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                         jsonObject.put("questions_id", question.questions_id);
                         jsonObject.put("status", "active");
                         QuestionUtils.updateValueItem(question.question_type, answer, questionAndAnswer.userAnswerData);
+
+                        //if this is a role question we need to fetch it's answers
+                        if (question.role && question.answers != null && question.answers.length > 0) {
+
+                        }
                         break;
                     }
                 }
@@ -438,6 +447,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
         Intent intent = new Intent();
         intent.putExtra(EXTRA_ACTIVITY_ID, activityId);
         setResult(Activity.RESULT_OK, intent);
+        IS_VIEW_MODE = false;
         finish();
 
         String currentActivities = ds.getUser().user_settings.user_activity_profile_id_list;
@@ -644,24 +654,42 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
         return true;
     }
 
+    private void putAnswer(QuestionAndAnswer questionAndAnswer, JSONArray answers) {
+        try {
+           /*if (questionAndAnswer.subQuestionsMap.size() > 0) {
+                for (Map.Entry<Integer, ArrayList<QuestionAndAnswer>> entry : questionAndAnswer.subQuestionsMap.entrySet()) {
+                    int key = entry.getKey();
+                    ArrayList<QuestionAndAnswer> subQuestionAndAnswers = entry.getValue();
+                    if (subQuestionAndAnswers == null) return;
+                    for (QuestionAndAnswer qaa : subQuestionAndAnswers)
+                        putAnswer(qaa, answers);
+
+                }
+            }*/
+            if (questionAndAnswer.isReadyToSend() && questionAndAnswer.question.question_type != QuestionType.SETUP) {
+                if (questionAndAnswer.question.form_type.equals(FormType.FROM_TO) ||
+                        questionAndAnswer.question.form_type.equals(FormType.NUMBER_RANGE)) {
+                    String value = questionAndAnswer.userAnswerData.getString("value").toString();
+                    value = value.replace(" - ", ",");
+                    questionAndAnswer.userAnswerData.put("value", value);
+                    answers.put(questionAndAnswer.userAnswerData);
+                } else
+                    answers.put(questionAndAnswer.userAnswerData);
+            }
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
+    }
+
     public void sendAnswersToServer() {
         Log.d(TAG, "sendAnswersToServer");
-
         try {
             // create answers array
             JSONArray answers = new JSONArray();
             /*add all answer except setup question*/
+
             for (QuestionAndAnswer questionAndAnswer : mQuestionsAndAnswers) {
-                if (questionAndAnswer.userAnswerData != null && questionAndAnswer.question.question_type != QuestionType.SETUP) {
-                    if (questionAndAnswer.question.form_type.equals(FormType.FROM_TO) ||
-                            questionAndAnswer.question.form_type.equals(FormType.NUMBER_RANGE)) {
-                        String value = questionAndAnswer.userAnswerData.getString("value").toString();
-                        value = value.replace(" - ", ",");
-                        questionAndAnswer.userAnswerData.put("value", value);
-                        answers.put(questionAndAnswer.userAnswerData);
-                    } else
-                        answers.put(questionAndAnswer.userAnswerData);
-                }
+                putAnswer(questionAndAnswer, answers);
             }
 
             for (QuestionAndAnswer questionAndAnswer : mTemporaryQuestionsAndAnswers) {
@@ -758,6 +786,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                             }
 
                             setResult(Activity.RESULT_OK);
+                            IS_VIEW_MODE = false;
                             finish();
                         }
                     }
@@ -795,6 +824,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                                     Intent intent = new Intent();
                                     intent.putExtra(EXTRA_EVENT, mGeneratedEvent);
                                     setResult(Activity.RESULT_OK, intent);
+                                    IS_VIEW_MODE = false;
                                     finish();
                                 } else {
                                     request_type = RequestCreateEvent.REQUEST_TYPE.PUBLISH_EVENT;
@@ -837,6 +867,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
 
                             progressDialog.dismiss();
                             setResult(Activity.RESULT_OK);
+                            IS_VIEW_MODE = false;
                             finish();
                         }
                     }
@@ -972,6 +1003,7 @@ public class QuestionnaireActivity extends BaseActivity implements PeopleListene
                     showExitDialog();
                 } else {
                     /*user already has a profile*/
+                    IS_VIEW_MODE = false;
                     QuestionnaireActivity.this.finish();
                 }
 

@@ -29,6 +29,7 @@ public class EventsAdapter extends EmBaseAdapter<DataEvent> {
 
     public static final int TYPE_STATUS = 1;
     public static final int TYPE_MATCH = 2;
+    public static final int TYPE_NONE = 3;
 
     private int showType;
 
@@ -96,14 +97,17 @@ public class EventsAdapter extends EmBaseAdapter<DataEvent> {
                 case TYPE_STATUS:
                     try {
                         match.setText(event.dataPublicEvent.user_event_status.status.toString().toUpperCase());
-
                     } catch (Exception ex) {
                         EMLog.e(TAG, ex.getMessage());
                     }
-
+                    break;
+                case TYPE_NONE:
+                    match.setText("");
                     break;
             }
-            matchIcon.setVisibility(showType == TYPE_MATCH ? View.VISIBLE : View.INVISIBLE);
+            //aviram asked to hide match percentage anyway
+            // matchIcon.setVisibility(showType == TYPE_MATCH ? View.VISIBLE : View.INVISIBLE);
+            matchIcon.setVisibility(View.INVISIBLE);
 
 
             try {

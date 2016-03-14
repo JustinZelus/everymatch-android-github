@@ -46,7 +46,7 @@
         app:bg_color="white_color">
 
         <com.everymatch.saas.view.BaseTextView
-            style="@style/EmTextStyleMeta"
+            style="@style/EmTextStyleNormal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:text_color="moon_color"
+            android:gravity="center"
             app:text_key="@string/No_suggestion_subtitle"
             tools:text="@string/No_suggestion_subtitle" />
 
@@ -81,14 +82,13 @@
             app:bg_color="white_color">
 
             <com.everymatch.saas.view.BaseTextView
-                style="@style/EmTextStyleMeta"
+                style="@style/EmTextStyleNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_horizontal"
                 android:textAllCaps="true"
-                android:textSize="18sp"
                 app:text_color="primary_color"
                 app:text_key="@string/ProfileEdit"
                 tools:text="@string/ProfileEdit" />
@@ -104,14 +104,13 @@
             app:bg_color="white_color">
 
             <com.everymatch.saas.view.BaseTextView
-                style="@style/EmTextStyleMeta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/EmTextStyleNormal"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_horizontal"
                 android:textAllCaps="true"
-                android:textSize="18sp"
                 app:text_color="primary_color"
                 app:text_key="@string/Create_Event"
                 tools:text="@string/Create_Event" />

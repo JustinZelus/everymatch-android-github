@@ -13,6 +13,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:id="@+id/BaseListTitleHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_xs"
+        android:visibility="gone">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvBaseListTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="special offer"
+            style="@style/EmTextStyleNormal"
+            app:text_color="night_color" />
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -58,11 +74,13 @@
                 <com.everymatch.saas.view.BaseButton
                     android:id="@+id/fragment_list_action_button_primary"
                     style="@style/peopleListActionButton"
+                    android:alpha="0.5"
                     tools:text="Accept" />
 
                 <com.everymatch.saas.view.BaseButton
                     android:id="@+id/fragment_list_action_button_secondary"
                     style="@style/peopleListActionButton"
+                    android:alpha="0.5"
                     tools:text="Reject" />
             </LinearLayout>
         </LinearLayout>

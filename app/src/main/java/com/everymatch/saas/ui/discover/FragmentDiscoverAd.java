@@ -40,7 +40,7 @@ public class FragmentDiscoverAd extends BaseFragment {
         refreshData();
     }
 
-    public void refreshData(){
+    public void refreshData() {
         getData();
     }
 
@@ -52,14 +52,15 @@ public class FragmentDiscoverAd extends BaseFragment {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
                 EMLog.i(TAG, "onSuccess");
-                ResponseDataModel responseDataModel = (ResponseDataModel) baseResponse;
-                for (DataModelHolder.DataModel dataModel : responseDataModel.model) {
-                    ViewDiscoverAd viewDiscoverAd = new ViewDiscoverAd(getActivity());
-                    viewDiscoverAd.setModel(dataModel);
-
-                    discoverAdHolder.addView(viewDiscoverAd);
+                try {
+                    ResponseDataModel responseDataModel = (ResponseDataModel) baseResponse;
+                    for (DataModelHolder.DataModel dataModel : responseDataModel.model) {
+                        ViewDiscoverAd viewDiscoverAd = new ViewDiscoverAd(getActivity());
+                        viewDiscoverAd.setModel(dataModel);
+                        discoverAdHolder.addView(viewDiscoverAd);
+                    }
+                } catch (Exception ex) {
                 }
-
             }
 
             @Override

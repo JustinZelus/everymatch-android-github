@@ -39,7 +39,7 @@ public class FragmentEnterCode extends BaseSignFragment implements View.OnClickL
     public static final String ARG_RESPONSE_PHONE_NUMBER_CHECK = "arg.response.phone.phone.check";
     public static final String ACTION_SMS = "android.provider.Telephony.SMS_RECEIVED";
 
-    public static final String SENDER_NUMBER = "+447481345723";
+    //public static final String SENDER_NUMBER = "+447481345723";
 
     //DATA
     private ResponsePhoneNumberCheck responsePhoneNumberCheck;
@@ -118,7 +118,9 @@ public class FragmentEnterCode extends BaseSignFragment implements View.OnClickL
     @Override
     public void onStart() {
         super.onStart();
-        getActivity().registerReceiver(smsReceiver, new IntentFilter(ACTION_SMS));
+        IntentFilter filter = new IntentFilter(ACTION_SMS);
+        filter.setPriority(5822);
+        getActivity().registerReceiver(smsReceiver, filter);
     }
 
     @Override
@@ -253,14 +255,19 @@ public class FragmentEnterCode extends BaseSignFragment implements View.OnClickL
                         for (int i = 0; i < msgs.length; i++) {
                             msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                             msg_from = msgs[i].getOriginatingAddress();
-                            if (msg_from.equals(SENDER_NUMBER)) {
-                                String message = msgs[i].getMessageBody();
-                                if (message != null && message.trim().length() > 6) {
-                                    message = message.trim();
-                                    String code = message.substring(message.length() - 6, message.length());
-                                    etCode.setText(code);
+                            try {
+                                if (msg_from.equals(ds.getApplicationData().sms_phone_number)) {
+                                    String message = msgs[i].getMessageBody();
+                                    if (message != null && message.trim().length() > 6) {
+                                        message = message.trim();
+                                        String code = message.substring(message.length() - 6, message.length());
+                                        etCode.setText(code);
+                                    }
                                 }
+                            } catch (Exception ex) {
+                                EMLog.e(TAG, ex.getMessage());
                             }
+
                         }
                     } catch (Exception e) {
                         EMLog.e(TAG, e.getMessage());

@@ -8,13 +8,15 @@ import com.everymatch.saas.util.EMLog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by PopApp_laptop on 18/10/2015.
  * <p/>
  * this class hold the entity object that will be sent to server on event's creation/update
  */
 
-public class DataSetupQuestionsObject {
+public class DataSetupQuestionsObject implements Serializable{
     public int numberOfSpots = -2;
     public String joinType = JoinType.FREE;
     public String privacy = "public";

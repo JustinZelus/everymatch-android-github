@@ -1,6 +1,9 @@
 package com.everymatch.saas.ui.event;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +15,7 @@ import android.widget.Button;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.adapter.PeopleTabsPagerAdapter;
+import com.everymatch.saas.adapter.PeopleUsersAdapter;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.server.Data.DataEvent;
 import com.everymatch.saas.server.Data.DataEventActions;
@@ -25,6 +29,7 @@ import com.everymatch.saas.ui.PeopleViewPagerFragment;
 import com.everymatch.saas.ui.base.BaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.ShapeDrawableUtils;
+import com.everymatch.saas.util.Utils;
 
 /**
  * Created by dors on 11/17/15.
@@ -37,6 +42,9 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
     private static final String EXTRA_ACTION = "extra.action";
     private static final String EXTRA_ACTION_POSITION = "extra.action.position";
     public static final String ACTION_INVITEES_SELECTED = "inviteesSelected";
+    public static final int REQUEST_CODE_INVITE = 107;
+    public static final String EXTRA_EVENT = "extra.event";
+    public static final String ACTION_INVITE = "action.invite";
 
     //Data
     private boolean makeActionInside;
@@ -46,7 +54,7 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
 
     //VIEWS
     private Button mButtonDone;
-   // private EventHeader mHeader;
+    // private EventHeader mHeader;
 
 
     public static Fragment getInstance(DataEvent mGeneratedEvent, int dataActionPosition, boolean makeActionInside, String action) {
@@ -95,15 +103,20 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
                     PeopleViewPagerFragment.TAG, false, null, R.anim.enter_from_right, R.anim.exit_to_left,
                     R.anim.enter_from_left, R.anim.exit_to_right);
         }
+
+        //register receiver
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiverSelectionChanged, new IntentFilter(PeopleUsersAdapter.ACTION_COUNTER_CLICK));
     }
 
     private void setHeader() {
 
     }
 
+
     @Override
     public void onClick(View v) {
         PeopleViewPagerFragment fragment = (PeopleViewPagerFragment) (getActivity()).getSupportFragmentManager().findFragmentByTag(PeopleViewPagerFragment.TAG);
+
 
         if (fragment != null) {
             PeopleTabsPagerAdapter adapter = fragment.mAdapter;
@@ -118,6 +131,9 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
             allInvitees = allInvitees.trim();
             if (allInvitees.endsWith(","))
                 allInvitees = allInvitees.substring(0, allInvitees.length() - 1);
+
+            // do nothing on done click when nothing selected
+            if (Utils.isEmpty(allInvitees)) return;
 
             if (makeActionInside) {
                 invite(allInvitees);
@@ -135,28 +151,30 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
 
     private void invite(String allInvitees) {
         DataEventActions actions = mEvent.getEvent_actions().get(dataActionPosition);
-        //if (Utils.isEmpty(actions.parameters)) actions.parameters = "{}";
         try {
             actions.parameters.put("other_user_id", allInvitees);
-
-            //JSONObject jsonObject = new JSONObject(actions.parameters);
-            //jsonObject.put("other_user_id", allInvitees);
+            showDialog(dm.getResourceText(R.string.Loading), false);
             ServerConnector.getInstance().processRequest(new RequestEventActions(mEvent.getEvent_actions().get(dataActionPosition)), new ServerConnector.OnResultListener() {
                 @Override
                 public void onSuccess(BaseResponse baseResponse) {
+                    stopDialog();
                     ResponseEvent responseEvent = (ResponseEvent) baseResponse;
                     if (responseEvent != null) {
                     /*here we update the events in the events fragment and close ourself*/
-                        mEvent.setEvent(responseEvent);
+                        /*mEvent.setEvent(responseEvent);
+                        if (getTargetFragment() != null) {
+                            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent(ACTION_INVITE).putExtra(EXTRA_EVENT, mEvent));
+                        }
                         ((EventFragment) getTargetFragment()).setEvent(mEvent);
                         getActivity().getSupportFragmentManager().popBackStackImmediate();
-                        return;
+                        return;*/
                     }
                     EMLog.e(TAG, "invite participants from event action - got event null response");
                 }
 
                 @Override
                 public void onFailure(ErrorResponse errorResponse) {
+                    stopDialog();
                 }
             });
 
@@ -165,4 +183,20 @@ public class InviteParticipantsFragment extends BaseFragment implements View.OnC
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiverSelectionChanged);
+    }
+
+    private BroadcastReceiver receiverSelectionChanged = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (PeopleUsersAdapter.ACTION_COUNTER_CLICK.equals(intent.getAction())) {
+                int selectionCount = intent.getIntExtra(PeopleUsersAdapter.EXTRA_SELECTION_COUNT, 0);
+                mButtonDone.setAlpha(selectionCount == 0 ? 0.5f : 1f);
+                mButtonDone.setOnClickListener(selectionCount == 0 ? null : InviteParticipantsFragment.this);
+            }
+        }
+    };
 }

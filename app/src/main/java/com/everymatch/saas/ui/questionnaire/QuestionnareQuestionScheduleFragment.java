@@ -16,6 +16,7 @@ import com.everymatch.saas.R;
 import com.everymatch.saas.server.Data.DataDate;
 import com.everymatch.saas.server.Data.DataTimeZone;
 import com.everymatch.saas.ui.dialog.FragmentTimeZones;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.NotifierPopup;
 import com.everymatch.saas.util.Utils;
@@ -81,7 +82,8 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         dataDateTo.second = 59;
 
         mDataTimeZone = ds.getUser().user_settings.getTime_zone();
-        timeZoneIndex = ds.getApplicationData().getTimeZoneIndex(mDataTimeZone.country_code, mDataTimeZone.utc);
+        if (mDataTimeZone != null)
+            timeZoneIndex = ds.getApplicationData().getTimeZoneIndex(mDataTimeZone);
         //mDataTimeZone = ds.getApplicationData().getTime_zone().get(timeZoneIndex);
     }
 
@@ -226,13 +228,14 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
     @Override
     public void onClick(View v) {
         Calendar calendar;
+        Calendar calMin;
         switch (v.getId()) {
             case R.id.tvScheduleOptional:
                 showOptionalFiled(true);
 
                 break;
             case R.id.tvSettingsTimeZoneValue:
-                FragmentTimeZones dialogTimeZones = new FragmentTimeZones();
+                FragmentTimeZones dialogTimeZones = FragmentTimeZones.getInstance(mDataTimeZone, timeZoneIndex);
                 dialogTimeZones.setTargetFragment(this, REQUEST_CODE_DIALOG_FRAGMENT);
                 ((QuestionnaireActivity) getActivity()).replaceFragment(R.id.fragment_container_full, dialogTimeZones,
                         FragmentTimeZones.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
@@ -268,13 +271,16 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
                 }, dataDateFrom.year, dataDateFrom.month - 1, dataDateFrom.day);
                 //set min date to now
                 //fromDialog.getDatePicker().setMinDate(new Date().getTime() - 1000);
-                fromDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
+                calMin = Calendar.getInstance();
+                calMin.set(Calendar.SECOND, calMin.getMinimum(Calendar.SECOND));
+                calMin.set(Calendar.HOUR, calMin.getMinimum(Calendar.HOUR_OF_DAY));
+                fromDialog.getDatePicker().setMinDate(calMin.getTimeInMillis() + 1000);
                 //set max date to dateTo
                 // Calendar calMax = Utils.getCalendarFromDataDate(dataDateTo);
                 //calMax.add(Calendar.MONTH, -1);
                 Calendar m = Calendar.getInstance();
                 m.add(Calendar.YEAR, 5);
-                fromDialog.getDatePicker().setMaxDate(m.getTime().getTime());
+                fromDialog.getDatePicker().setMaxDate(m.getTime().getTime() - 10000);
                 fromDialog.show();
                 break;
             case R.id.tvScheduleFromTime:
@@ -318,14 +324,20 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
                 }, dataDateTo.year, dataDateTo.month - 1, dataDateTo.day);
 
                 // Set minimum date to "from" date
-                Calendar calMin = Utils.getCalendarFromDataDate(dataDateFrom);
-                calMin.add(Calendar.MONTH, -1);
-                toDialog.getDatePicker().setMinDate(calMin.getTimeInMillis());
+                try {
+                    calMin = Utils.getCalendarFromDataDate(dataDateFrom);
+                    calMin.set(Calendar.SECOND, calMin.getMinimum(Calendar.SECOND));
+                    calMin.set(Calendar.HOUR, calMin.getMinimum(Calendar.HOUR_OF_DAY));
+                    calMin.add(Calendar.MONTH, -1);
+                    toDialog.getDatePicker().setMinDate(calMin.getTimeInMillis() + 1000);
+                } catch (Exception ex) {
+                    EMLog.e(TAG, ex.getMessage());
+                }
 
                 //set max to 5 year
                 Calendar max = Calendar.getInstance();
                 max.add(Calendar.YEAR, 5);
-                toDialog.getDatePicker().setMaxDate(max.getTimeInMillis());
+                toDialog.getDatePicker().setMaxDate(max.getTimeInMillis() - 1000);
 
                 toDialog.show();
 
@@ -477,11 +489,9 @@ public class QuestionnareQuestionScheduleFragment extends QuestionnaireQuestionB
         switch (requestCode) {
             case REQUEST_CODE_DIALOG_FRAGMENT:
                 DataTimeZone dataTimeZone = (DataTimeZone) data.getSerializableExtra(EXTRA_TIME_ZONE);
-                int index = data.getIntExtra(FragmentTimeZones.EXTRA_TIME_ZONE_INDEX, timeZoneIndex);
                 if (dataTimeZone != null) {
-                    timeZoneIndex = index;
-                    //mDataTimeZone = ds.getApplicationData().getTime_zone().get(index);
                     mDataTimeZone = dataTimeZone;
+                    timeZoneIndex = ds.getApplicationData().getTimeZoneIndex(mDataTimeZone);
                     setTimeZoneText();
                 }
                 break;

@@ -68,7 +68,7 @@ public class EmptyViewFactory {
                 title.setText(dm.getResourceText(R.string.No_suggestion));
                 summary.setText(dm.getResourceText(R.string.No_suggestion_subtitle));
                 icon.setText(Consts.Icons.icon_Discover);
-                firstButton.setText(dm.getResourceText(R.string.Edit_your_profile));
+                firstButton.setText(dm.getResourceText(R.string.Edit_Profile));
                 secondButton.setText(dm.getResourceText(R.string.Create_Your_Event));
                 break;
 

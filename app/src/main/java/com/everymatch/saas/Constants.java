@@ -1,5 +1,6 @@
 package com.everymatch.saas;
 
+import com.everymatch.saas.client.data.BUILD_MODE;
 import com.everymatch.saas.client.data.DataStore;
 
 /**
@@ -7,13 +8,15 @@ import com.everymatch.saas.client.data.DataStore;
  */
 public class Constants {
 
-    public static String mode = "me"; // me // local // com
+
+    //public static String mode = BuildConfig.DEBUG ? "me" : "com"; // me // local // com
+    public static BUILD_MODE mode = BUILD_MODE.ME;
 
     public static String getAPI_SERVICE_URL() {
         switch (mode) {
-            case "com":
+            case COM:
                 return "https://api.everymatch.com/";
-            case "me":
+            case ME:
                 return "https://api.everymatch.me/";
             default:
                 return "http://192.168.1.101:4434/";
@@ -23,9 +26,9 @@ public class Constants {
 
     public static String getOAUTH2_SERVICE_URL() {
         switch (mode) {
-            case "com":
+            case COM:
                 return "https://oauth2.everymatch.com/";
-            case "me":
+            case ME:
                 return "https://oauth2.everymatch.me/";
             default: //local
                 return "http://192.168.1.101:4432/";
@@ -36,11 +39,11 @@ public class Constants {
 
     public static String getImageUploadUrl() {
         switch (mode) {
-            case "com":
+            case COM:
                 return "https://api.everymatch.com/api/uploads?" +
                         "hl=" + DataStore.getInstance().getCulture() +
                         "&app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id);
-            case "me":
+            case ME:
                 return "https://api.everymatch.me/api/uploads?" +
                         "hl=" + DataStore.getInstance().getCulture() +
                         "&app_id=" + EverymatchApplication.getContext().getResources().getString(R.string.app_id);

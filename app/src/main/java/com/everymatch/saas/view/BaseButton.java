@@ -13,6 +13,7 @@ import com.everymatch.saas.client.data.DataManager;
 import com.everymatch.saas.client.data.DataStore;
 import com.everymatch.saas.util.ShapeDrawableUtils;
 import com.everymatch.saas.util.TypeFaceProvider;
+import com.everymatch.saas.util.Utils;
 
 
 /**
@@ -37,10 +38,7 @@ public class BaseButton extends Button {
 
         this.mContext = context;
 
-        if (isInEditMode()) {
-        } else {
-            initAttributes(attrs);
-        }
+        initAttributes(attrs);
     }
 
     public BaseButton(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -85,7 +83,7 @@ public class BaseButton extends Button {
             int textColor = typedArray.getInt(R.styleable.ResourceColor_text_color, -1);
 
             if (textColor != -1) {
-                setTextColor(Color.parseColor(DataStore.getInstance().getColor(textColor)));
+                setTextColor(isInEditMode() ? Utils.ViewModeIntToIntColor(textColor) : Color.parseColor(DataStore.getInstance().getColor(textColor)));
             }
 
             typedArray.recycle();
@@ -112,4 +110,5 @@ public class BaseButton extends Button {
             setText(DataManager.getInstance().getResourceText(key));
         }
     }
+
 }

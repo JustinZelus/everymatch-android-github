@@ -1,11 +1,13 @@
 package com.everymatch.saas.ui.questionnaire;
 
 import android.Manifest;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.graphics.ColorUtils;
 import android.text.Editable;
 import android.text.InputType;
@@ -29,6 +31,7 @@ import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.Types;
 import com.everymatch.saas.server.Data.DataLocation;
 import com.everymatch.saas.singeltones.Consts;
+import com.everymatch.saas.ui.questionnaire.base.QuestionnaireQuestionBaseFragment;
 import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.ShapeDrawableUtils;
 import com.everymatch.saas.util.Utils;
@@ -140,8 +143,9 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
     protected void setHeader() {
         super.setHeader();
 
-        if (mActivity.isInEditMode())
+        if (mActivity.isInEditMode() && mActivity.create_mode == QuestionnaireActivity.CREATE_MODE.EDIT_EVENT) {
             mHeader.setSaveCancelMode(dm.getResourceText(R.string.Edit_Event_Location));
+        }
     }
 
     @Override
@@ -238,7 +242,9 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
             if (!mQuestionAndAnswer.userAnswerData.has("value"))
                 return;
 
-            JSONObject jsonObject = mQuestionAndAnswer.userAnswerData.getJSONObject("value");
+            String valueStr = mQuestionAndAnswer.userAnswerData.getString("value");
+            JSONObject jsonObject = new JSONObject(valueStr);
+            //JSONObject jsonObject = mQuestionAndAnswer.userAnswerData.getJSONObject("value");
             mDataLocation = DataLocation.fromJsonObject(jsonObject);
             radius = mDataLocation.distance_value / getUnit();
             etAddressInput.setText(mDataLocation.text_address);
@@ -279,15 +285,18 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
             case R.id.btnMyLocation:
                 isFromLocationClick = true;
                 /*show set specific area if needed*/
-                if (!isEventMode)
-                    tvSetSpecificArea.setVisibility(View.VISIBLE);
-                else {
-                    viewAnimator.setDisplayedChild(0);
-                    tvSetSpecificArea.setVisibility(View.GONE);
-                }
-                if (btnMyLocation.getText().equals(Consts.Icons.icon_GPS))
-                    setCurrentLocationSelected();
-                else {
+
+                if (btnMyLocation.getText().equals(Consts.Icons.icon_GPS)) {
+                    if (CheckEnableGPS()) {
+                        setCurrentLocationSelected();
+                        if (!isEventMode)
+                            tvSetSpecificArea.setVisibility(View.VISIBLE);
+                        else {
+                            viewAnimator.setDisplayedChild(0);
+                            tvSetSpecificArea.setVisibility(View.GONE);
+                        }
+                    } else startGPS();
+                } else {
                     clearAnswer();
                 }
                 break;
@@ -298,6 +307,34 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
                 viewAnimator.showNext();
                 mRadiusEditText.setText(mRadiusEditText.getText());
                 break;
+        }
+    }
+
+    private boolean CheckEnableGPS() {
+        String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        if (!provider.equals("")) {
+            return true;
+            //GPS Enabled
+            // Toast.makeText(getActivity(), "GPS Enabled: " + provider, Toast.LENGTH_LONG).show();
+        } else {
+            return false;
+        }
+    }
+
+    private void startGPS() {
+        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 1);
+        //Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
+        //startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            switch (requestCode) {
+                case 1:
+                    break;
+            }
         }
     }
 
@@ -533,7 +570,7 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
     }
 
     @Override
-    public JSONObject createLocationJsonObject(String locationStr) {
+    public String createLocationJsonObject(String locationStr) {
         JSONObject value = new JSONObject();
         String radiusStr = mRadiusEditText.getText().toString();
         radius = TextUtils.isEmpty(radiusStr) ? 0 : Double.parseDouble(radiusStr);
@@ -556,7 +593,7 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
             value.put("distance_units", ds.getUser().user_settings.getDistance());
             value.put("distance_value", getRadius());
             value.put("place_name", isPlace ? mDataLocation.place_name : "");
-            value.put("place_id", mDataLocation.place_id);
+            value.put("place_id", mDataLocation.place_id == null ? "" : mDataLocation.place_id);
 
 
         } catch (Exception e) {
@@ -564,7 +601,7 @@ public class QuestionnaireQuestionLocationFragment extends QuestionnaireQuestion
             EMLog.e(TAG, e.getMessage());
         }
 
-        return value;
+        return value.toString();
     }
 
     private double getUnit() {

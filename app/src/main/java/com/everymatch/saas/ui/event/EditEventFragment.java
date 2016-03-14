@@ -31,9 +31,11 @@ import java.text.MessageFormat;
 public class EditEventFragment extends BaseFragment implements EventHeader.OnEventHeader, View.OnClickListener {
 
     private static final String KEY_EVENT = "key.event";
+    public static final String DATE_FORMAT_LONG = "EEE, MMM d, yyyy";
+    public static final String DATE_FORMAT_SHORT = "MMM d ";
 
     private static final String TAG = EditEventFragment.class.getSimpleName();
-    public  static final int CODE_EDIT_EVENT = 19;
+    public static final int CODE_EDIT_EVENT = 19;
 
     // Data
     private DataEvent mEvent;
@@ -129,13 +131,34 @@ public class EditEventFragment extends BaseFragment implements EventHeader.OnEve
         mRowLocation.setDetails(mEvent.dataPublicEvent.getLocation().text_address);
 
         // Schedule
-        String strDate = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "EEE, MMM d, yyyy");
-        if (mEvent.dataPublicEvent.schedule.from != null)
+        String strDate = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, DATE_FORMAT_LONG);
+
+        /*if (mEvent.dataPublicEvent.schedule.from != null)
             strDate += "    " + numberFormat(mEvent.dataPublicEvent.schedule.from.hour) + ":"
                     + numberFormat(mEvent.dataPublicEvent.schedule.from.minute) + " - " +
                     numberFormat(mEvent.dataPublicEvent.schedule.to.hour) +
-                    ":" + numberFormat(mEvent.dataPublicEvent.schedule.to.minute);
-        mRowSchedule.setDetails(strDate);
+                    ":" + numberFormat(mEvent.dataPublicEvent.schedule.to.minute);*/
+
+        String date = "";
+        String time = "";
+        if (mEvent.dataPublicEvent.schedule.from.isSameDay(mEvent.dataPublicEvent.schedule.to)) {
+            date = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, DATE_FORMAT_LONG);
+            if (mEvent.dataPublicEvent.schedule.to.hasEndTime()) {
+                time = mEvent.dataPublicEvent.schedule.from.getHourString() + " - " + mEvent.dataPublicEvent.schedule.to.getHourString();
+            } else {
+                time = mEvent.dataPublicEvent.schedule.from.getHourString();
+            }
+        } else {
+            date = (Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, DATE_FORMAT_LONG) + " - " +
+                    Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, DATE_FORMAT_LONG));
+
+            // String at = dm.getResourceText(getString(R.string.At)) + " ";
+            //String from = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.from, "MMM d ") + at + mEvent.dataPublicEvent.schedule.from.getHourString();
+            //String to = Utils.getDateStringFromDataDate(mEvent.dataPublicEvent.schedule.to, "MMM d ") + at + mEvent.dataPublicEvent.schedule.to.getHourString();
+            //time = from + " - " + to);
+        }
+
+        mRowSchedule.setDetails(date + " " + time);
 
 
         // Participants
