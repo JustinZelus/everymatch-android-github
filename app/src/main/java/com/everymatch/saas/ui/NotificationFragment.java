@@ -145,7 +145,7 @@ public class NotificationFragment extends BaseListFragment implements EventHeade
             isClicked = true;
         } else {
             mEventHeader.getTitle().setVisibility(View.VISIBLE);
-            mEventHeader.setTitle("Notifications");
+            mEventHeader.setTitle(dm.getResourceText(R.string.Notification));
             mEventHeader.getEditTitle().setVisibility(View.GONE);
 
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);

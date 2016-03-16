@@ -270,8 +270,8 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
                     onSelectionMade(mAdapter.getSelectedCount());
                     mAdapter.refreshData(mDataEvent.dataPublicEvent.getAllUsers(mParticipantType));
 
-                    ((PeopleViewPagerFragment)getParentFragment()).mDataEvent = mDataEvent;
-                    ((PeopleViewPagerFragment)getParentFragment()).update(mDataEvent);
+                    ((PeopleViewPagerFragment) getParentFragment()).mDataEvent = mDataEvent;
+                    ((PeopleViewPagerFragment) getParentFragment()).update(mDataEvent);
                 }
             }
 
@@ -309,6 +309,18 @@ public class ParticipantsListFragment extends BasePeopleListFragment implements 
 
     @Override
     public void onSelectionMade(int selectionCount) {
+       //we don't need to show upper title when we are not hosting
+        try {
+            String status = mDataEvent.dataPublicEvent.user_event_status.status;
+            if (!UserEventStatus.TYPE_HOSTING.equals(status) && !UserEventStatus.TYPE_MANAGER.equals(status)) {
+                titleHolder.setVisibility(View.GONE);
+                return;
+            }
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
+
+
         numOfSelectedPeople = selectionCount;
         setTitle("" + numOfSelectedPeople + "/" + mDataEvent.dataPublicEvent.getAllUsers(mParticipantType).size() + " " + dm.getResourceText("Match.Selected"));
         enableButtons(selectionCount != 0);

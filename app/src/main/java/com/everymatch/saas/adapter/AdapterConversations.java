@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.RelativeLayout;
@@ -34,10 +33,10 @@ import java.util.List;
 /**
  * Created by PopApp_laptop on 09/08/2015.
  */
-public class AdapterConversations extends BaseAdapter {
+public class AdapterConversations extends EmBaseAdapter<DataConversation> {
 
     private DataStore ds = DataStore.getInstance();
-    public ArrayList<DataConversation> data, filtered;
+    //public ArrayList<DataConversation> data, filtered;
     private String conversationType = "Active";
     Context con;
     LayoutInflater inflater;
@@ -46,41 +45,40 @@ public class AdapterConversations extends BaseAdapter {
     private inboxCallback callback;
 
     public AdapterConversations(ArrayList<DataConversation> data, Context con, inboxCallback callback) {
-        this.data = data;
-        filtered = new ArrayList<>();
+        this.mData = data;
+        //filtered = new ArrayList<>();
         this.con = con;
         this.callback = callback;
         inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    @Override
+    /*@Override
     public int getCount() {
         return filtered.size();
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Object getItem(int i) {
         return filtered.get(i);
-    }
+    }*/
+
 
     @Override
-    public long getItemId(int i) {
-        return i;
-    }
+    protected View getFinalView(int position, View convertView, ViewGroup parent) {
+        final DataConversation item = getItem(position);
 
-    @Override
-    public View getView(final int i, View view, ViewGroup viewGroup) {
-        final DataConversation item = filtered.get(i);
-
-        View v = view;
-        if (view == null)
+        View v = convertView;
+        if (convertView == null)
             v = inflater.inflate(R.layout.view_conversation_item, null);
-
         setView(v, item);
-
         return v;
     }
 
+    /* @Override
+     public View getView(final int i, View view, ViewGroup viewGroup) {
+
+     }
+     */
     private void setView(View v, final DataConversation item) {
         ImageView imgUserImage = (ImageView) v.findViewById(R.id.img_view_conversation_image);
         BaseTextView tvUser = (BaseTextView) v.findViewById(R.id.tv_view_conversation_username);
@@ -109,16 +107,16 @@ public class AdapterConversations extends BaseAdapter {
                 mMorePopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (position == 0) {
-                            if (callback != null) callback.onReplyClick(item);
-                        } else if (position == 1) {
+                        if (position == 2) {
+                            //if (callback != null) callback.onReplyClick(item);
+                        } else if (position == 0) {
                             if (callback != null) {
                                 if (item.status.toLowerCase().equals("active"))
                                     callback.onArchiveClick(item);
                                 else if (item.status.toLowerCase().equals("archive"))
                                     callback.onUnArchiveClick(item);
                             }
-                        } else if (position == 2) {
+                        } else if (position == 1) {
                             if (callback != null) callback.onDeleteClick(item);
                         }
                         mMorePopup.dismiss();
@@ -193,7 +191,7 @@ public class AdapterConversations extends BaseAdapter {
     }
 
     public void add(DataConversation dataConversation) {
-        data.add(dataConversation);
+        mData.add(dataConversation);
         refresh(conversationType);
     }
 
@@ -204,7 +202,6 @@ public class AdapterConversations extends BaseAdapter {
 
     public void refresh(String conversationType) {
         String realFilter = "";
-
         if (conversationType.equals(DataManager.getInstance().getResourceText(R.string.Archive)))
             realFilter = "Archive";
         else if (conversationType.equals(DataManager.getInstance().getResourceText(R.string.Inbox_title)))
@@ -212,11 +209,11 @@ public class AdapterConversations extends BaseAdapter {
 
         this.conversationType = realFilter;
 
-        filtered.clear();
+        /*filtered.clear();
         for (DataConversation conversation : data) {
             if (conversation.status.toLowerCase().equals(this.conversationType.toLowerCase()))
                 filtered.add(conversation);
-        }
+        }*/
 
         notifyDataSetChanged();
     }
@@ -229,6 +226,18 @@ public class AdapterConversations extends BaseAdapter {
         void onDeleteClick(DataConversation dataConversation);
 
         void onUnArchiveClick(DataConversation dataConversation);
+    }
+
+    @Override
+    public boolean filterObject(DataConversation dataConversation, String constraint) {
+        try {
+            return dataConversation.getLast_message().message.toLowerCase().contains(constraint.toLowerCase());
+            // ||dataConversation.p.toLowerCase().contains(constraint.toLowerCase());
+        } catch (Exception ex) {
+            return false;
+        }
+
+
     }
 }
 

@@ -274,7 +274,16 @@ public class EventFragment extends BaseFragment implements EventHeader.OnEventHe
 
         // LOCATION
         mLocationRow.setTitle(mEvent.getLocationText());
-        mLocationRow.setDetails(mEvent.getLocationText());
+        String city = Utils.isEmpty(mEvent.dataPublicEvent.getLocation().city) ? "" : mEvent.dataPublicEvent.getLocation().city;
+        String country = Utils.isEmpty(mEvent.dataPublicEvent.getLocation().country_name) ? "" : mEvent.dataPublicEvent.getLocation().country_name;
+        String details = city;
+        if (!Utils.isEmpty(city) && !Utils.isEmpty(country))
+            details += ", " + country;
+        else if(!Utils.isEmpty(country))
+            details = country;
+        mLocationRow.setDetails(details);
+        if (Utils.isEmpty(city) && Utils.isEmpty(country))
+            mLocationRow.setDetails(null);
 
         // SCHEDULE
         if (mEvent.dataPublicEvent.schedule.from.isSameDay(mEvent.dataPublicEvent.schedule.to)) {

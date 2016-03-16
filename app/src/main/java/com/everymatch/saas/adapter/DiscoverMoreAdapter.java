@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.everymatch.saas.R;
+import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.client.data.PopupMenuItem;
 import com.everymatch.saas.util.IconManager;
 import com.everymatch.saas.view.BaseTextView;
@@ -53,20 +55,22 @@ public class DiscoverMoreAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_discover_more_menu_item, parent, false);
         }
 
-        ((TextView) convertView.findViewById(R.id.view_discover_more_menu_item_title)).setText(item.title);
-        if (item.icon == null)
-            ((TextView) convertView.findViewById(R.id.view_discover_more_menu_item_icon)).setVisibility(View.GONE);
-        else {
-            ((TextView) convertView.findViewById(R.id.view_discover_more_menu_item_icon)).setVisibility(View.VISIBLE);
-            ((TextView) convertView.findViewById(R.id.view_discover_more_menu_item_icon)).setText(IconManager.getInstance(parent.getContext()).getIconString(item.icon));
-        }
+        TextView tvTitle = (TextView) convertView.findViewById(R.id.view_discover_more_menu_item_title);
+        tvTitle.setText(item.title);
+        tvTitle.setTextColor(item.color == 0 ? DataStore.getInstance().getIntColor(EMColor.PRIMARY) : item.color);
+
+        TextView tvIcon = (TextView) convertView.findViewById(R.id.view_discover_more_menu_item_icon);
+
+        tvIcon.setVisibility(item.icon == null ? View.GONE : View.VISIBLE);
+        tvIcon.setText(item.icon == null ? "" : IconManager.getInstance(parent.getContext()).getIconString(item.icon));
+
         BaseTextView tvBadge = (BaseTextView) convertView.findViewById(R.id.badge);
-        if (item.badge == null)
-            tvBadge.setVisibility(View.GONE);
+        if (item.badge == null) tvBadge.setVisibility(View.GONE);
         else {
             tvBadge.setVisibility(View.VISIBLE);
             tvBadge.setText(item.badge);
         }
+
         return convertView;
     }
 }

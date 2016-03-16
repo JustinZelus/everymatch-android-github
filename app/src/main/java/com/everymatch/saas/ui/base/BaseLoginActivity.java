@@ -20,6 +20,7 @@ import com.everymatch.saas.ui.discover.DiscoverActivity;
 import com.everymatch.saas.ui.questionnaire.QuestionnaireActivity;
 import com.everymatch.saas.ui.sign.SignActivity;
 import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.Utils;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -91,6 +92,9 @@ public abstract class BaseLoginActivity extends BaseActivity {
     public void performLoginOperation() {
         ResponseGetUser responseGetUser = ds.getUser();
         ds.getUser().user_settings.setDefaultData();
+        //here we update app localization
+        Utils.setApplicationLocal();
+
         registerToPusher();
         if (responseGetUser.user_settings.user_activity_profile_id_list != null && responseGetUser.user_settings.user_activity_profile_id_list.length() > 0) {
             // user already filled profile

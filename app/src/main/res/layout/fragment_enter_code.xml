@@ -54,7 +54,10 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/margin_m"
-        android:background="@color/fog"></LinearLayout>
+        android:background="@color/fog">
+
+
+    </LinearLayout>
 
     <com.everymatch.saas.view.BaseTextView
         style="@style/EmTextStyleService"
@@ -81,6 +84,33 @@
         tools:text="number" />
 
 
+    <RelativeLayout
+        android:id="@+id/rlCallMeHolder"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="@dimen/margin_xs"
+        android:layout_marginLeft="@dimen/margin_m"
+        android:layout_marginRight="@dimen/margin_m">
+
+
+        <ProgressBar
+            android:id="@+id/pbCallMe"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000" />
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvCallMe"
+            style="@style/EmTextStyleNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:text_color="primary_color"
+            app:text_key="@string/Call_Me"
+            tools:text="Call_Me" />
+    </RelativeLayout>
+
     <com.everymatch.saas.view.BaseTextView
         android:id="@+id/tvResendCode"
         style="@style/EmTextStyleNormal"
@@ -89,22 +119,33 @@
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/margin_xs"
         android:gravity="center"
+        android:visibility="gone"
         app:text_color="primary_color"
         app:text_key="@string/Resend_code"
         tools:text="number" />
 
 
-    <com.everymatch.saas.view.BaseTextView
-        android:id="@+id/tvWrongNumber"
-        style="@style/EmTextStyleNormal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/margin_s"
-        android:gravity="center"
-        app:text_color="primary_color"
-        app:text_key="@string/Wrong_number"
-        tools:text="number" />
+    <RelativeLayout
+        android:id="@+id/rlWrongNumberHolder"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="@dimen/margin_xs"
+        android:layout_marginLeft="@dimen/margin_m"
+        android:layout_marginRight="@dimen/margin_m">
+
+        <com.everymatch.saas.view.BaseTextView
+            android:id="@+id/tvWrongNumber"
+            style="@style/EmTextStyleNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_s"
+            android:gravity="center"
+            app:text_color="primary_color"
+            app:text_key="@string/Wrong_number"
+            tools:text="number"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
 
 </com.everymatch.saas.view.BaseLinearLayout>

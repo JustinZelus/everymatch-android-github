@@ -212,7 +212,7 @@ public class MyEventsFragment extends BaseEventListFragment implements EmptyView
 
     @Override
     public EventsAdapter createAdapter() {
-        return new EventsAdapter(mEventMap.get(mCurrentEventKey).getEvents(), getActivity(), EventsAdapter.TYPE_STATUS);
+        return new EventsAdapter(mEventMap.get(mCurrentEventKey).getEvents(), getActivity(), EventsAdapter.TYPE_STATUS,true);
     }
 
     @Override

@@ -49,21 +49,24 @@ public class QuestionnareSetup extends QuestionnaireQuestionBaseFragment impleme
         inflater.inflate(R.layout.question_setup, (ViewGroup) view.findViewById(R.id.answers_container));
 
         tvEventSetupSpotsNumber = (BaseTextView) view.findViewById(R.id.tvEventSetupSpotsNumber);
-        ((TextView) view.findViewById(R.id.tvSpotsTitle)).setText(ds.getApplicationData().event.setup_questions.get(0).text_title);
         tvEventSetupPrivacy = (BaseTextView) view.findViewById(R.id.tvEventSetupPrivacy);
-
         switchSetupIsParticipating = (Switch) view.findViewById(R.id.SwitchSetupIsParticipating);
         switchSetupEventJoinType = (Switch) view.findViewById(R.id.SwitchSetupEventJoinType);
 
-        view.findViewById(R.id.edrJoinType).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.edrJoinType)).setText(ds.getApplicationData().event.setup_questions.get(1).text_title);
-        view.findViewById(R.id.edrIsParticipating).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.tvPrivacy)).setText(ds.getApplicationData().event.setup_questions.get(2).text_title);
+        ((TextView) view.findViewById(R.id.tvSpotsTitle)).setText(ds.getApplicationData().event.setup_questions.get(1).text_title);
+        ((TextView) view.findViewById(R.id.edrJoinType)).setText(ds.getApplicationData().event.setup_questions.get(2).text_title);
+        ((TextView) view.findViewById(R.id.tvPrivacy)).setText(ds.getApplicationData().event.setup_questions.get(3).text_title);
+        ((TextView) view.findViewById(R.id.edrIsParticipating)).setText(ds.getApplicationData().event.setup_questions.get(0).text_title);
+
+
 
         switchSetupEventJoinType.setOnCheckedChangeListener(this);
         switchSetupIsParticipating.setOnCheckedChangeListener(this);
         switchSetupEventJoinType.setChecked(false);
 
+
+        view.findViewById(R.id.edrIsParticipating).setOnClickListener(this);
+        view.findViewById(R.id.edrJoinType).setOnClickListener(this);
         view.findViewById(R.id.edrSetupNumberOfSpots).setOnClickListener(this);
         view.findViewById(R.id.edrSetupPrivacy).setOnClickListener(this);
 

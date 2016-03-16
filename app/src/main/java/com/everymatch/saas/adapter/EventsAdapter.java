@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import com.everymatch.saas.R;
 import com.everymatch.saas.client.data.DataManager;
+import com.everymatch.saas.client.data.DataStore;
+import com.everymatch.saas.client.data.EMColor;
 import com.everymatch.saas.server.Data.DataEvent;
 import com.everymatch.saas.util.EMLog;
+import com.everymatch.saas.util.ShapeDrawableUtils;
 import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.BaseIconTextView;
 import com.squareup.picasso.Picasso;
@@ -32,12 +35,14 @@ public class EventsAdapter extends EmBaseAdapter<DataEvent> {
     public static final int TYPE_NONE = 3;
 
     private int showType;
+    private boolean showActivityLabel;
 
-    public EventsAdapter(ArrayList<DataEvent> data, Context con, int type) {
+    public EventsAdapter(ArrayList<DataEvent> data, Context con, int type, boolean showActivityLabel) {
         mData = data;
         this.mContext = con;
         inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         showType = type;
+        this.showActivityLabel = showActivityLabel;
 
         // Width of screen minus left and right padding
         imageWidth = con.getResources().getDisplayMetrics().widthPixels - con.getResources().getDimensionPixelSize(R.dimen.margin_s);
@@ -72,8 +77,18 @@ public class EventsAdapter extends EmBaseAdapter<DataEvent> {
         ImageView image = (ImageView) view.findViewById(R.id.view_event_image);
 
         //activity title
-        RelativeLayout rlActivityTitleHolder = (RelativeLayout) view.findViewById(R.id.rlActivityLabelHolder);
-        rlActivityTitleHolder.setVisibility(View.GONE);
+        try {
+            String activityTitle = DataStore.getInstance().getApplicationData().getActivityTitleByEventId(event.client_id);
+            RelativeLayout rlActivityTitleHolder = (RelativeLayout) view.findViewById(R.id.rlActivityLabelHolder);
+            rlActivityTitleHolder.setVisibility(showActivityLabel ? View.VISIBLE : View.GONE);
+            TextView tvActivityLabel = (TextView) view.findViewById(R.id.tvActivityLabel);
+            tvActivityLabel.setText(activityTitle);
+            rlActivityTitleHolder.setBackgroundDrawable(ShapeDrawableUtils.getRoundendButton(DataStore.getInstance().getIntColor(EMColor.WHITE), 0));
+            rlActivityTitleHolder.setVisibility(showActivityLabel ? View.VISIBLE : View.GONE);
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
+
 
         if (event != null && event.dataPublicEvent != null) {
             title.setText(event.dataPublicEvent.event_title);

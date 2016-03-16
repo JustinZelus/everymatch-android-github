@@ -52,9 +52,15 @@ public class BaseIdsQuestion extends QuestionnaireQuestionBaseFragment {
         selectedAnswers.clear();
         if (mQuestionAndAnswer.userAnswerData != null && mQuestionAndAnswer.userAnswerData.has("value")) {
             try {
-                final String markedAnswers[] = mQuestionAndAnswer.userAnswerData.getString("value").split(",");
-                for (String s : markedAnswers)
-                    selectedAnswers.add(s);
+                final String markedAnswers[] = mQuestionAndAnswer.userAnswerData.getString("value").toString().split(",");
+                for (String s : markedAnswers) {
+                    if (s.endsWith(".0") && markedAnswers.length == 1) {
+                        //this is a problem with JSONOBJECT and we should remove the added '.0'
+                        String fixed = s.substring(0, s.length() - 2);
+                        selectedAnswers.add(fixed);
+                    } else
+                        selectedAnswers.add(s);
+                }
             } catch (Exception ex) {
                 EMLog.e(TAG, ex.getMessage());
             }

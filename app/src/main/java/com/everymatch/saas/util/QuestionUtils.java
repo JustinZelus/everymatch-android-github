@@ -160,12 +160,11 @@ public class QuestionUtils {
                         if (question.question_type.equals(QuestionType.GENDER) || question.question_type.equals(QuestionType.GENDER_RANGE)) {
                             //value = (String) answer.value;
                             ArrayList<String> answered = new ArrayList<>();
-                            for (DataAnswer answers : question.answers) {
-                                if (((String) answers.value).trim().equals(answers.value.toString().trim() + "")) {
-                                    answered.add(answers.text_title);
+                            for (DataAnswer ans : question.answers) {
+                                if (ans.value.toString().trim().equals(answer.value.toString().trim())) {
+                                    answered.add(ans.text_title);
                                 }
                             }
-
                             if (!Utils.isArrayListEmpty(answered)) {
                                 value = TextUtils.join(", ", answered);
                             }
@@ -268,12 +267,9 @@ public class QuestionUtils {
                     DataLocation dataLocation = DataLocation.fromJsonObject(valueObject);
                     value.put("city", dataLocation.city);
                     value.put("country_code", dataLocation.country_code);
-                    value.put("country_name ", dataLocation.country_name);
-                    value.put("country_code", dataLocation.country_code);
+                    value.put("country_name", dataLocation.country_name);
                     value.put("text_address", dataLocation.text_address);
-                    value.put("distance_units", dataLocation.distance_units);
                     value.put("distance_value", dataLocation.distance_value);
-                    value.put("distance_units", dataLocation.distance_units);
                     value.put("distance_units", dataLocation.distance_units);
                     value.put("place_name", dataLocation.place_name);
                     value.put("place_id", dataLocation.place_id);

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -21,7 +23,9 @@ import com.everymatch.saas.singeltones.PusherManager;
 import com.everymatch.saas.ui.BaseActivity;
 import com.everymatch.saas.ui.base.BaseListFragment;
 import com.everymatch.saas.ui.dialog.menus.MenuConversations;
+import com.everymatch.saas.util.EMLog;
 import com.everymatch.saas.util.EmptyViewFactory;
+import com.everymatch.saas.util.Utils;
 import com.everymatch.saas.view.EventHeader;
 
 import java.io.Serializable;
@@ -40,6 +44,8 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
 
     //Data
     private String mCurrentConversationType = CONVERSATION_TYPE_ACTIVE;
+    private ArrayList<DataConversation> chat = new ArrayList<>();
+    private ArrayList<DataConversation> archive = new ArrayList<>();
 
     //Views
     AdapterConversations adapter;
@@ -59,7 +65,7 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
         mAbsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, ChatFragment.getInstance(adapter.data.get(i), adapter.data.get(i)._id, ChatFragment.CHAT_TYPE_USER),
+                ((BaseActivity) getActivity()).replaceFragment(R.id.fragment_container, ChatFragment.getInstance(adapter.getItem(i), adapter.getItem(i)._id, ChatFragment.CHAT_TYPE_USER),
                         ConversationsFragment.TAG, true, null, R.anim.enter_from_right, R.anim.exit_to_left,
                         R.anim.enter_from_left, R.anim.exit_to_right);
             }
@@ -74,7 +80,14 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
         /*we have to load conversations eny time  ):  */
         adapter = new AdapterConversations(new ArrayList<DataConversation>(), getActivity(), this);
         mAbsListView.setAdapter(adapter);
+        chat.clear();
+        archive.clear();
         fetchNextPage();
+    }
+
+    public void updateData() {
+        adapter.cancelSearch();
+        adapter.refreshData(mCurrentConversationType.equals(CONVERSATION_TYPE_ACTIVE) ? chat : archive);
     }
 
     @Override
@@ -99,17 +112,42 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
                 menuConversations.show(getActivity().getSupportFragmentManager(), "");
             }
         });
+
+        mEventHeader.getEditTitle().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (adapter != null)
+                    adapter.getFilter().filter(s.toString());
+            }
+        });
     }
 
     public void handleConversationFilterChange(String title) {
         mCurrentConversationType = title;
-        adapter.refresh(title);
+        updateData();
         updateHeaderTitle();
     }
 
     private void updateHeaderTitle() {
-        //mEventHeader.setTitle(dm.getResourceText(R.string.Inbox_title) + " (" + mCurrentConversationType + ") ▼");
-        mEventHeader.setTitle( mCurrentConversationType + "▼");
+        mEventHeader.setArrowDownVisibility(true);
+        mEventHeader.getTvArrowDown().setPadding(Utils.dpToPx(10), Utils.dpToPx(3), Utils.dpToPx(3), Utils.dpToPx(3));
+        mEventHeader.getTvArrowDown().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEventHeader.getTitle().performClick();
+            }
+        });
+        mEventHeader.setTitle(mCurrentConversationType);
     }
 
     @Override
@@ -121,10 +159,14 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
                     return;
 
                 ResponseConversations responseMessage = (ResponseConversations) data;
-                for (DataConversation conversation : responseMessage.array)
-                    adapter.add(conversation);
+                for (DataConversation conversation : responseMessage.array) {
+                    if (conversation.status.equals("active"))
+                        chat.add(conversation);
+                    else
+                        archive.add(conversation);
+                }
 
-                adapter.refresh(mCurrentConversationType);
+                updateData();
                 if (responseMessage.array.length < PAGE_COUNT)
                     mIsNoMoreResults = true;
             }
@@ -176,6 +218,7 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             isClicked = false;
+            adapter.cancelSearch();
         }
     }
 
@@ -193,36 +236,48 @@ public class ConversationsFragment extends BaseListFragment implements EventHead
 
     @Override
     public void onArchiveClick(DataConversation dataConversation) {
-        dataConversation.status = "archive";
-        adapter.refresh(mCurrentConversationType);
-        ConversationManager.setConversationStatus(dataConversation._id, "archive", new GenericCallback() {
-            @Override
-            public void onDone(boolean success, Object data) {
+        try {
+            dataConversation.status = "archive";
+            archive.add(chat.remove(chat.indexOf(dataConversation)));
+            updateData();
 
-            }
-        });
+            ConversationManager.setConversationStatus(dataConversation._id, "archive", new GenericCallback() {
+                @Override
+                public void onDone(boolean success, Object data) {
+
+                }
+            });
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
     }
 
     @Override
     public void onDeleteClick(DataConversation dataConversation) {
-        adapter.data.remove(dataConversation);
+        try {
+            boolean b = chat.remove(dataConversation);
+            b = archive.remove(dataConversation);
+        } catch (Exception ex) {
+            EMLog.e(TAG, ex.getMessage());
+        }
         ConversationManager.setConversationStatus(dataConversation._id, "deleted", new GenericCallback() {
             @Override
             public void onDone(boolean success, Object data) {
             }
         });
-        adapter.refresh(mCurrentConversationType);
+        updateData();
     }
 
     @Override
     public void onUnArchiveClick(DataConversation dataConversation) {
         dataConversation.status = "active";
+        chat.add(archive.remove(archive.indexOf(dataConversation)));
+        updateData();
         ConversationManager.setConversationStatus(dataConversation._id, "active", new GenericCallback() {
             @Override
             public void onDone(boolean success, Object data) {
             }
         });
-        adapter.refresh(mCurrentConversationType);
     }
 
     @Override

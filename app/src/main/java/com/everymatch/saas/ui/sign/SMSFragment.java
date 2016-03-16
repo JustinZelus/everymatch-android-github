@@ -97,13 +97,18 @@ public class SMSFragment extends BaseFragment implements View.OnClickListener {
         btnContinue = (Button) view.findViewById(R.id.btnContinue);
         setCountryPhoneAdapter();
 
+        btnContinue.setOnClickListener(this);
         //terms
         setTextViewHTML(tvTerms, dm.getResourceText(R.string.RegisterTnc));
         tvTerms.setMovementMethod(LinkMovementMethod.getInstance());
 
         loadUserPhoneNumber();
 
-        btnContinue.setOnClickListener(this);
+        //tmp
+       /* FragmentEnterCode fragmentEnterCode = FragmentEnterCode.getInstance(countryPhoneCode, phone, new ResponsePhoneNumberCheck());
+        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_up_animation, 0)
+                .replace(R.id.activity_sign_main_layout, fragmentEnterCode, RegistrationFragment.TAG).commit();*/
+
     }
 
     private void loadUserPhoneNumber() {
@@ -266,7 +271,7 @@ public class SMSFragment extends BaseFragment implements View.OnClickListener {
 
     private void sendSms() {
         showDialog(dm.getResourceText(R.string.Loading));
-        ProfileManager.PhoneNumberCheck(countryPhoneCode.code, phone, new GenericCallback() {
+        ProfileManager.PhoneNumberCheck(countryPhoneCode.code, phone,false, new GenericCallback() {
             @Override
             public void onDone(boolean success, Object data) {
                 stopDialog();

@@ -236,8 +236,12 @@ public class QuestionAndAnswer implements Serializable {
     // in order to know if answer is selected (in list question or button selector)
     // we need to know what  to compare to (id or title)
     public String getAnswerIdentifier(DataAnswer answer) {
-        if (question.question_type.equals(QuestionType.IDS))
-            return "" + answer.answer_id;
+        // michel asked to also check if answer type at the first question is equals to id's
+        if (question.question_type.equals(QuestionType.IDS)) {
+            if (question.answers != null && question.answers.length > 0 && !Utils.isEmpty(question.answers[0].answer_type) && question.answers[0].answer_type.equals(QuestionType.IDS)) {
+                return "" + answer.answer_id;
+            } else answer.value.toString();
+        }
 
         return answer.value.toString();
     }

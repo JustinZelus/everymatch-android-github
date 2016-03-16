@@ -14,7 +14,7 @@ public class ResponseOtherUser extends BaseResponse implements Serializable {
     public DataActivity activities[];
     public ArrayList<DataEvent> events;
     public DataLocation location;
-    public String groups;
+    //public String groups;
     public String searches;
     public String users_id;
     public String first_name;

@@ -159,6 +159,7 @@
     <string name="Participating">Participating</string>
     <string name="Age">Age</string>
     <string name="Edit_Profile">Edit_Profile</string>
+    <string name="Call_Me">Call_Me</string>
     <string name="Select_Profile">Select_Profile</string>
     <string name="Currency">Currency</string>
     <string name="Culture_text">Culture_text</string>
@@ -203,5 +204,6 @@
     <string name="reject">reject</string>
     <string name="Profile_Sublabel">Profile_Sublabel</string>
     <string name="List_Profile_Sublabel">List_Profile_Sublabel</string>
+    <string name="Choose_Folder">Choose_Folder</string>
 
 </resources>

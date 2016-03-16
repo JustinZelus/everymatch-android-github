@@ -51,6 +51,13 @@ public abstract class EmBaseAdapter<T> extends BaseAdapter implements Filterable
         }
     }
 
+    public ArrayList<T> getData() {
+        if (mFilteredResults != null)
+            return mFilteredResults;
+        else
+            return mData;
+    }
+
     @Override
     public long getItemId(int position) {
         return position;

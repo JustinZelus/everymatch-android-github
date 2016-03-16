@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.graphics.ColorUtils;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -92,12 +94,38 @@ public class Utils {
     public static String getDateStringFromDataDate(DataDate dataDate, String format) {
         try {
             Date date = getDateDromDataDate(dataDate);
-            SimpleDateFormat fmt = new SimpleDateFormat(format, getRealCulture());
+            Locale locale = Locale.getDefault(); //this should be the user's local
+            SimpleDateFormat fmt = new SimpleDateFormat(format, locale);
+            //SimpleDateFormat fmt = new SimpleDateFormat(format, getRealCulture());
             return fmt.format(date);
 
             //return dataDate.day + "." + dataDate.month + "." + dataDate.year;
         } catch (Exception ex) {
             return "";
+        }
+    }
+
+    public static void setApplicationLocal() {
+        DataStore ds = DataStore.getInstance();
+        String userLocal = null;
+
+        if (ds.getApplicationData().getSettings().default_culture != null && ds.getApplicationData().getSettings().default_culture.culture_name != null)
+            userLocal = ds.getApplicationData().getSettings().default_culture.culture_name;
+
+        if (ds.getUser().user_settings.default_culture != null)
+            userLocal = ds.getUser().user_settings.default_culture;
+
+        if (Utils.isEmpty(userLocal)) return;
+
+        for (Locale locale : Locale.getAvailableLocales()) {
+            if (locale.toString().replace("_", "-").replace("iw", "he").equals(userLocal)) {
+                Context context = EverymatchApplication.getContext();
+                //we have a local
+                Configuration config = context.getResources().getConfiguration();
+                Locale.setDefault(locale);
+                config.locale = locale;
+                context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
+            }
         }
     }
 
@@ -153,12 +181,10 @@ public class Utils {
         return fmt.format(date);
     }
 
-    public static String getDeviceLoacal() {
+    public static String getDeviceLocal() {
         String answer = Locale.US.getLanguage().replace("iw", "il") + "-" + Locale.US.getCountry();
-
         return answer;
     }
-
 
     public static String getPhoneCountryCode(Context context) {
         TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -279,7 +305,6 @@ public class Utils {
 
         return details;
     }
-
 
     /**
      * Takes int color witch defined in xml and convert to its
@@ -404,7 +429,6 @@ public class Utils {
         }
     }
 
-
     public static String getImageUrl(String imageUrl, int requiredWidth, int requiredHeight) {
         return getImageUrl(imageUrl, requiredWidth, requiredWidth, null);
     }
@@ -525,6 +549,11 @@ public class Utils {
             EMLog.e(TAG, ex.getMessage());
         }
         return "";
+    }
+
+    public static int getAlphaPrimaryColor() {
+        int color = ColorUtils.setAlphaComponent(DataStore.getInstance().getIntColor(EMColor.PRIMARY), (int) (255 * 0.3));
+        return color;
     }
 
     public static String getEventImportantAnswersText(DataEvent event) {

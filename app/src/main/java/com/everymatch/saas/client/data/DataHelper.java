@@ -27,14 +27,15 @@ public class DataHelper {
 
     public static List<PopupMenuItem> createInboxMenuItems(DataConversation item) {
         List<PopupMenuItem> items = new ArrayList<>();
-        items.add(new PopupMenuItem(dm.getResourceText(R.string.Reply), null));
+        //items.add(new PopupMenuItem(dm.getResourceText(R.string.Reply), null));
 
         if (item.status.equals("archive"))
-            items.add(new PopupMenuItem(dm.getResourceText(R.string.Unarchive), null));
+            items.add(new PopupMenuItem(dm.getResourceText(R.string.Unarchive), "icon-Unarchive"));
         else if (item.status.equals("active"))
-            items.add(new PopupMenuItem(dm.getResourceText(R.string.Archive), null));
+            items.add(new PopupMenuItem(dm.getResourceText(R.string.Archive), "icon-Archive"));
 
-        items.add(new PopupMenuItem(dm.getResourceText(R.string.Delete), null));
+        items.add(new PopupMenuItem(dm.getResourceText(R.string.Delete), "icon-Delete"));
+        items.add(new PopupMenuItem(dm.getResourceText(R.string.Cancel), "", null, DataStore.getInstance().getIntColor(EMColor.NEGATIVE)));
 
         return items;
     }

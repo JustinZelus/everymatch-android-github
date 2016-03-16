@@ -127,6 +127,7 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
     }
 
     protected void setHeader() {
+        mEventHeader.setArrowDownVisibility(true);
     }
 
     @Override

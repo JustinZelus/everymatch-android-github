@@ -104,6 +104,7 @@ public class Consts {
         public static final String icon_New_Close = String.valueOf((char) 0xe6ae);
         public static final String icon_Hide = String.valueOf((char) 0xe629);
         public static final String icon_Archive = String.valueOf((char) 0xe62b);
+        public static final String icon_UnArchive = String.valueOf((char) 0xe917);
         public static final String icon_ListView = String.valueOf((char) 0xe62d);
         public static final String icon_GridView = String.valueOf((char) 0xe62e);
         public static final String icon_Logout = String.valueOf((char) 0xe62f);
@@ -117,6 +118,7 @@ public class Consts {
         public static final String icon_Plus = String.valueOf((char) 0xe637);
         public static final String icon_VideoGames = String.valueOf((char) 0xe638);
         public static final String icon_Sculpting = String.valueOf((char) 0xe639);
+        public static final String icon_Delete = String.valueOf((char) 0xe923);
         public static final String icon_Restaurant = String.valueOf((char) 0xe63a);
         public static final String icon_Photography = String.valueOf((char) 0xe63b);
         public static final String icon_LanguageStudies = String.valueOf((char) 0xe63c);
